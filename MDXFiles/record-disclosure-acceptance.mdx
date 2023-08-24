@@ -1,0 +1,73 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Record Disclosure Acceptance
+
+An important requirement when onboarding new customers is telling them about laws and regulations that affect them: that is, you must disclose that regulatory information.
+
+## Disclosures and disclosure documents
+
+Banks and regulators need to verify that the required disclosures have been made, so Synctera keeps a record of every disclosure you make to every customer. Our API thus supports the concept of a disclosure record, which we usually just call a disclosure.
+
+The main fields of a disclosure are:
+
+Together, type and version uniquely specify a disclosure document. These are represented in Synctera's database, but not currently available via our API. You should have a default set of disclosure documents already available:
+
+You may not need every disclosure type: Synctera's compliance team can help you if need guidance here. See the API reference for more information about disclosure types.
+
+One more thing: Synctera does not currently store actual disclosure documents. Our disclosure documents are just records in a database that refer to documents that you must write and disclose to your customers. A future version of this API will support storage of the documents themselves.
+
+## Creating a disclosure record
+
+After you disclose a piece of information to a customer, typically by presenting them with a document that they must read and accept, you need to create a disclosure by calling POST /v0/disclosures. The request body is a disclosure record.
+
+### Personal customers
+
+To create a disclosure record for a personal customer:
+
+### Business customers
+
+To create a disclosure record for a business customer, specify business_id instead of person_id:
+
+### What it means
+
+Together, type and version identify the disclosure document. If this disclosure document does not already exist in Synctera's system, you will get an error. See above for the list of available disclosure documents.
+
+The type and event_type fields are fully described in the API specification.
+
+### Response
+
+On success, POST /v0/disclosures returns a 201 Created response with the new disclosure record (including a unique ID). For example, the above request to create a disclosure for a personal customer might return
+
+## Retrieval
+
+After creating disclosures, you can list them or retrieve individual records. Get a paginated list all disclosure records across your customer base:
+
+You can filter by person_id or business_id to limit the result
+to a single customer:
+
+And you can fetch a single disclosure record by ID:
+
+API reference documentation:
+
+Updated 10 months ago 
+

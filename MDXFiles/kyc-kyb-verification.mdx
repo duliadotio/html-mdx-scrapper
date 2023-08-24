@@ -1,0 +1,200 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# KYC/KYB Verification
+
+US banking regulations require banks and other financial institutions to collect and verify information about the customers they do business with. These regulations require the establishment of a Customer Identification Program (CIP), commonly referred to as: know your customer (KYC) and know your business (KYB). These programs require:
+
+📘
+
+In order to move money all customers are required to undergo KYC or KYB verification.
+
+Synctera's verification solution provides identity and watchlist monitoring for personal and business customers. In this article, we'll dive into what a verification is and how to manage the KYC and KYB process for your customers.
+
+See the API reference for more information on managing customer verifications.
+
+### Prerequisites
+
+This guide assumes that you have:
+
+## Verifications and the verification object
+
+Synctera represents KYC and KYB verifications using the verification object. A verification object represents a category of checks that were performed on a customer. The example below shows an IDENTITY verification for a personal customer.
+
+An IDENTITY verification encompasses all of the the individual checks that were done pertaining to the customer's identity. If we take a look at the details array we see the individual checks done in verifying the customer's identity. In this case we see the name, address, SSN, and email were all verified by Synctera's KYC provider.
+
+Similarly, watchlist checks are represented by the WATCHLIST verification type.
+
+See the API reference for more information about customer verifications.
+
+## Verification status and verifying customers
+
+A customer's verification status is the outcome of all verifications done on the customer. All new customers are created with a verification status of UNVERIFIED. The verification status field is available on the person and business resources (see the API reference for persons and businesses).
+
+Once all of the required information has been collected, you can initiate a verification request using the verify endpoint and the customer's ID.
+
+To verify a business customer, specify business_id instead of person_id:
+
+A successful verification request will result in the customer being moved from UNVERIFIED into one of the following statuses:
+
+Any time a customer is moved into a verification status other than ACCEPTED, a case will be created in the Synctera Case Manager so that their profile can be manually reviewed by a compliance officer. As previously mentioned, a customer cannot move money unless their verification status is ACCEPTED.
+
+Suggested flow for customer verification:
+
+If the user is not initially accepted, we recommend the following:
+
+📘
+
+There are two statuses that fall outside the typical integration path:
+
+## Example: Create a personal customer that can open an account
+
+### Integration Steps
+
+### 1. Create a personal customer
+
+First we start by creating a record for our new customer. We'll use the POST /persons endpoint to create a person.
+
+For more information about creating and managing people consult the person guide.
+
+### 2. Create a KYC data collection disclosure
+
+Once we have our created customer, you will need to display a disclosure to your customer that you are collecting personal data that will be shared with a third-party for the purpose of verifying their identity. For this we use the disclosures resource.
+
+For more information about creating and managing disclosures consult the disclosure guide.
+
+### 3. Verify the customer
+
+Now that we have a customer, and consent to collect and share their data we can verify this customer.
+
+📘
+
+Consent must come directly from the customer.
+
+Response
+
+The response will contain:
+
+See the API reference for more information about customer verifications.
+
+Great! We have successfully created and verified a personal customer. You can now visit our account creation guide.
+
+## Example: Create a business customer that can open an account
+
+Before we create an account, we must first complete our due diligence on the business. In this guide, we'll focus on modeling the example flow for the example corporation below, "Your New Business".
+
+Example corporation
+
+### Integration Steps
+
+### 1. Create a business customer: Your New Business
+
+First we start by creating a record for our new business customer. We'll use the POST /businesses endpoint to create a business.
+
+### 2. Create a beneficial owner
+
+Next, we need to represent the beneficial owner of the business. To do this, we'll create a new person using the POST /persons endpoint.
+
+The response body to this request will contain the id of the newly created person. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the BENEFICIAL_OWNER_OF relationship type.
+
+### 3. Create all necessary disclosures
+
+Prior to verifying our business and related owners we must create KYC data collection disclosures for each of the owners.
+
+For more information about creating and managing disclosures, see the disclosure guide.
+
+### 4. Verify the business
+
+At this point we have collected all of the required information to verify our original business and all of the related officers and owners.
+
+Verifying our business and all of the related entities is as easy as making a request to POST /v0/verifications/verify that specifies the business to verify:
+
+📘
+
+Verifying a business customer using the POST /verifications/verify endpoint initiates the KYC and KYB process for all entities: the original business and the beneficial owner.
+
+See the API reference for more information about business verifications.
+
+Great! We have successfully created and verified a business customer. You can now visit our account creation guide.
+
+## Example: Create a business customer with a more complex ownership structure
+
+​To satisfy regulatory requirements, we must collect business registration information and the ownership structure including: beneficial owners, holding corporations, officers, and directors of the business.
+
+Before we create an account, we must first complete our due diligence on the business. In this guide, we'll focus on modeling the example flow for the example corporation below, "Your New Business".
+
+Example corporation
+
+### Integration Steps
+
+### 1. Create a business customer: Your New Business
+
+First we start by creating a record for our new business customer. We'll use the POST /businesses endpoint to create a business.
+
+📘
+
+We indicate that this business is intended to be a customer by setting the "is_customer" parameter to true.
+
+For more information about creating and managing businesses consult the business guide.
+
+### 2. Create a beneficial owner
+
+Next, we need to represent the beneficial owner of the business. To do this, we'll create a new person using the POST /persons endpoint.
+
+The response body to this request will contain the id of the newly created person. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the BENEFICIAL_OWNER_OF relationship type.
+
+### 3. Create Holding Company (another business, but not a customer)
+
+To represent the ownership structure of a business partially owned by another business, create another business using the POST /businesses endpoint.
+
+Next, you'll create an OWNER_OF relationship which represents one business owning another business.
+
+### 4. Create an officer of Holding Company
+
+Because Holding Company owns a controlling portion of Your New Business, we must also model the relationship of the officers. Once again, we'll create a person using /persons with the information of the officer.
+
+The response body to this request will contain the id of the newly created officer. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the MANAGING_PERSON_OF relationship type.
+
+### 5. Create all necessary disclosures
+
+Prior to verifying our business and related owners we must create KYC data collection disclosures for each of the owners.
+
+For more information about creating and managing disclosures, see the disclosure guide.
+
+### 6. Verify the business
+
+At this point we have collected all of the required information to verify our original business and all of the related officers and owners.
+
+Verifying our business and all of the related entities is as easy as making a request to POST /v0/verifications/verify that specifies the business to verify:
+
+📘
+
+Verifying a business customer using the POST /verifications/verify endpoint initiates the KYC and KYB process for all entities: the original business, holding company, officers, and the beneficial owners.
+
+Response
+
+The response will contain:
+
+We have successfully created and verified a business customer with a more complex ownership structure. See the account creation guide for next steps.
+
+Updated 6 months ago 
+

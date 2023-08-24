@@ -1,0 +1,86 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Document Verification
+
+In addition to providing identity verification and watchlist monitoring Synctera's verification solution includes document verification. In this guide, we'll dive into use cases and the document verification flow for your customers.
+
+As discussed in the verification guide, Synctera recommends using document verification as a step up verification method for customers that cannot be automatically verified using basic CIP information (name, address, dob, govenment ID).
+
+Synctera has partnered with Socure to provide the ability to verify thousands of documents from over 100 countries to help verify a customer's identity. By capturing the front and back of the document as well as a live capture selfie, document verification can be used as step up verification to improve conversion rates on customers that would otherwise go into manual review using standard identity verification methods. It can also help to reduce risk by further ensuring the validity of the customer and their information.
+
+See the API reference or follow this guide for more information about integrating document verification into your onboarding flow.
+
+### Prerequisites
+
+This guide assumes that you have:
+
+### Socure SDKs
+
+Socure provides SDKs for multiple platforms to simplify the integration of  document verification into your application:
+
+📘
+
+If you would like build out your document verification flow using the Socure SDK, contact your Synctera sales representative.
+
+### Integration Steps
+
+### 1. Create a personal customer
+
+First we start by creating a record for our new customer. We'll use the POST /persons endpoint to create a person.
+
+For more information about creating and managing people consult the person guide.
+
+### 2. Create a KYC data collection disclosure
+
+Once we have our created customer, you will need to display a disclosure to your customer that you are collecting personal data that will be shared with a third-party for the purpose of verifying their identity. For this we use the disclosures resource.
+
+For more information about creating and managing disclosures consult the disclosure guide.
+
+### 3. Verify the customer
+
+Now that we have a customer, and consent to collect and share their data we can make a request to verify the customer.
+
+📘
+
+Consent must come directly from the customer.
+
+### 4. Collect the customer's documents
+
+Currently, you must integrate with one of Socure's SDKs.
+
+📘
+
+If you would like build out your document verification flow using the Socure SDK, contact your Synctera sales representative.
+
+Once you have uploaded the customer's documents you will receive a document_id which we will use in the next step.
+
+### 5. Verify the customer using document verification
+
+Using the document reference id returned from the Socure SDK, send a verification request, (like you did in step 3) this time including the document_id.
+
+By providing a document_id, the verification request will perform a KYC verification of the individual using the documents provided to the Socure SDK.
+
+Great! We have successfully created and verified a personal customer using document verification. You can now visit our account creation guide.
+
+Updated 11 months ago 
+

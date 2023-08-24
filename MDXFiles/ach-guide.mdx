@@ -1,0 +1,253 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# ACH Payments
+
+# Overview
+
+If you’re building a service that will enable your customers to send and accept
+payments, issue cards, or transfer money between accounts at different
+institutions, chances are you’ll need ACH. ACH is a one-stop shop for a
+variety of payment use cases. From recurring payments and payroll deposits to
+online purchases and bill payment, ACH offers a fast and flexible way to send
+money. 
+
+Originally established in 1970, expanding support and innovation around ACH
+payments has led it to become one of the most popular online payment rails in
+the world.
+
+## What is an ACH Transaction?
+
+An ACH transaction (often referred to as an ACH transfer) is an electronic,
+bank-to-bank money transfer processed through the Automated Clearing House
+(ACH) Network. You can think of the ACH Network as a postal service for ACH
+files. Each file can contain up to 1000 ACH entries with each entry
+representing a transaction being sent from one bank to another.
+
+ACH transactions can be used to facilitate Person-to-person (P2P),
+Business-to-consumer (B2C), and Business-to-business (B2B) payments and is a
+convenient alternative to card networks, wire transfers, paper checks or cash.
+In addition to their convenience, ACH transactions are reliable, inexpensive,
+fast, and most importantly, safe. Most transfers are processed and settled
+within 1-2 business day with zero cost to the consumer.
+
+## How does Synctera support ACH?
+
+From the outside, the ACH workflow may seem simple but it’s actually quite
+complex. This is where where Synctera comes in. Synctera works with your
+sponsor bank to serve as your connection to the ACH network and supports
+sending and accepting ACH transactions from other financial institutions.
+
+In ACH terms, Synctera acts as the ODFI (Originating Depository Financial
+Institution) when it comes to originating transactions and the RDFI
+(Receiving Depository Financial Institution) when it comes to receiving them.
+Thats means we take care of all the batch processing and file generation while
+ensuring that all transaction are reflected in your customer account balances.
+
+## What are the 2 types of ACH Transactions?
+
+Each ACH transaction involves 2 primary parties:
+
+All transactions fall into one of two categories, debit (“pull”) or credit (“push”). 
+
+### Push (Credit)
+
+Determining if a transaction is a push or pull is always with respect to the
+receiving account. For example, if Tom, a customer of Bank A wants to send
+money to John, a customer of Bank B. Tom’s bank can originate an ACH push
+transaction from his account to John’s account. The term “push” is used
+interchangeably with “credit”. The result is a credit to John’s (the receiver)
+account balance and a debit to Tom’s (the sender).
+
+A real life use case for push transactions are the deposits that result from an
+employee signing up for payroll direct deposit. Whenever payday rolls around,
+the employer’s bank initiates a push/credit to the employee’s bank account.
+
+### Pull (Debit)
+
+Alternatively, if Tom want’s to request money from John, Tom’s bank can
+originate an ACH pull request from his account to John’s. The term “pull” is
+used interchangeably with “debit”. The result is a debit to John’s account and
+a credit to Tom’s. This is what occurs when users of a service sign up for
+recurring bill payments. The service provider ends up debiting the customer’s
+account via an ACH pull request. 
+
+This is also the case when a banking customer deposits a check made out to
+him/her by an account holder at another financial institution. Checks are
+ultimately translated into pull request on the ACH network. The check contains
+the account holders routing and account number which are the only pieces of
+information required to initiate a credit or debit from an account at another
+institution.
+
+📘
+
+There is a difference between the direction of an ACH transaction and the
+direction of money flow. The direction of the transaction refers to the
+direction of the ACH message on the network. It always flows from the
+originator to the receiver while the direction of money flow relates to which
+account is receiving funds and which account is sending them. This means
+there are 2 ways to achieve the same direction of money movement.
+
+## Scenario
+
+The desired result is to withdraw funds from an account at Bank A and
+deposit them into an account at Bank B
+
+### Option 1 (This is how customers fund their accounts)
+
+Bank B sends an ACH debit / pull transaction requesting funds from the
+account at Bank A:
+
+### Option 2
+
+Bank A sends an ACH credit / push transaction to send funds to the account
+at Bank B.
+
+## How are accounts funded using ACH?
+
+Once your customers have an account setup, they’ll need to fund their account
+by originating an ACH pull/debit transaction to be sent to their account at
+another institution. Synctera refers to this as an external account. 
+
+If you have just created account B on the Synctera platform and you want to add
+funds to it from account A at another financial institution, its natural to
+assume that funding involves pushing funds from account A to account B.
+Instead, funding your customers account involves originating an ACH debit/pull
+transaction with your Synctera account in order to withdraw funds from the
+external account. 
+
+## How do I get started with sending/receiving ACH payments?
+
+### Step 1: Customer Creation
+
+1.1 Create a Customer
+
+Any individual wanting to transact on the Synctera platform must be stored as a
+customer in our system. Part of that includes completing the KYC process.
+See the Customer guide for details.
+
+### Step 2: Account Creation
+
+2.1 Create an Account
+
+In order to send and receive ACH payments you will need to create an account
+and associate it with your customer. Account Guide 
+
+2.2 Create an External Account
+
+In order for your customers to fund their accounts they’ll need to debit funds
+from an account at another institution. You’ll need to create an external
+account on the Synctera platform which serves as the internal representation of
+the account to be debited. External Account Guide
+
+### Step 3: Send/Receive an ACH
+
+3.1 Send an ACH request
+
+Once the external account has been verified, ACH transactions (credits and
+debits) can be originated from your customer’s account. If you’re unsure what
+values to set in your API request take a look at the documentation
+here.
+
+3.2 Receive an ACH transaction
+
+As long as your customer has an account that is both active and verified,
+there is no work required by you or your customer to receive ACH transactions.
+Synctera will process the incoming transaction and debit/credit the account
+accordingly.
+
+## What happens after I send an ACH request?
+
+After you send a request to originate an ACH transaction, the transaction is
+placed in a batch which, in turn, is placed in an ACH file to be sent out over
+the network. Depending on the time that you originate the transaction there may
+be some delay between the time the transaction is created and the time the file
+is sent. This is done to align with the processing schedule
+set by the federal reserve. The date the transaction is sent will ultimately
+determine when funds are settled across accounts and institutions. It will also
+have a bearing on if and when an ACH transaction can be returned by the
+recipient.
+
+The responsibilities and guidelines for participants in the ACH system are
+determined by the National Automated Clearing House Association, better known
+as NACHA. NACHA operates as the rule making body for all financial institutions
+wanting to use the ACH system.
+
+## What do I need to do to receive an ACH transaction?
+
+Nothing. Unless an incoming transaction needs to be returned (see
+Why would an ACH transaction be returned?),
+no action is required. Synctera will process all debit and credits for any ACH
+transactions that we receive on behalf of you or your customers. Check your
+Synctera dashboard to view all ACH transaction that have been sent or received.
+Synctera also supports webhooks to notify you of all ACH transactions.
+
+## How long does it take to process an ACH transaction?
+
+The time it takes for the network to completely process an ACH transaction is
+dependent on a number of variables. The operating schedule of the federal
+reserve, the operating schedule of each bank, and the time of day the
+transaction was created are all key factors in determining when a transaction
+will settle. “Settle”. Integrators can influence the timing of an ACH
+transaction by setting the is_same_day field to true when posting a request
+to send a transaction.
+
+However, even when sending “same day” ACH transfers, there are a couple things
+to keep in mind:
+
+## Why would an ACH transaction be returned?
+
+ACH transactions can be returned for a variety of reasons. “Insufficient
+funds”, “invalid account number”, “account closed” are all fair game but but
+many of the return reasons are not so obvious. NACHA guidelines specify
+85 different codes
+that may be associated with a returned transaction. The good news is that you
+and your customers are likely to see only the most common ones. Synctera will
+take care of processing any returned transaction and notify you of the
+resolution via webhooks. In the event that a returned transaction requires your
+immediate attention, you will be able to take action through the Synctera
+dashboard. 
+
+The dashboard is also were you can generate returns from received ACH
+transactions. While most transaction failures such as insufficient funds,
+invalid account, etc., will result in automatic returns, you may occasionally
+identify transactions that were not authorized and choose to manually initiate
+a return.
+
+## ACH same day vs non-same day cut-off times
+
+ACH (Debit/Credit) - External bank to Synctera account
+
+📘
+
+Not all of our sponsor banks support 8:00 pm ET / 2:15 am ET exchange times
+
+ACH Returns - External bank to Synctera account
+
+## Example: Funding a customer account
+
+To fund a customer account from an external bank account the Synctera API:
+
+It is important to note a few things in this example:
+
+Updated about 1 year ago 
+

@@ -1,0 +1,89 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Internal Transfers
+
+# Internal Transfers
+
+## Overview
+
+The Internal Transfer API allows you to transfer funds between two Synctera accounts, in real-time. Common use cases include:
+
+This guide will show you how to accomplish a few different use cases using the internal transfers API.
+
+## Prerequisites
+
+This guide assumes that you are already familiar with the customer and account creation APIs and have one or more accounts already created and in the appropriate status to be able to move funds.
+
+If not, go through the following guides before continue:
+
+📘
+
+To allow internal transfers between customer accounts, both accounts must be created using an an account template with is_p2p_enabled set to true.
+
+## Internal transfers and transaction types
+
+All transactions in the Synctera platform have both a type and a subtype which are used to categorize transactions.
+
+The Internal Transfers API always create a transaction with type internal_transfer, but allows you to specify the subtype of the transaction via the Internal Transfer type field in the request payload.
+
+The full set of supported internal transfer types are documented in the Internal Transfer API Reference.
+
+For more details about transaction types, and transactions in general, see the Transaction Guide.
+
+# Internal account permissions
+
+It's worth noting that certain internal accounts are special and are reserved exclusively for internal use by the Synctera platform. These are distinguished from normal internal accounts by the is_system_acc attribute on resource.
+
+When this field is true, it means that any internal transfers to or from these internal accounts will be declined.
+
+See the Internal Transfers API for more details.
+
+## Example: Moving money between accounts
+
+To move funds between two customer accounts:
+
+This will create a transaction that debits of $10.25 from customer account 35c1a55e-4510-458d-9345-fe08121b5654 and credits $10.25 to customer account
+c8ddc14b-33be-447a-820d-3fe59ad49028.
+
+It's also worth highlighting that the amount in this example in cents, not dollars. The Synctera payment APIs always use the smallest denomination for the given currency.
+
+The response on an successful internal transfer will include the same information in the request payload, with the addition of an id field that represents the unique transaction id created to represent the transfer:
+
+You can use the id with the GET Posted Transaction API API to retrieve additional details about the transaction.
+
+## Example: Charging a fee
+
+Charging a fee can be achieved by initiating an internal transfer that debits a customer and credits an internal account that has been allocated for that purpose (for example, a "profits and losses" operating account).
+
+This example will charge a $5.00 account fee against a customer account (0b4e28a7-65fd-4ae0-bbb8-d744ded639a5), crediting our PnL internal account (a5c2604b-7758-4732-b264-b0ea0a1403d1):
+
+The main difference between this example and the previous one is:
+
+## Example: Moving money between internal accounts
+
+Operations teams may need to perform periodic "sweeps" to move funds from one internal account to another as part of regular end-of-day operations.
+
+This example will move $25,000 from an ACH Settlement internal account (0b4e28a7-65fd-4ae0-bbb8-d744ded639a5), to a Money in and out internal account (3dff4ee6-057a-4b29-bedc-f8de8b838780):
+
+Updated 5 months ago 
+

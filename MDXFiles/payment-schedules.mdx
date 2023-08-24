@@ -1,0 +1,79 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Payment Schedules
+
+Customers may want to set up scheduled payments for their mortgage or to move money into savings.  Synctera enables you to easily create and manage scheduled payments for your customers.  Synctera will manage updating the payment date if the payment is scheduled to occur on a date the payment method is not available such as weekends for ACH.
+
+## Payment Schedule Resource
+
+The payment schedule resource consists of two primary fields: schedule and payment_instruction. schedule is a schedule configuration to
+define the frequency and number of recurring payments. payment_instruction defines how the payments are executed. There are two fields: type
+defines the supported payment types like ACH and INTERNAL_TRANSFER, and request will be the same request body for the corresponding payments.
+
+The resource also has the fields description and metadata, so the users can provide additional information for the resources.
+
+### Schedule Configuration
+
+The schedule has several fields to define the recurrence.
+
+### Scheduled Date vs Execution Date
+
+Once the payment schedule is created, or the current scheduled one has been executed, it will calculate the next scheduled date and execution date. The next
+scheduled date will simply be calculated based on the schedule configuration for the next recurrence. Please note that if frequency is set to MONTHLY, but
+the next scheduled date does not have the day of the month, then it will be the last day of the month, e.g. start_date is Jan 31 with interval is 1, then
+the next recurrence will be Feb 28/29.
+
+Execution date is based on the underlying bank's business dates. If a scheduled date falls on the bank's holiday or weekend, then the execution date will be
+the last business day of the scheduled date. Otherwise, it will be the same as the scheduled date.
+
+### Execution Timing
+
+The payment executions starts to happen on the execution date, 11:00 AM on the underlying bank's timezone. Please note that the payment could be delayed depends
+on the volume of the payment schedules needs to be processed at the time.
+
+### Status
+
+Status is the enumeration value
+
+## Examples
+
+### A customer wants to set up scheduled payments save $100 bi-weekly for a year starting on April 26, 2022.
+
+You will have the response like below.
+
+Note that next_payment_date and status are the new fields. This means the next execution will be on 2022-04-26, it will
+call POST /v0/internal_transfers with the request as the request body. Once it is completed, both execution_date and schedule_date
+will be set to 2022-04-28
+
+### A customer wants to see all the payments from the schedule
+
+There are a few keys are worth to note:
+
+### A customer wants to cancel the future payments of the schedule
+
+## Webhook Events
+
+There are several events you can subscribe from webhook endpoints
+
+Updated about 1 year ago 
+

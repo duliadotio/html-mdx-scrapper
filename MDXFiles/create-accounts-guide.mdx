@@ -1,0 +1,114 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Accounts
+
+In the Synctera platform, an account represents a bank account of your business or personal customer. This guide explains how to create and use accounts.
+
+## Types of Accounts
+
+There are three types of accounts. SAVING and CHECKING are Demand Deposit Accounts (DDA) and represent funds accrued by the account holder. A LINE_OF_CREDIT account represents credit extended to the account holder.
+
+In addition to the three types of customer accounts, there are also:
+
+## Creating an Account
+
+The following curl example will walk you through the creation of an account and getting it ready to use with other features such Cards and ACH. This assumes you have set up baseurl and apikey environment variables. See Base URL and Authentication for instructions.
+
+If you don't already have a business or personal customer, create one now. See Create a Personal Customer guide. Replace the {CUSTOMER_ID} with the customer's id.
+
+Call POST /v0/accounts to create the account, linking to the existing customer.
+
+This will return a response with the created account, e.g.:
+
+### Account Relationships
+
+A customer be related to an account in different ways:
+
+You can add/update/delete the relationships using the /v0/accounts/relationships` endpoints.
+
+ The relationships should use the customer_id attribute if the account holder is a personal customer, and business_id if a business customer.
+
+### Status
+
+The account object contains two status attributes:
+
+access_status: can be set to FROZEN to temporarily freeze an account.
+
+status represents the lifecycle of the account. A FinTech can progress the account from ACTIVE_OR_DISBURSED to CLOSED. The Synctera platform also updates this attribute, e.g. setting it to RESTRICTED when the account holder has not been verified. Note that authorized signers do not need to be verified.
+
+To participate in money movement transactions, issue cards, etc, the account must have an access_status of ACTIVE and a status of ACTIVE_OR_DISBURSED.
+
+### Balance Floor and Ceiling
+
+The optional balance_floor and balance_ceiling attributes control what happens when the account balance goes below or above a set level. This can be used to implement sweep accounts. Please see the Balance Floor and Ceiling guide.
+
+## Balances
+
+Accounts have two types of balances: ACCOUNT_BALANCE and AVAILABLE_BALANCE.
+
+For SAVING and CHECKING accounts:
+
+For LINE_OF_CREDIT accounts:
+
+## Account Products and Templates
+
+Synctera supports the concepts of Account Products and Account Templates to so you don't need to specify all the details when creating similar accounts.
+
+### Account Products
+
+An account product is a set of attributes that define how interest is calculated for accounts. The account product resource acts as a profile that can apply to multiple accounts. Changes to the account product affects all accounts that reference it. Only interest-bearing accounts need to reference an account product. Details about interest calculation can be found here in the Interest Guide
+
+Using an account product is optional. If no account product is specified when creating the account, no interest will be calculated.
+
+❗️
+
+It is not currently possible to change the account product on an account.
+
+The v0 API spec also includes a preview of fee product types. This product type is not yet supported - account fees will be implemented in the future.
+
+To create an interest product_type, use POST /v0/accounts/products. Specify how you want the interest calculated (e.g. COMPOUNDED_MONTHLY), accured (e.g. DAILY) and paid (e.g. MONTHLY). You can specify that the interest rate varies over time by including multiple periods with different rates. The rate is specified using basis points (bps), i.e. 125 represents 1.25%.
+
+This will return a response with the created account product, e.g.:
+
+Note the returned id attribute. This is used for when creating an account template.
+
+### Account Templates
+
+Account templates contain predefined values for creating an account. When creating an account, the Accounts API copies all the template values to the account resource. Once you create an account, the API no longer references the template used to create it, and updates won’t affect existing accounts. To create an account template, call POST /v0/accounts/templates.
+
+All account creation uses an account template. As a convenience, the account_template_id does not need to be specified if there is a single account template that matches the requested account's type. As part of initial the FinTech setup, a simple account template for each account type is automatically created. 
+
+You can override template values in the POST /v0/accounts request when creating an account. However, the account type in the template and the POST request must agree.
+
+To create an account template, specify the type of account (CHECKING, SAVING, LINE_OF_CREDIT or CHARGE_SECURED), and the attributes for that type. The is_enabled attribute must be set to true to use this template when creating an account. This example will use a SAVING account.
+
+Note the is_ach_enabled, is_card_enabled, is_external_card_enabled, is_p2p_enabled and is_wire_enabled attributes. Synctera will enforce these controls as money movement requests could be generated both via the API and by your ops team on apps.synctera.com.
+
+This will return a response with the created account template, e.g.:
+
+Note the returned id attribute. This is used for when creating an account.
+
+Additional details:
+
+Updated 4 months ago 
+

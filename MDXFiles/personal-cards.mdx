@@ -1,0 +1,157 @@
+### Overview
+
+### Onboard a personal customer
+
+### Onboard a business customer
+
+### Create Accounts
+
+### Link External Accounts
+
+### Link External Cards
+
+### Move Money
+
+### Issue Cards
+
+### Get Transactions
+
+### Platform Tools
+
+### Validate a value proposition
+
+# Personal Cards
+
+Cards are an important part of many FinTechs’ business with their customers. They come in many varieties: physical or virtual, debit or credit, and in multiple different products that define the card’s use: transaction limits, when fees are charged, rewards programs, and so on.
+
+The Cards API creates and manages cards for your customers over the entire life of a card, from issuing a card through card activation, management, and termination.
+
+## A Card’s Life
+
+A card handled in the Synctera platform has many parts of its life:
+
+The Cards API endpoints handle the card as it moves through these stages.
+
+## Card Activation Methods
+
+There are 3 methods for activating cards:
+
+Typically upon activating a card the user should be prompted to set a PIN on the card. Even virtual cards when used with digital wallets can be prompted for a PIN at a merchant POS.
+If no PIN is set on a card and a merchant POS requests a PIN, the purchase will be impossible to complete successfully.
+
+### Activation Widget
+
+For cards that have the full PAN and CVV printed on them, the customer who receives the card logs into the FinTech app (which uses our widgets described below), selects the option to activate a card, and enters those values to prove that they received the card. These values go to Synctera’s card vendor for card activation.
+
+### Barcode Activation
+
+For cards that don’t have the PAN and CVV printed on them (or just have a partial PAN), the card issuer generates a unique barcode value for the card and gives that value to the card fulfillment vendor printing the card. The card printer encodes the barcode string into a code 128 barcode printed on the card or card carrier.
+
+The customer receiving the card uses the FinTech app’s section for card activation and scans the barcode. The FinTech converts the barcode back into the string and sends that to the POST /cards/activate endpoint which authenticates card activation through our card vendor.
+
+### PATCH Request
+
+Depending on the risk appetite and alternative means of verifying the cardholder has the card in hand, integrators can optionally choose to activate cards using the PATCH /cards/{card_id} endpoint.
+
+This doesn't require any proof that the customer has the card in hand, so it's up to the integrator to perform any required due diligence to verify and authenticate the user.
+
+## Handling Sensitive Card Information
+
+Some card data such as the PAN, CVV, expiration date (EXP) and PIN are sensitive and should be guarded from exposure to anyone except the authorized card holder. This data is exposed not only during card activation, but over the life of the card when the card customer wants to view their card data.
+
+To secure sensitive card information, the Payment Card Industry (PCI) Data Security Standard defines steps that must be followed when sending and receiving sensitive information. Your sponsor bank and credit card network require PCI compliance in your application when you handle card business with customers. Getting PCI compliance certification is an involved and expensive process.
+
+To provide PCI compliance without you having to go through the compliance process, we provide pre-built widgets and a library that are certified PCI-compliant. These widgets and the library are created by our card vendor, adapted by Synctera to work in our platform, and run within your application to send and receive sensitive data directly between your application and our card vendor.
+
+### Initial Card Setup
+
+Synctera provides two PCI-compliant widgets that let your customers activate cards and set up an initial PIN:
+
+These widgets each display within an HTML iframe element and connect to the card vendor using a single-use token granted for each transaction.
+
+### Displaying Sensitive Card Data
+
+Once a card is active, your customers will want to view information about their cards that includes sensitive card data such as the PAN and CVV. See the Card Widgets guide for more details.
+
+## Resetting PIN Tries
+
+If someone incorrectly enters a card’s PIN too many times in a short time period (typically at an ATM or point-of-sale device), our card vendor suspends the card. The card status is set to SUSPENDED, and the card owner will most likely contact your FinTech for assistance.
+
+There are several courses of action to take if this occurs:
+
+Note that you can handle status update and card reissuance through the Synctera dashboard if a customer service rep is working with the customer, or you can handle it through the Cards API endpoints if you have your own customer service mechanisms.
+
+## Card Reissuance Scenarios
+
+A card may be reissued for many reasons. The card may have expired, the name on the card may need to be changed, or a physical card may be lost or stolen. Each of these scenarios is handled a bit differently to provide the best transition from the existing card to its replacement. These reissuance reasons are defined in the Cards API when you request issuing a replacement card:
+
+In all of these cases, the Synctera platform automatically terminates the old card when it is time for termination.
+
+## Cards API Objects
+
+The Cards API works with two primary objects.
+
+### The Card Product Object
+
+A card product is a defined set of card features that you can offer to your customers. A card product may define charge limits, foreign transaction fees, reward programs, and other important agreements between you and a customer for card use. When your FinTech onboards with Synctera and works out an agreement with a sponsor bank, if you’re going to use cards, your agreement includes a set of defined card products you can offer to your customers.
+
+When we set you up in the Synctera platform, we create a set of Cards API objects, one for each of your card products. Each card product object contains:
+
+When you request a card issuance, you specify a card product by ID so that you and the card issuer know the terms under which the card is issued.
+
+### The Card Object
+
+The card object is the Card API’s principal object. Each object defines and tracks a card from issuance request through activation, management, and eventual end of life.
+
+A card object has a set of attributes that vary depending on whether the card is virtual or physical. A physical card has to contain information about shipping such as address and shipping status, and for activation of a physical card such as the barcode used for validation.
+
+#### Common Attributes
+
+Physical and virtual card objects both have these common attributes:
+
+#### Physical Card Attributes
+
+A physical card object has some additional attributes:
+
+The Synctera platform receives information from the card issuer about shipping status and fills in attributes with received information so you can check on a card’s shipping status by looking at the card object.
+
+## Endpoints
+
+The Cards API offers endpoints that handle different aspects of card creation and management.
+
+### Card Products
+
+These endpoints provide card product information:
+
+### Card Creation
+
+These endpoints create an active card for a customer:
+
+### Card Management
+
+These endpoints manage a card once it’s issued:
+
+### Data Security Through Widgets
+
+These endpoints provide tokens and connection information for Synctera’s PCI-compliant widgets:
+
+## A Typical Card Workflow
+
+This workflow is an example of steps covering a card’s life from creation to deactivation. For this example, the card we work with is a physical debit card that activates through a barcode activation value.
+
+Setup: To create a card, you need a customer that has passed KYC verification and an account that belongs to the customer.
+
+### Requesting Card Issuance
+
+📘For customers who have specified a chosen name, you can overwrite the default embossed first and last name by explicitly setting embossed_name with your customer's chosen and last name.
+
+For customers who have specified a chosen name, you can overwrite the default embossed first and last name by explicitly setting embossed_name with your customer's chosen and last name.
+
+### Activating a Card
+
+### Reissuing a Card
+
+### Cancelling a Card
+
+Updated 4 months ago 
+
