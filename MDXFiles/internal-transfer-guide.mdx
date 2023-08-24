@@ -1,89 +1,360 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
-# Internal Transfers
+[Waitlist](/docs/viral-loops-waitlist)
 
 # Internal Transfers
+
+[Suggest Edits](/edit/internal-transfer-guide)
+
+# Internal Transfers
+
+[](#internal-transfers)
 
 ## Overview
 
+[](#overview)
+
 The Internal Transfer API allows you to transfer funds between two Synctera accounts, in real-time. Common use cases include:
+
+[Internal Transfer API](/reference/createinternaltransfer)
 
 This guide will show you how to accomplish a few different use cases using the internal transfers API.
 
 ## Prerequisites
 
+[](#prerequisites)
+
 This guide assumes that you are already familiar with the customer and account creation APIs and have one or more accounts already created and in the appropriate status to be able to move funds.
 
 If not, go through the following guides before continue:
+
+[Customers](/docs/create-a-personal-customer)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Accounts](/docs/create-accounts-guide)
 
 📘
 
 To allow internal transfers between customer accounts, both accounts must be created using an an account template with is_p2p_enabled set to true.
 
+`is_p2p_enabled`
+
+`true`
+
 ## Internal transfers and transaction types
+
+[](#internal-transfers-and-transaction-types)
 
 All transactions in the Synctera platform have both a type and a subtype which are used to categorize transactions.
 
+`type`
+
+`subtype`
+
 The Internal Transfers API always create a transaction with type internal_transfer, but allows you to specify the subtype of the transaction via the Internal Transfer type field in the request payload.
+
+`internal_transfer`
+
+`type`
 
 The full set of supported internal transfer types are documented in the Internal Transfer API Reference.
 
+[Internal Transfer API Reference](/reference/createinternaltransfer)
+
 For more details about transaction types, and transactions in general, see the Transaction Guide.
+
+[Transaction Guide](/docs/transactions-guide)
 
 # Internal account permissions
 
+[](#internal-account-permissions)
+
 It's worth noting that certain internal accounts are special and are reserved exclusively for internal use by the Synctera platform. These are distinguished from normal internal accounts by the is_system_acc attribute on resource.
+
+`is_system_acc`
 
 When this field is true, it means that any internal transfers to or from these internal accounts will be declined.
 
+`true`
+
 See the Internal Transfers API for more details.
+
+[Internal Transfers API](/reference/listinternalaccounts)
 
 ## Example: Moving money between accounts
 
+[](#example-moving-money-between-accounts)
+
 To move funds between two customer accounts:
+
+`
+curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H "Content-Type: application/json" \
+  https://api.synctera.com/v0/transactions/internal_transfer \
+  --data-binary '
+  {
+     "amount": 1025,
+     "currency": "USD",
+     "originating_account_id": "35c1a55e-4510-458d-9345-fe08121b5654",
+     "receiving_account_id": "c8ddc14b-33be-447a-820d-3fe59ad49028",
+     "type": "ACCOUNT_TO_ACCOUNT"
+  }'
+
+`
 
 This will create a transaction that debits of $10.25 from customer account 35c1a55e-4510-458d-9345-fe08121b5654 and credits $10.25 to customer account
 c8ddc14b-33be-447a-820d-3fe59ad49028.
 
+`35c1a55e-4510-458d-9345-fe08121b5654`
+
+`c8ddc14b-33be-447a-820d-3fe59ad49028`
+
 It's also worth highlighting that the amount in this example in cents, not dollars. The Synctera payment APIs always use the smallest denomination for the given currency.
+
+`amount`
 
 The response on an successful internal transfer will include the same information in the request payload, with the addition of an id field that represents the unique transaction id created to represent the transfer:
 
+`id`
+
+`{
+  "amount": 1025,
+  "currency": "USD",
+  "originating_account_id": "35c1a55e-4510-458d-9345-fe08121b5654",
+  "receiving_account_id": "c8ddc14b-33be-447a-820d-3fe59ad49028",
+  "type": "ACCOUNT_TO_ACCOUNT",
+  "id": "e7ec7e47-0a97-40b8-8477-2fa80ae680f7"
+}
+`
+
 You can use the id with the GET Posted Transaction API API to retrieve additional details about the transaction.
 
+`id`
+
+[GET Posted Transaction API](/reference/getpostedtransactionbyid)
+
 ## Example: Charging a fee
+
+[](#example-charging-a-fee)
 
 Charging a fee can be achieved by initiating an internal transfer that debits a customer and credits an internal account that has been allocated for that purpose (for example, a "profits and losses" operating account).
 
 This example will charge a $5.00 account fee against a customer account (0b4e28a7-65fd-4ae0-bbb8-d744ded639a5), crediting our PnL internal account (a5c2604b-7758-4732-b264-b0ea0a1403d1):
 
+`0b4e28a7-65fd-4ae0-bbb8-d744ded639a5`
+
+`a5c2604b-7758-4732-b264-b0ea0a1403d1`
+
+`
+curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H "Content-Type: application/json" \
+  https://api.synctera.com/v0/transactions/internal_transfer \
+  --data-binary '
+  {
+     "amount": 500,
+     "currency": "USD",
+     "originating_account_id": "0b4e28a7-65fd-4ae0-bbb8-d744ded639a5",
+     "receiving_account_id": "a5c2604b-7758-4732-b264-b0ea0a1403d1",
+     "type": "FEE"
+  }'
+`
+
 The main difference between this example and the previous one is:
 
+`FEE`
+
+`originating_account_id`
+
+`/v0/internal_accounts`
+
 ## Example: Moving money between internal accounts
+
+[](#example-moving-money-between-internal-accounts)
 
 Operations teams may need to perform periodic "sweeps" to move funds from one internal account to another as part of regular end-of-day operations.
 
 This example will move $25,000 from an ACH Settlement internal account (0b4e28a7-65fd-4ae0-bbb8-d744ded639a5), to a Money in and out internal account (3dff4ee6-057a-4b29-bedc-f8de8b838780):
 
+`0b4e28a7-65fd-4ae0-bbb8-d744ded639a5`
+
+`3dff4ee6-057a-4b29-bedc-f8de8b838780`
+
+`
+curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H "Content-Type: application/json" \
+  https://api.synctera.com/v0/transactions/internal_transfer \
+  --data-binary '
+  {
+     "amount": 2500000,
+     "currency": "USD",
+     "originating_account_id": "0b4e28a7-65fd-4ae0-bbb8-d744ded639a5",
+     "receiving_account_id": "3dff4ee6-057a-4b29-bedc-f8de8b838780",
+     "type": "ACH_CREDIT_SWEEP"
+  }'
+`
+
 Updated 5 months ago 
+
+[Table of Contents](#)
+
+[Internal Transfers](#internal-transfers)
+
+[Overview](#overview)
+
+[Prerequisites](#prerequisites)
+
+[Internal transfers and transaction types](#internal-transfers-and-transaction-types)
+
+[Internal account permissions](#internal-account-permissions)
+
+[Example: Moving money between accounts](#example-moving-money-between-accounts)
+
+[Example: Charging a fee](#example-charging-a-fee)
+
+[Example: Moving money between internal accounts](#example-moving-money-between-internal-accounts)
 

@@ -1,28 +1,152 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
 
 # ACH Payments
 
+[Suggest Edits](/edit/ach-guide)
+
 # Overview
+
+[](#overview)
 
 If you’re building a service that will enable your customers to send and accept
 payments, issue cards, or transfer money between accounts at different
@@ -36,6 +160,8 @@ payments has led it to become one of the most popular online payment rails in
 the world.
 
 ## What is an ACH Transaction?
+
+[](#what-is-an-ach-transaction)
 
 An ACH transaction (often referred to as an ACH transfer) is an electronic,
 bank-to-bank money transfer processed through the Automated Clearing House
@@ -52,6 +178,8 @@ within 1-2 business day with zero cost to the consumer.
 
 ## How does Synctera support ACH?
 
+[](#how-does-synctera-support-ach)
+
 From the outside, the ACH workflow may seem simple but it’s actually quite
 complex. This is where where Synctera comes in. Synctera works with your
 sponsor bank to serve as your connection to the ACH network and supports
@@ -65,11 +193,15 @@ ensuring that all transaction are reflected in your customer account balances.
 
 ## What are the 2 types of ACH Transactions?
 
+[](#what-are-the-2-types-of-ach-transactions)
+
 Each ACH transaction involves 2 primary parties:
 
 All transactions fall into one of two categories, debit (“pull”) or credit (“push”). 
 
 ### Push (Credit)
+
+[](#push-credit)
 
 Determining if a transaction is a push or pull is always with respect to the
 receiving account. For example, if Tom, a customer of Bank A wants to send
@@ -83,6 +215,8 @@ employee signing up for payroll direct deposit. Whenever payday rolls around,
 the employer’s bank initiates a push/credit to the employee’s bank account.
 
 ### Pull (Debit)
+
+[](#pull-debit)
 
 Alternatively, if Tom want’s to request money from John, Tom’s bank can
 originate an ACH pull request from his account to John’s. The term “pull” is
@@ -109,24 +243,34 @@ there are 2 ways to achieve the same direction of money movement.
 
 ## Scenario
 
+[](#scenario)
+
 The desired result is to withdraw funds from an account at Bank A and
 deposit them into an account at Bank B
 
 ### Option 1 (This is how customers fund their accounts)
+
+[](#option-1-this-is-how-customers-fund-their-accounts)
 
 Bank B sends an ACH debit / pull transaction requesting funds from the
 account at Bank A:
 
 ### Option 2
 
+[](#option-2)
+
 Bank A sends an ACH credit / push transaction to send funds to the account
 at Bank B.
 
 ## How are accounts funded using ACH?
 
+[](#how-are-accounts-funded-using-ach)
+
 Once your customers have an account setup, they’ll need to fund their account
 by originating an ACH pull/debit transaction to be sent to their account at
 another institution. Synctera refers to this as an external account. 
+
+[external account](doc:%7Bexternal-accounts-guide%7D)
 
 If you have just created account B on the Synctera platform and you want to add
 funds to it from account A at another financial institution, its natural to
@@ -137,7 +281,11 @@ external account.
 
 ## How do I get started with sending/receiving ACH payments?
 
+[](#how-do-i-get-started-with-sendingreceiving-ach-payments)
+
 ### Step 1: Customer Creation
+
+[](#step-1-customer-creation)
 
 1.1 Create a Customer
 
@@ -145,12 +293,18 @@ Any individual wanting to transact on the Synctera platform must be stored as a
 customer in our system. Part of that includes completing the KYC process.
 See the Customer guide for details.
 
+[Customer guide](doc:%7Bcreate-a-personal-customer%7D)
+
 ### Step 2: Account Creation
+
+[](#step-2-account-creation)
 
 2.1 Create an Account
 
 In order to send and receive ACH payments you will need to create an account
 and associate it with your customer. Account Guide 
+
+[Account Guide](doc:%7Bcreate-accounts-guide%7D)
 
 2.2 Create an External Account
 
@@ -159,7 +313,11 @@ from an account at another institution. You’ll need to create an external
 account on the Synctera platform which serves as the internal representation of
 the account to be debited. External Account Guide
 
+[External Account Guide](doc:%7Bexternal-accounts-guide%7D)
+
 ### Step 3: Send/Receive an ACH
+
+[](#step-3-sendreceive-an-ach)
 
 3.1 Send an ACH request
 
@@ -167,6 +325,8 @@ Once the external account has been verified, ACH transactions (credits and
 debits) can be originated from your customer’s account. If you’re unsure what
 values to set in your API request take a look at the documentation
 here.
+
+[here](ref:%7Baddtransactionout%7D)
 
 3.2 Receive an ACH transaction
 
@@ -176,6 +336,8 @@ Synctera will process the incoming transaction and debit/credit the account
 accordingly.
 
 ## What happens after I send an ACH request?
+
+[](#what-happens-after-i-send-an-ach-request)
 
 After you send a request to originate an ACH transaction, the transaction is
 placed in a batch which, in turn, is placed in an ACH file to be sent out over
@@ -187,12 +349,16 @@ determine when funds are settled across accounts and institutions. It will also
 have a bearing on if and when an ACH transaction can be returned by the
 recipient.
 
+[processing schedule](https://www.frbservices.org/resources/resource-centers/same-day-ach/fedach-processing-schedule.html)
+
 The responsibilities and guidelines for participants in the ACH system are
 determined by the National Automated Clearing House Association, better known
 as NACHA. NACHA operates as the rule making body for all financial institutions
 wanting to use the ACH system.
 
 ## What do I need to do to receive an ACH transaction?
+
+[](#what-do-i-need-to-do-to-receive-an-ach-transaction)
 
 Nothing. Unless an incoming transaction needs to be returned (see
 Why would an ACH transaction be returned?),
@@ -201,7 +367,11 @@ transactions that we receive on behalf of you or your customers. Check your
 Synctera dashboard to view all ACH transaction that have been sent or received.
 Synctera also supports webhooks to notify you of all ACH transactions.
 
+[Why would an ACH transaction be returned?](#why-would-an-ach-transaction-be-returned)
+
 ## How long does it take to process an ACH transaction?
+
+[](#how-long-does-it-take-to-process-an-ach-transaction)
 
 The time it takes for the network to completely process an ACH transaction is
 dependent on a number of variables. The operating schedule of the federal
@@ -211,10 +381,18 @@ will settle. “Settle”. Integrators can influence the timing of an ACH
 transaction by setting the is_same_day field to true when posting a request
 to send a transaction.
 
+`is_same_day`
+
+`true`
+
 However, even when sending “same day” ACH transfers, there are a couple things
 to keep in mind:
 
+[processing schedule](https://www.frbservices.org/resources/resource-centers/same-day-ach/fedach-processing-schedule.html)
+
 ## Why would an ACH transaction be returned?
+
+[](#why-would-an-ach-transaction-be-returned)
 
 ACH transactions can be returned for a variety of reasons. “Insufficient
 funds”, “invalid account number”, “account closed” are all fair game but but
@@ -227,6 +405,8 @@ resolution via webhooks. In the event that a returned transaction requires your
 immediate attention, you will be able to take action through the Synctera
 dashboard. 
 
+[85 different codes](https://engineering.gusto.com/how-ach-works-a-developer-perspective-part-2/#appendix)
+
 The dashboard is also were you can generate returns from received ACH
 transactions. While most transaction failures such as insufficient funds,
 invalid account, etc., will result in automatic returns, you may occasionally
@@ -234,6 +414,8 @@ identify transactions that were not authorized and choose to manually initiate
 a return.
 
 ## ACH same day vs non-same day cut-off times
+
+[](#ach-same-day-vs-non-same-day-cut-off-times)
 
 ACH (Debit/Credit) - External bank to Synctera account
 
@@ -245,9 +427,82 @@ ACH Returns - External bank to Synctera account
 
 ## Example: Funding a customer account
 
+[](#example-funding-a-customer-account)
+
 To fund a customer account from an external bank account the Synctera API:
+
+`
+curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H "Content-Type: application/json" \
+  https://api.synctera.com/v0/ach \
+  --data-binary '
+    {
+      "risk": {
+        "client_ip": "127.0.0.1"
+      },
+      "customer_id": "{CUSTOMER_ID}",
+      "amount": 100,
+      "currency": "USD",
+      "receiving_account_id": "{EXTERNAL_ACCOUNT_ID}", 
+      "dc_sign": "debit", 
+      "originating_account_id": "{ACCOUNT_ID}", 
+      "reference_info": "Synctera test",
+      "memo": "Synctera test"
+    }'
+
+`
 
 It is important to note a few things in this example:
 
+`receiving_account_id`
+
+[External Account](doc:%7Bexternal-accounts-guide%7D)
+
+`originating_account_id`
+
+[Account](doc:%7Bcreate-accounts-guide%7D)
+
+`dc_sign`
+
+`debit`
+
+`amount`
+
+`USD`
+
+`customer_id`
+
+`originating_account_id`
+
 Updated about 1 year ago 
+
+[Table of Contents](#)
+
+[Overview](#overview)
+
+[What is an ACH Transaction?](#what-is-an-ach-transaction)
+
+[How does Synctera support ACH?](#how-does-synctera-support-ach)
+
+[What are the 2 types of ACH Transactions?](#what-are-the-2-types-of-ach-transactions)
+
+[Scenario](#scenario)
+
+[How are accounts funded using ACH?](#how-are-accounts-funded-using-ach)
+
+[How do I get started with sending/receiving ACH payments?](#how-do-i-get-started-with-sendingreceiving-ach-payments)
+
+[What happens after I send an ACH request?](#what-happens-after-i-send-an-ach-request)
+
+[What do I need to do to receive an ACH transaction?](#what-do-i-need-to-do-to-receive-an-ach-transaction)
+
+[How long does it take to process an ACH transaction?](#how-long-does-it-take-to-process-an-ach-transaction)
+
+[Why would an ACH transaction be returned?](#why-would-an-ach-transaction-be-returned)
+
+[ACH same day vs non-same day cut-off times](#ach-same-day-vs-non-same-day-cut-off-times)
+
+[Example: Funding a customer account](#example-funding-a-customer-account)
 

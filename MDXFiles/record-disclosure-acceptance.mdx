@@ -1,73 +1,334 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
+[Waitlist](/docs/viral-loops-waitlist)
+
 # Record Disclosure Acceptance
+
+[Suggest Edits](/edit/record-disclosure-acceptance)
 
 An important requirement when onboarding new customers is telling them about laws and regulations that affect them: that is, you must disclose that regulatory information.
 
 ## Disclosures and disclosure documents
 
+[](#disclosures-and-disclosure-documents)
+
 Banks and regulators need to verify that the required disclosures have been made, so Synctera keeps a record of every disclosure you make to every customer. Our API thus supports the concept of a disclosure record, which we usually just call a disclosure.
 
 The main fields of a disclosure are:
 
+`person_id`
+
+`business_id`
+
+`event_type`
+
+`type`
+
+`version`
+
 Together, type and version uniquely specify a disclosure document. These are represented in Synctera's database, but not currently available via our API. You should have a default set of disclosure documents already available:
 
+`type`
+
+`version`
+
+`REG_DD`
+
+`KYC_DATA_COLLECTION`
+
+`REG_E`
+
+`REG_CC`
+
+`E_SIGN`
+
+`PRIVACY_NOTICE`
+
+`TERMS_AND_CONDITIONS`
+
 You may not need every disclosure type: Synctera's compliance team can help you if need guidance here. See the API reference for more information about disclosure types.
+
+[API reference](/reference/createdisclosure)
 
 One more thing: Synctera does not currently store actual disclosure documents. Our disclosure documents are just records in a database that refer to documents that you must write and disclose to your customers. A future version of this API will support storage of the documents themselves.
 
 ## Creating a disclosure record
 
+[](#creating-a-disclosure-record)
+
 After you disclose a piece of information to a customer, typically by presenting them with a document that they must read and accept, you need to create a disclosure by calling POST /v0/disclosures. The request body is a disclosure record.
+
+`POST /v0/disclosures`
 
 ### Personal customers
 
+[](#personal-customers)
+
 To create a disclosure record for a personal customer:
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/disclosures \
+  --data-binary '
+  {
+    "person_id": "e72f1f20-7a95-4b19-aafc-c73f868183e7",
+    "type": "REG_DD",
+    "version": "1.0",
+    "event_type": "ACKNOWLEDGED",
+    "disclosure_date": "2022-03-17T17:04:34Z"
+  }'
+`
 
 ### Business customers
 
+[](#business-customers)
+
 To create a disclosure record for a business customer, specify business_id instead of person_id:
+
+`business_id`
+
+`person_id`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/disclosures \
+  --data-binary '
+  {
+    "business_id": "d894d64b-d513-42f2-9b3a-2cd5989b6ef8",
+    "type": "REG_E",
+    "version": "1.1",
+    "event_type": "DISPLAYED",
+    "disclosure_date": "2022-04-03T10:43:12Z"
+  }'
+`
 
 ### What it means
 
+[](#what-it-means)
+
 Together, type and version identify the disclosure document. If this disclosure document does not already exist in Synctera's system, you will get an error. See above for the list of available disclosure documents.
+
+`type`
+
+`version`
 
 The type and event_type fields are fully described in the API specification.
 
+`type`
+
+`event_type`
+
+[the API specification](/reference/createdisclosure)
+
 ### Response
+
+[](#response)
 
 On success, POST /v0/disclosures returns a 201 Created response with the new disclosure record (including a unique ID). For example, the above request to create a disclosure for a personal customer might return
 
+`POST /v0/disclosures`
+
+`{
+  "id": "08a27c6b-b55f-42c3-8805-f5ad442b0312",
+  "creation_time": "2022-04-05T23:29:42.436824Z",
+  "last_updated_time": "2022-04-05T23:29:42.436824Z",
+  "person_id": "e72f1f20-7a95-4b19-aafc-c73f868183e7",
+  "type": "REG_DD",
+  "version": "1.0",
+  "event_type": "ACKNOWLEDGED",
+  "disclosure_date": "2022-03-17T17:04:34Z"
+}
+`
+
 ## Retrieval
 
+[](#retrieval)
+
 After creating disclosures, you can list them or retrieve individual records. Get a paginated list all disclosure records across your customer base:
+
+`GET /v0/disclosures
+`
 
 You can filter by person_id or business_id to limit the result
 to a single customer:
 
+`person_id`
+
+`business_id`
+
+`GET /v0/disclosures?person_id={person_id}
+
+GET /v0/disclosures?business_id={business_id}
+`
+
 And you can fetch a single disclosure record by ID:
+
+`GET /v0/disclosures/{disclosure_id}
+`
 
 API reference documentation:
 
+[list disclosures](/reference/listdisclosures)
+
+[get disclosure](/reference/getdisclosure)
+
 Updated 10 months ago 
+
+[Table of Contents](#)
+
+[Disclosures and disclosure documents](#disclosures-and-disclosure-documents)
+
+[Creating a disclosure record](#creating-a-disclosure-record)
+
+[Personal customers](#personal-customers)
+
+[Business customers](#business-customers)
+
+[What it means](#what-it-means)
+
+[Response](#response)
+
+[Retrieval](#retrieval)
 

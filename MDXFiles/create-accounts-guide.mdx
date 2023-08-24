@@ -1,82 +1,353 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
+[Waitlist](/docs/viral-loops-waitlist)
+
 # Accounts
+
+[Suggest Edits](/edit/create-accounts-guide)
 
 In the Synctera platform, an account represents a bank account of your business or personal customer. This guide explains how to create and use accounts.
 
 ## Types of Accounts
 
+[](#types-of-accounts)
+
 There are three types of accounts. SAVING and CHECKING are Demand Deposit Accounts (DDA) and represent funds accrued by the account holder. A LINE_OF_CREDIT account represents credit extended to the account holder.
+
+`SAVING`
+
+`CHECKING`
+
+`LINE_OF_CREDIT`
 
 In addition to the three types of customer accounts, there are also:
 
+[Internal Account](/reference/listinternalaccounts)
+
+[External Accounts](/docs/external-accounts-guide)
+
 ## Creating an Account
+
+[](#creating-an-account)
 
 The following curl example will walk you through the creation of an account and getting it ready to use with other features such Cards and ACH. This assumes you have set up baseurl and apikey environment variables. See Base URL and Authentication for instructions.
 
+`curl`
+
+`baseurl`
+
+`apikey`
+
+[Base URL](/reference/environments)
+
+[Authentication](/reference/authentication)
+
 If you don't already have a business or personal customer, create one now. See Create a Personal Customer guide. Replace the {CUSTOMER_ID} with the customer's id.
+
+[Create a Personal Customer](/docs/create-a-personal-customer)
+
+`{CUSTOMER_ID}`
+
+`id`
 
 Call POST /v0/accounts to create the account, linking to the existing customer.
 
+[POST /v0/accounts](/reference/createaccount)
+
+`curl \
+  -X POST \
+  $baseurl/v0/accounts \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+    {
+      "account_type": "SAVING",
+      "relationships": [
+        {
+          "relationship_type": "PRIMARY_ACCOUNT_HOLDER",
+          "customer_id": "{CUSTOMER_ID}"
+        }
+      ]
+    }'
+`
+
 This will return a response with the created account, e.g.:
 
+`{
+  "access_status": "ACTIVE",
+  "access_status_last_updated_time": "2022-10-06T14:03:54.962704Z",
+  "account_number": "790954299503",
+  "account_number_masked": "790*****9503",
+  "account_type": "SAVING",
+  "balances": [
+    {
+      "balance": 0,
+      "type": "ACCOUNT_BALANCE"
+    },
+    {
+      "balance": 0,
+      "type": "AVAILABLE_BALANCE"
+    }
+  ],
+  "bank_routing": "112233445",
+  "creation_time": "2022-10-06T14:03:54.963162Z",
+  "currency": "USD",
+  "customer_ids": [
+    "110acc45-0b53-4d21-b624-29f88879c6a0"
+  ],
+  "customer_type": "PERSONAL",
+  "id": "ce439ca4-8eb6-45e6-955c-46441af33770",
+  "is_account_pool": false,
+  "is_ach_enabled": false,
+  "is_card_enabled": false,
+  "is_p2p_enabled": false,
+  "is_wire_enabled": false,
+  "last_updated_time": "2022-10-06T14:03:54.963162Z",
+  "status": "ACTIVE_OR_DISBURSED"
+}
+`
+
 ### Account Relationships
+
+[](#account-relationships)
 
 A customer be related to an account in different ways:
 
 You can add/update/delete the relationships using the /v0/accounts/relationships` endpoints.
 
+[/v0/accounts/relationships](/reference/createaccountrelationship)
+
  The relationships should use the customer_id attribute if the account holder is a personal customer, and business_id if a business customer.
 
+`customer_id`
+
+`business_id`
+
 ### Status
+
+[](#status)
 
 The account object contains two status attributes:
 
 access_status: can be set to FROZEN to temporarily freeze an account.
 
+`access_status`
+
+`FROZEN`
+
 status represents the lifecycle of the account. A FinTech can progress the account from ACTIVE_OR_DISBURSED to CLOSED. The Synctera platform also updates this attribute, e.g. setting it to RESTRICTED when the account holder has not been verified. Note that authorized signers do not need to be verified.
+
+`status`
+
+`ACTIVE_OR_DISBURSED`
+
+`CLOSED`
+
+`RESTRICTED`
 
 To participate in money movement transactions, issue cards, etc, the account must have an access_status of ACTIVE and a status of ACTIVE_OR_DISBURSED.
 
+`access_status`
+
+`ACTIVE`
+
+`status`
+
+`ACTIVE_OR_DISBURSED`
+
 ### Balance Floor and Ceiling
+
+[](#balance-floor-and-ceiling)
 
 The optional balance_floor and balance_ceiling attributes control what happens when the account balance goes below or above a set level. This can be used to implement sweep accounts. Please see the Balance Floor and Ceiling guide.
 
+`balance_floor`
+
+`balance_ceiling`
+
+[Balance Floor and Ceiling](/docs/balance-floor-ceiling)
+
 ## Balances
+
+[](#balances)
 
 Accounts have two types of balances: ACCOUNT_BALANCE and AVAILABLE_BALANCE.
 
+`ACCOUNT_BALANCE`
+
+`AVAILABLE_BALANCE`
+
 For SAVING and CHECKING accounts:
+
+`SAVING`
+
+`CHECKING`
+
+`ACCOUNT_BALANCE`
+
+`AVAILABLE_BALANCE`
 
 For LINE_OF_CREDIT accounts:
 
+`LINE_OF_CREDIT`
+
+`ACCOUNT_BALANCE`
+
+`AVAILABLE_BALANCE`
+
+`ACCOUNT_BALANCE`
+
 ## Account Products and Templates
+
+[](#account-products-and-templates)
 
 Synctera supports the concepts of Account Products and Account Templates to so you don't need to specify all the details when creating similar accounts.
 
 ### Account Products
 
+[](#account-products)
+
 An account product is a set of attributes that define how interest is calculated for accounts. The account product resource acts as a profile that can apply to multiple accounts. Changes to the account product affects all accounts that reference it. Only interest-bearing accounts need to reference an account product. Details about interest calculation can be found here in the Interest Guide
+
+[Interest Guide](/docs/interest-guide)
 
 Using an account product is optional. If no account product is specified when creating the account, no interest will be calculated.
 
@@ -88,27 +359,201 @@ The v0 API spec also includes a preview of fee product types. This product type 
 
 To create an interest product_type, use POST /v0/accounts/products. Specify how you want the interest calculated (e.g. COMPOUNDED_MONTHLY), accured (e.g. DAILY) and paid (e.g. MONTHLY). You can specify that the interest rate varies over time by including multiple periods with different rates. The rate is specified using basis points (bps), i.e. 125 represents 1.25%.
 
+[POST /v0/accounts/products](/reference/createaccountresourceproduct)
+
+`COMPOUNDED_MONTHLY`
+
+`DAILY`
+
+`MONTHLY`
+
+`125`
+
+`curl \
+  -X POST \
+  $baseurl/v0/accounts/products \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+    {
+      "product_type": "INTEREST",
+      "description": "Sample interest request body",
+      "calculation_method": "COMPOUNDED_MONTHLY",
+      "accrual_payout_schedule": "MONTHLY",
+      "rates": [
+        {
+          "valid_from": "2021-06-15",
+          "rate": 100,
+          "accrual_period": "DAILY"
+        },
+        {
+          "valid_from": "2021-06-01",
+          "valid_to": "2021-06-15",
+          "rate": 100,
+          "accrual_period": "DAILY"
+        }
+      ]
+    }'
+`
+
 This will return a response with the created account product, e.g.:
+
+`{
+  "accrual_payout_schedule": "MONTHLY",
+  "calculation_method": "COMPOUNDED_MONTHLY",
+  "description": "Sample interest request body",
+  "id": "52c80838-90b3-4afb-b3ff-98a97b5df96b",
+  "product_type": "INTEREST",
+  "rates": [
+    {
+      "accrual_period": "DAILY",
+      "rate": 100,
+      "valid_from": "2021-06-01",
+      "valid_to": "2021-06-15"
+    },
+    {
+      "accrual_period": "DAILY",
+      "rate": 100,
+      "valid_from": "2021-06-15"
+    }
+  ]
+}
+
+`
 
 Note the returned id attribute. This is used for when creating an account template.
 
+`id`
+
 ### Account Templates
+
+[](#account-templates)
 
 Account templates contain predefined values for creating an account. When creating an account, the Accounts API copies all the template values to the account resource. Once you create an account, the API no longer references the template used to create it, and updates won’t affect existing accounts. To create an account template, call POST /v0/accounts/templates.
 
+[POST /v0/accounts/templates](/reference/createaccounttemplate)
+
 All account creation uses an account template. As a convenience, the account_template_id does not need to be specified if there is a single account template that matches the requested account's type. As part of initial the FinTech setup, a simple account template for each account type is automatically created. 
+
+`account_template_id`
 
 You can override template values in the POST /v0/accounts request when creating an account. However, the account type in the template and the POST request must agree.
 
+`POST /v0/accounts`
+
+`POST`
+
 To create an account template, specify the type of account (CHECKING, SAVING, LINE_OF_CREDIT or CHARGE_SECURED), and the attributes for that type. The is_enabled attribute must be set to true to use this template when creating an account. This example will use a SAVING account.
+
+`CHECKING`
+
+`SAVING`
+
+`LINE_OF_CREDIT`
+
+`CHARGE_SECURED`
+
+`is_enabled`
+
+`true`
+
+`SAVING`
 
 Note the is_ach_enabled, is_card_enabled, is_external_card_enabled, is_p2p_enabled and is_wire_enabled attributes. Synctera will enforce these controls as money movement requests could be generated both via the API and by your ops team on apps.synctera.com.
 
+`is_ach_enabled`
+
+`is_card_enabled`
+
+`is_external_card_enabled`
+
+`is_p2p_enabled`
+
+`is_wire_enabled`
+
+`curl \
+  -X POST \
+  $baseurl/v0/accounts/templates \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+    {
+      "name": "sample template",
+      "description": "Sample account template",
+      "is_enabled": true,
+      "template": {
+        "account_type": "SAVING",
+        "bank_country": "US",
+        "currency": "USD",
+        "is_ach_enabled": true,
+        "is_card_enabled": true,
+        "is_p2p_enabled": true,
+        "interest_product_id": "{ACCOUNT_PRODUCT_ID}",
+        "overdraft_limit": 0
+      }
+    }'
+`
+
 This will return a response with the created account template, e.g.:
+
+`{
+  "description": "Sample account template",
+  "id": "{ACCOUNT_TEMPLATE_ID}",
+  "is_enabled": true,
+  "name": "sample template",
+  "template": {
+    "account_type": "SAVING",
+    "bank_country": "US",
+    "currency": "USD",
+    "interest_product_id": "{ACCOUNT_PRODUCT_ID}",
+    "is_ach_enabled": true,
+    "is_card_enabled": true,
+    "is_p2p_enabled": true,
+    "overdraft_limit": 0
+  }
+}
+
+`
 
 Note the returned id attribute. This is used for when creating an account.
 
+`id`
+
 Additional details:
 
+`interest_product_id`
+
+`spending_limits`
+
+`spend_control_ids`
+
+[spend controls guide](/reference/spend-controls-guide)
+
+`balance_floor`
+
+`balance_ceiling`
+
+[Balance Floor and Ceiling](/docs/balance-floor-ceiling)
+
 Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Types of Accounts](#types-of-accounts)
+
+[Creating an Account](#creating-an-account)
+
+[Account Relationships](#account-relationships)
+
+[Status](#status)
+
+[Balance Floor and Ceiling](#balance-floor-and-ceiling)
+
+[Balances](#balances)
+
+[Account Products and Templates](#account-products-and-templates)
+
+[Account Products](#account-products)
+
+[Account Templates](#account-templates)
 

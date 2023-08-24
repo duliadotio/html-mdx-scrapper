@@ -1,26 +1,148 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
+[Waitlist](/docs/viral-loops-waitlist)
+
 # KYC/KYB Verification
+
+[Suggest Edits](/edit/kyc-kyb-verification)
 
 US banking regulations require banks and other financial institutions to collect and verify information about the customers they do business with. These regulations require the establishment of a Customer Identification Program (CIP), commonly referred to as: know your customer (KYC) and know your business (KYB). These programs require:
 
@@ -32,59 +154,289 @@ Synctera's verification solution provides identity and watchlist monitoring for 
 
 See the API reference for more information on managing customer verifications.
 
+[API reference](/reference/kyckyb-verifications)
+
 ### Prerequisites
+
+[](#prerequisites)
 
 This guide assumes that you have:
 
+[personal customer](/reference/createperson)
+
+[business customer](/reference/createbusiness)
+
+[disclosure](/reference/disclosures)
+
 ## Verifications and the verification object
+
+[](#verifications-and-the-verification-object)
 
 Synctera represents KYC and KYB verifications using the verification object. A verification object represents a category of checks that were performed on a customer. The example below shows an IDENTITY verification for a personal customer.
 
+`verification`
+
+`IDENTITY`
+
+`{
+  "id": "05e2ddf3-d172-450e-9cf3-7a34f76a414f",
+  "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+  "verification_type": "IDENTITY",
+  "result": "ACCEPTED",
+  "details": [
+    {
+      "description": "Full name, address, and SSN/ITIN can be resolved to the individual",
+      "label": "Customer Identification Program (CIP)",
+      "result": "PASS"
+    },
+    {
+      "description": "Address can be resolved to the individual",
+      "label": "Address",
+      "result": "PASS"
+    },
+    {
+      "description": "Email address is more than 2 years old",
+      "label": "Email",
+      "result": "PASS"
+    }
+  ],
+  "verification_time": "2022-03-14T18:34:59.91272Z",
+  "creation_time": "2022-03-14T18:34:59.918188Z",
+  "last_updated_time": "2022-03-14T18:34:59.918188Z"
+}
+`
+
 An IDENTITY verification encompasses all of the the individual checks that were done pertaining to the customer's identity. If we take a look at the details array we see the individual checks done in verifying the customer's identity. In this case we see the name, address, SSN, and email were all verified by Synctera's KYC provider.
+
+`IDENTITY`
+
+`details`
 
 Similarly, watchlist checks are represented by the WATCHLIST verification type.
 
+`WATCHLIST`
+
+`{
+  "id": "a24a16a2-4711-4486-8049-787462c61ffc",
+  "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+  "verification_type": "WATCHLIST",
+  "result": "ACCEPTED",
+  "details": [
+    {
+      "description": "Global Watchlist sources selected are not correlated with the input identifiers",
+      "label": "Watchlist",
+      "result": "PASS"
+    }
+  ],
+  "verification_time": "2022-03-14T18:34:59.91272Z",
+  "creation_time": "2022-03-14T18:34:59.918188Z",
+  "last_updated_time": "2022-03-14T18:34:59.918188Z"
+}
+`
+
 See the API reference for more information about customer verifications.
+
+[API reference](/reference/verify)
 
 ## Verification status and verifying customers
 
+[](#verification-status-and-verifying-customers)
+
 A customer's verification status is the outcome of all verifications done on the customer. All new customers are created with a verification status of UNVERIFIED. The verification status field is available on the person and business resources (see the API reference for persons and businesses).
+
+`UNVERIFIED`
+
+[persons](/reference/createperson)
+
+[businesses](/reference/createbusiness)
 
 Once all of the required information has been collected, you can initiate a verification request using the verify endpoint and the customer's ID.
 
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "customer_ip_address": "184.233.47.237",
+    "customer_consent": true
+  }'
+`
+
 To verify a business customer, specify business_id instead of person_id:
+
+`business_id`
+
+`person_id`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "business_id": "eaa9807f-8cda-4308-8244-90c11b1b43a5",
+    "customer_ip_address": "184.233.47.237",
+    "customer_consent": true
+  }'
+`
 
 A successful verification request will result in the customer being moved from UNVERIFIED into one of the following statuses:
 
+`UNVERIFIED`
+
+`PENDING`
+
+`PROVISIONAL`
+
+`ACCEPTED`
+
+`REVIEW`
+
+`VENDOR_ERROR`
+
+`REJECTED`
+
 Any time a customer is moved into a verification status other than ACCEPTED, a case will be created in the Synctera Case Manager so that their profile can be manually reviewed by a compliance officer. As previously mentioned, a customer cannot move money unless their verification status is ACCEPTED.
+
+`ACCEPTED`
+
+[Synctera Case Manager](https://learn.synctera.com/docs/en/kyc-cases-fintechs)
+
+`ACCEPTED`
 
 Suggested flow for customer verification:
 
+`ACCEPTED`
+
+[create an account](/docs/create-accounts-guide)
+
+`REVIEW`
+
+`REJECTED`
+
+`ACCEPTED`
+
+`REJECTED`
+
+`VENDOR_ERROR`
+
+`REVIEW`
+
 If the user is not initially accepted, we recommend the following:
+
+`POST /v0/verifications/verify`
+
+[document verification](/docs/document-verification)
 
 📘
 
 There are two statuses that fall outside the typical integration path:
 
+`PENDING`
+
+`BUSINESS.VERIFICATION_OUTCOME.UPDATED`
+
+`PROVISIONAL`
+
 ## Example: Create a personal customer that can open an account
+
+[](#example-create-a-personal-customer-that-can-open-an-account)
 
 ### Integration Steps
 
+[](#integration-steps)
+
 ### 1. Create a personal customer
+
+[](#1-create-a-personal-customer)
 
 First we start by creating a record for our new customer. We'll use the POST /persons endpoint to create a person.
 
+`POST /persons`
+
+[create a person](/reference/createperson)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Christopher",
+    "middle_name": "James",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "456-78-9999",
+    "legal_address": {
+      "address_line_1": "123 Main St.",
+      "city": "Beverly Hills",
+      "state": "CA",
+      "postal_code": "90210",
+      "country_code": "US"
+    },
+    "is_customer": true,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
 For more information about creating and managing people consult the person guide.
+
+[person guide](/docs/create-a-personal-customer)
 
 ### 2. Create a KYC data collection disclosure
 
+[](#2-create-a-kyc-data-collection-disclosure)
+
 Once we have our created customer, you will need to display a disclosure to your customer that you are collecting personal data that will be shared with a third-party for the purpose of verifying their identity. For this we use the disclosures resource.
+
+[disclosures resource](/reference/createdisclosure)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/disclosures \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "type": "KYC_DATA_COLLECTION",
+    "version": "1.0",
+    "event_type": "ACKNOWLEDGED",
+    "disclosure_date": "2022-03-17T17:04:34Z"
+  }'
+`
 
 For more information about creating and managing disclosures consult the disclosure guide.
 
+[disclosure guide](/docs/record-disclosure-acceptance)
+
 ### 3. Verify the customer
 
+[](#3-verify-the-customer)
+
 Now that we have a customer, and consent to collect and share their data we can verify this customer.
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "customer_ip_address": "184.233.47.237",
+    "customer_consent": true
+  }'
+`
 
 📘
 
@@ -94,49 +446,235 @@ Response
 
 The response will contain:
 
+`verification_status`
+
+`{
+  "verification_status": "ACCEPTED",
+  "verifications": [
+    {
+      "id": "05e2ddf3-d172-450e-9cf3-7a34f76a414f",
+      "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+      "verification_type": "IDENTITY",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "Full name, address, and SSN/ITIN can be resolved to the individual",
+          "label": "Customer Identification Program (CIP)",
+          "result": "PASS"
+        },
+        {
+          "description": "Address can be resolved to the individual",
+          "label": "Address",
+          "result": "PASS"
+        },
+        {
+          "description": "Email address is more than 2 years old",
+          "label": "Email",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    },
+    {
+      "id": "a24a16a2-4711-4486-8049-787462c61ffc",
+      "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+      "verification_type": "WATCHLIST",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "Global Watchlist sources selected are not correlated with the input identifiers",
+          "label": "Watchlist",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    }
+  ]
+}
+`
+
 See the API reference for more information about customer verifications.
+
+[API reference](/reference/verify)
 
 Great! We have successfully created and verified a personal customer. You can now visit our account creation guide.
 
+[account creation guide](/docs/create-accounts-guide)
+
 ## Example: Create a business customer that can open an account
+
+[](#example-create-a-business-customer-that-can-open-an-account)
 
 Before we create an account, we must first complete our due diligence on the business. In this guide, we'll focus on modeling the example flow for the example corporation below, "Your New Business".
 
 Example corporation
 
+`%%{init: {"fontFamily": "sans-serif"}}%%
+graph TD
+    A[Beneficial Owner] -->B(Your New Business)
+`
+
 ### Integration Steps
+
+[](#integration-steps-1)
 
 ### 1. Create a business customer: Your New Business
 
+[](#1-create-a-business-customer-your-new-business)
+
 First we start by creating a record for our new business customer. We'll use the POST /businesses endpoint to create a business.
+
+`POST /businesses`
+
+[create a business](/reference/createbusiness)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/businesses \
+  --data-binary '
+  {
+    "entity_name": "Your New Business",
+    "website": "https://example.com",
+    "phone_number": "+16045551212",
+    "legal_address": {
+      "address_line_1": "123 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "structure": "CORPORATION",
+    "formation_date": "2000-01-01",
+    "formation_state": "DE",
+    "ein": "99-9999999",
+    "is_customer": true,
+    "status": "ACTIVE"
+  }'
+`
 
 ### 2. Create a beneficial owner
 
+[](#2-create-a-beneficial-owner)
+
 Next, we need to represent the beneficial owner of the business. To do this, we'll create a new person using the POST /persons endpoint.
+
+[beneficial owner](https://en.wikipedia.org/wiki/Beneficial_ownership)
+
+[create a new person](/reference/createperson)
+
+`POST /persons`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Christopher",
+    "middle_name": "James",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "456-78-9999",
+    "legal_address": {
+      "address_line_1": "456 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "is_customer": false,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
 
 The response body to this request will contain the id of the newly created person. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the BENEFICIAL_OWNER_OF relationship type.
 
+`id`
+
+`id`
+
+[create a relationship](/reference/createrelationship)
+
+`POST /relationships`
+
+`BENEFICIAL_OWNER_OF`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/relationships \
+  --data-binary '
+  {
+    "from_person_id": &lt;ID of beneficial owner&gt;,
+    "relationship_type": "BENEFICIAL_OWNER_OF",
+    "to_business_id": &lt;ID of Your New Business&gt;,
+    "additional_data": {
+      "percent_ownership": 50
+    }
+  }'
+`
+
 ### 3. Create all necessary disclosures
+
+[](#3-create-all-necessary-disclosures)
 
 Prior to verifying our business and related owners we must create KYC data collection disclosures for each of the owners.
 
 For more information about creating and managing disclosures, see the disclosure guide.
 
+[disclosure guide](/docs/record-disclosure-acceptance)
+
 ### 4. Verify the business
+
+[](#4-verify-the-business)
 
 At this point we have collected all of the required information to verify our original business and all of the related officers and owners.
 
 Verifying our business and all of the related entities is as easy as making a request to POST /v0/verifications/verify that specifies the business to verify:
 
+`POST /v0/verifications/verify`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "business_id": &lt;ID of Your New Business&gt;,
+    "customer_consent": true
+  }'
+`
+
 📘
 
 Verifying a business customer using the POST /verifications/verify endpoint initiates the KYC and KYB process for all entities: the original business and the beneficial owner.
 
+`POST /verifications/verify`
+
 See the API reference for more information about business verifications.
+
+[API reference](/reference/verify)
 
 Great! We have successfully created and verified a business customer. You can now visit our account creation guide.
 
+[account creation guide](/docs/create-accounts-guide)
+
 ## Example: Create a business customer with a more complex ownership structure
+
+[](#example-create-a-business-customer-with-a-more-complex-ownership-structure)
 
 ​To satisfy regulatory requirements, we must collect business registration information and the ownership structure including: beneficial owners, holding corporations, officers, and directors of the business.
 
@@ -144,57 +682,399 @@ Before we create an account, we must first complete our due diligence on the bus
 
 Example corporation
 
+`%%{init: {"fontFamily": "sans-serif"}}%%
+graph TD
+    D[Owner] --> C
+    A[Officer] -->B(Holding Company)
+    B --> C(Your New Business)
+`
+
 ### Integration Steps
+
+[](#integration-steps-2)
 
 ### 1. Create a business customer: Your New Business
 
+[](#1-create-a-business-customer-your-new-business-1)
+
 First we start by creating a record for our new business customer. We'll use the POST /businesses endpoint to create a business.
+
+`POST /businesses`
+
+[create a business](/reference/createbusiness)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/businesses \
+  --data-binary '
+  {
+    "entity_name": "Your New Business",
+    "website": "https://example.com",
+    "phone_number": "+16045551212",
+    "legal_address": {
+      "address_line_1": "123 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "structure": "CORPORATION",
+    "formation_date": "2000-01-01",
+    "formation_state": "DE",
+    "ein": "99-9999999",
+    "is_customer": true,
+    "status": "ACTIVE"
+  }'
+`
 
 📘
 
 We indicate that this business is intended to be a customer by setting the "is_customer" parameter to true.
 
+`"is_customer"`
+
+`true`
+
 For more information about creating and managing businesses consult the business guide.
+
+[business guide](/docs/create-a-business)
 
 ### 2. Create a beneficial owner
 
+[](#2-create-a-beneficial-owner-1)
+
 Next, we need to represent the beneficial owner of the business. To do this, we'll create a new person using the POST /persons endpoint.
+
+[beneficial owner](https://en.wikipedia.org/wiki/Beneficial_ownership)
+
+[create a new person](/reference/createperson)
+
+`POST /persons`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Christopher",
+    "middle_name": "James",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "456-78-9999",
+    "legal_address": {
+      "address_line_1": "456 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "is_customer": false,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
 
 The response body to this request will contain the id of the newly created person. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the BENEFICIAL_OWNER_OF relationship type.
 
+`id`
+
+`id`
+
+[create a relationship](/reference/createrelationship)
+
+`POST /relationships`
+
+`BENEFICIAL_OWNER_OF`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/relationships \
+  --data-binary '
+  {
+    "from_person_id": &lt;ID of beneficial owner&gt;,
+    "relationship_type": "BENEFICIAL_OWNER_OF",
+    "to_business_id": &lt;ID of Your New Business&gt;,
+    "additional_data": {
+      "percent_ownership": 50
+    }
+  }'
+`
+
 ### 3. Create Holding Company (another business, but not a customer)
+
+[](#3-create-holding-company-another-business-but-not-a-customer)
 
 To represent the ownership structure of a business partially owned by another business, create another business using the POST /businesses endpoint.
 
+`POST /businesses`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/businesses \
+  --data-binary '
+  {
+    "entity_name": "Holding Company",
+    "website": "https://example.com",
+    "phone_number": "+16045551212",
+    "legal_address": {
+      "address_line_1": "789 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "structure": "CORPORATION",
+    "formation_date": "2000-01-01",
+    "formation_state": "DE",
+    "ein": "99-9999999",
+    "is_customer": false,
+    "status": "ACTIVE"
+  }'
+`
+
 Next, you'll create an OWNER_OF relationship which represents one business owning another business.
+
+`OWNER_OF`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/relationships \
+  --data-binary '
+  {
+    "from_business_id": &lt;ID of Holding Company&gt;,
+    "relationship_type": "OWNER_OF",
+    "to_business_id": &lt;ID of Your New Business&gt;,
+    "additional_data": {
+      "percent_ownership": 50
+    }
+  }'
+`
 
 ### 4. Create an officer of Holding Company
 
+[](#4-create-an-officer-of-holding-company)
+
 Because Holding Company owns a controlling portion of Your New Business, we must also model the relationship of the officers. Once again, we'll create a person using /persons with the information of the officer.
+
+`/persons`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Carol",
+    "middle_name": "Ann",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "789-45-9999",
+    "legal_address": {
+      "address_line_1": "456 Main St.",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94105",
+      "country_code": "US"
+    },
+    "is_customer": false,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
 
 The response body to this request will contain the id of the newly created officer. Use this id to create a relationship between the person and the original business by calling the POST /relationships endpoint using the MANAGING_PERSON_OF relationship type.
 
+`id`
+
+`id`
+
+[create a relationship](/reference/createrelationship)
+
+`POST /relationships`
+
+`MANAGING_PERSON_OF`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/relationships \
+  --data-binary '
+  {
+    "from_person_id": {ID of the officer},
+    "relationship_type": "MANAGING_PERSON_OF",
+    "to_business_id": {ID of Holding Company};,
+    "additional_data": {
+      "title": "OFFICER"
+    }
+  }'
+`
+
 ### 5. Create all necessary disclosures
+
+[](#5-create-all-necessary-disclosures)
 
 Prior to verifying our business and related owners we must create KYC data collection disclosures for each of the owners.
 
 For more information about creating and managing disclosures, see the disclosure guide.
 
+[disclosure guide](/docs/record-disclosure-acceptance)
+
 ### 6. Verify the business
+
+[](#6-verify-the-business)
 
 At this point we have collected all of the required information to verify our original business and all of the related officers and owners.
 
 Verifying our business and all of the related entities is as easy as making a request to POST /v0/verifications/verify that specifies the business to verify:
 
+`POST /v0/verifications/verify`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "business_id": &lt;ID of Your New Business&gt;,
+    "customer_consent": true
+  }'
+`
+
 📘
 
 Verifying a business customer using the POST /verifications/verify endpoint initiates the KYC and KYB process for all entities: the original business, holding company, officers, and the beneficial owners.
+
+`POST /verifications/verify`
 
 Response
 
 The response will contain:
 
+`verification_status`
+
+`RELATED_ENTITIES`
+
+`{
+  "verification_status": "ACCEPTED",
+  "verifications": [
+    {
+      "id": "598dd41e-733c-4fee-b8e7-a71de41881ef",
+      "business_id": "eaa9807f-8cda-4308-8244-90c11b1b43a5",
+      "verification_type": "RELATED_ENTITIES",
+      "result": "ACCEPTED",
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    },
+    {
+      "id": "05e2ddf3-d172-450e-9cf3-7a34f76a414f",
+      "business_id": "eaa9807f-8cda-4308-8244-90c11b1b43a5",
+      "verification_type": "IDENTITY",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "Match identified to the submitted Business Name",
+          "label": "Business Name",
+          "result": "PASS"
+        },
+        {
+          "description": "Match identified to the submitted Office Address",
+          "label": "Office Address",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    },
+    {
+      "id": "a24a16a2-4711-4486-8049-787462c61ffc",
+      "business_id": "eaa9807f-8cda-4308-8244-90c11b1b43a5",
+      "verification_type": "WATCHLIST",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "No Watchlist hits were identified",
+          "label": "Watchlist",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    }
+  ]
+}
+`
+
 We have successfully created and verified a business customer with a more complex ownership structure. See the account creation guide for next steps.
 
+[account creation guide](/docs/create-accounts-guide)
+
 Updated 6 months ago 
+
+[Table of Contents](#)
+
+[Prerequisites](#prerequisites)
+
+[Verifications and the verification object](#verifications-and-the-verification-object)
+
+[Verification status and verifying customers](#verification-status-and-verifying-customers)
+
+[Example: Create a personal customer that can open an account](#example-create-a-personal-customer-that-can-open-an-account)
+
+[Integration Steps](#integration-steps)
+
+[1. Create a personal customer](#1-create-a-personal-customer)
+
+[2. Create a KYC data collection disclosure](#2-create-a-kyc-data-collection-disclosure)
+
+[3. Verify the customer](#3-verify-the-customer)
+
+[Example: Create a business customer that can open an account](#example-create-a-business-customer-that-can-open-an-account)
+
+[Integration Steps](#integration-steps-1)
+
+[1. Create a business customer: Your New Business](#1-create-a-business-customer-your-new-business)
+
+[2. Create a beneficial owner](#2-create-a-beneficial-owner)
+
+[3. Create all necessary disclosures](#3-create-all-necessary-disclosures)
+
+[4. Verify the business](#4-verify-the-business)
+
+[Example: Create a business customer with a more complex ownership structure](#example-create-a-business-customer-with-a-more-complex-ownership-structure)
+
+[Integration Steps](#integration-steps-2)
+
+[1. Create a business customer: Your New Business](#1-create-a-business-customer-your-new-business-1)
+
+[2. Create a beneficial owner](#2-create-a-beneficial-owner-1)
+
+[3. Create Holding Company (another business, but not a customer)](#3-create-holding-company-another-business-but-not-a-customer)
+
+[4. Create an officer of Holding Company](#4-create-an-officer-of-holding-company)
+
+[5. Create all necessary disclosures](#5-create-all-necessary-disclosures)
+
+[6. Verify the business](#6-verify-the-business)
 

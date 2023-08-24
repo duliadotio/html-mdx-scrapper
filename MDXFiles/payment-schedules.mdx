@@ -1,79 +1,466 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
+[Waitlist](/docs/viral-loops-waitlist)
+
 # Payment Schedules
+
+[Suggest Edits](/edit/payment-schedules)
 
 Customers may want to set up scheduled payments for their mortgage or to move money into savings.  Synctera enables you to easily create and manage scheduled payments for your customers.  Synctera will manage updating the payment date if the payment is scheduled to occur on a date the payment method is not available such as weekends for ACH.
 
 ## Payment Schedule Resource
 
+[](#payment-schedule-resource)
+
 The payment schedule resource consists of two primary fields: schedule and payment_instruction. schedule is a schedule configuration to
 define the frequency and number of recurring payments. payment_instruction defines how the payments are executed. There are two fields: type
 defines the supported payment types like ACH and INTERNAL_TRANSFER, and request will be the same request body for the corresponding payments.
 
+`schedule`
+
+`payment_instruction`
+
+`schedule`
+
+`payment_instruction`
+
+`type`
+
+`ACH`
+
+`INTERNAL_TRANSFER`
+
+`request`
+
 The resource also has the fields description and metadata, so the users can provide additional information for the resources.
+
+`description`
+
+`metadata`
+
+`{
+  "description": "example schedule",
+  "schedule": {
+      "start_date": "2022-04-26",
+      "frequency": "DAILY",
+      "interval": 2,
+      "count": 2
+  },
+  "payment_instruction": {
+      "type": "INTERNAL_TRANSFER",
+      "request": {
+          "amount": 10,
+          "currency": "USD",
+          "originating_account_id": "{ACCOUNT_ID}",
+          "receiving_account_id": "{ACCOUNT_ID}",
+          "type": "ACCOUNT_TO_ACCOUNT"
+      }
+  }
+}
+`
 
 ### Schedule Configuration
 
+[](#schedule-configuration)
+
 The schedule has several fields to define the recurrence.
 
+`start_date`
+
+`frequency`
+
+`DAILY`
+
+`WEEKLY`
+
+`MONTHLY`
+
+`interval`
+
+`interval`
+
+`frequency`
+
+`DAILY`
+
+`count`
+
+`end_date`
+
+`count`
+
+`end_date`
+
 ### Scheduled Date vs Execution Date
+
+[](#scheduled-date-vs-execution-date)
 
 Once the payment schedule is created, or the current scheduled one has been executed, it will calculate the next scheduled date and execution date. The next
 scheduled date will simply be calculated based on the schedule configuration for the next recurrence. Please note that if frequency is set to MONTHLY, but
 the next scheduled date does not have the day of the month, then it will be the last day of the month, e.g. start_date is Jan 31 with interval is 1, then
 the next recurrence will be Feb 28/29.
 
+`frequency`
+
+`MONTHLY`
+
+`start_date`
+
+`interval`
+
 Execution date is based on the underlying bank's business dates. If a scheduled date falls on the bank's holiday or weekend, then the execution date will be
 the last business day of the scheduled date. Otherwise, it will be the same as the scheduled date.
 
 ### Execution Timing
+
+[](#execution-timing)
 
 The payment executions starts to happen on the execution date, 11:00 AM on the underlying bank's timezone. Please note that the payment could be delayed depends
 on the volume of the payment schedules needs to be processed at the time.
 
 ### Status
 
+[](#status)
+
 Status is the enumeration value
+
+`ACTIVE`
+
+`CANCELLED`
+
+`EXPIRED`
+
+`schedule`
 
 ## Examples
 
+[](#examples)
+
 ### A customer wants to set up scheduled payments save $100 bi-weekly for a year starting on April 26, 2022.
 
+[](#a-customer-wants-to-set-up-scheduled-payments-save-100-bi-weekly-for-a-year-starting-on-april-26-2022)
+
+`curl \
+  -X POST \
+  https://api.synctera.com/v0/payment_schedules \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '{
+    "description": "example schedule",
+    "metadata": {
+        "foo": "bar"
+    },
+    "schedule": {
+        "start_date": "2022-04-26",
+        "frequency": "WEEKLY",
+        "interval": 2,
+        "count": 26
+    },
+    "payment_instruction": {
+        "type": "INTERNAL_TRANSFER", 
+        "request": {
+            "amount": 10000,
+            "currency": "USD",
+            "originating_account_id": "{ACCOUNT_ID}",
+            "receiving_account_id": "{ACCOUNT_ID}",
+            "type": "ACCOUNT_TO_ACCOUNT"
+        }
+    }
+}'
+`
+
 You will have the response like below.
+
+`{
+    "description": "payola testing",
+    "id": "{PAYMENT_SCHEDULE_ID}",
+    "metadata": {
+        "key": "value"
+    },
+    "next_payment_date": {
+        "execution_date": "2022-04-26",
+        "scheduled_date": "2022-04-26"
+    },
+    "payment_instruction": {
+        "request": {
+            "amount": 10,
+            "currency": "USD",
+            "originating_account_id": "{ACCOUNT_ID}",
+            "receiving_account_id": "{ACCOUNT_ID}",
+            "type": "ACCOUNT_TO_ACCOUNT"
+        },
+        "type": "INTERNAL_TRANSFER"
+    },
+    "schedule": {
+        "count": 2,
+        "frequency": "DAILY",
+        "interval": 2,
+        "start_date": "2022-04-26"
+    },
+    "status": "ACTIVE"
+}
+`
 
 Note that next_payment_date and status are the new fields. This means the next execution will be on 2022-04-26, it will
 call POST /v0/internal_transfers with the request as the request body. Once it is completed, both execution_date and schedule_date
 will be set to 2022-04-28
 
+`next_payment_date`
+
+`status`
+
+`2022-04-26`
+
+`POST /v0/internal_transfers`
+
+`request`
+
+`execution_date`
+
+`schedule_date`
+
+`2022-04-28`
+
 ### A customer wants to see all the payments from the schedule
+
+[](#a-customer-wants-to-see-all-the-payments-from-the-schedule)
+
+`curl \
+  -X GET \
+  https://api.synctera.com/v0/payment_schedules/payments?schedule_id={PAYMENT_SCHEDULE_ID} \
+  -H "Authorization: Bearer $apikey"
+{
+  "payments": [
+    {
+      "description": "example schedule",
+      "id": "{PAYMENT_SCHEDULE_ID}",
+      "metadata": {
+        "foo": "bar"
+      },
+      "payment_date": {
+        "execution_date": "2022-04-26",
+        "scheduled_date": "2022-04-26"
+      },
+      "payment_instruction": {
+        "request": {
+          "amount": 10,
+          "currency": "USD",
+          "originating_account_id": "{ACCOUNT_ID}",
+          "receiving_account_id": "{ACCOUNT_ID}",
+          "type": "ACCOUNT_TO_ACCOUNT"
+        },
+        "type": "INTERNAL_TRANSFER"
+      },
+      "payment_schedule_id": "{PAYMENT_SCHEDULE_ID}",
+      "status": "COMPLETED",
+      "transaction_id": "{TRANSACTION_ID}"
+    }
+  ]
+}'
+`
 
 There are a few keys are worth to note:
 
+`description`
+
+`metadata`
+
+`payment_instruction`
+
+`payment_date`
+
+`status`
+
+`COMPLETED`
+
+`transaction_id`
+
+`GET /v0/transactions/posted/{TRANSACTION_ID}`
+
+`ERROR`
+
+`error_details`
+
 ### A customer wants to cancel the future payments of the schedule
+
+[](#a-customer-wants-to-cancel-the-future-payments-of-the-schedule)
+
+`curl \
+  -X PATCH \
+  https://api.synctera.com/v0/payment_schedules/{PAYMENT_SCHEDULE_ID} \
+  -H "Authorization: Bearer $apikey"
+{
+  "status": "CANCELLED"
+}'
+`
 
 ## Webhook Events
 
+[](#webhook-events)
+
 There are several events you can subscribe from webhook endpoints
 
+`next_payment_date`
+
 Updated about 1 year ago 
+
+[Table of Contents](#)
+
+[Payment Schedule Resource](#payment-schedule-resource)
+
+[Schedule Configuration](#schedule-configuration)
+
+[Scheduled Date vs Execution Date](#scheduled-date-vs-execution-date)
+
+[Execution Timing](#execution-timing)
+
+[Status](#status)
+
+[Examples](#examples)
+
+[A customer wants to set up scheduled payments save $100 bi-weekly for a year starting on April 26, 2022.](#a-customer-wants-to-set-up-scheduled-payments-save-100-bi-weekly-for-a-year-starting-on-april-26-2022)
+
+[A customer wants to see all the payments from the schedule](#a-customer-wants-to-see-all-the-payments-from-the-schedule)
+
+[A customer wants to cancel the future payments of the schedule](#a-customer-wants-to-cancel-the-future-payments-of-the-schedule)
+
+[Webhook Events](#webhook-events)
 

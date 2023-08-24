@@ -1,40 +1,178 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
 
+[Waitlist](/docs/viral-loops-waitlist)
+
 # Document Verification
+
+[Suggest Edits](/edit/document-verification)
 
 In addition to providing identity verification and watchlist monitoring Synctera's verification solution includes document verification. In this guide, we'll dive into use cases and the document verification flow for your customers.
 
 As discussed in the verification guide, Synctera recommends using document verification as a step up verification method for customers that cannot be automatically verified using basic CIP information (name, address, dob, govenment ID).
 
+[verification guide](/docs/kyc-kyb-verification#verification-status-and-verifying-customers)
+
 Synctera has partnered with Socure to provide the ability to verify thousands of documents from over 100 countries to help verify a customer's identity. By capturing the front and back of the document as well as a live capture selfie, document verification can be used as step up verification to improve conversion rates on customers that would otherwise go into manual review using standard identity verification methods. It can also help to reduce risk by further ensuring the validity of the customer and their information.
+
+[Socure](https://www.socure.com)
 
 See the API reference or follow this guide for more information about integrating document verification into your onboarding flow.
 
+[API reference](/reference/verify)
+
 ### Prerequisites
+
+[](#prerequisites)
 
 This guide assumes that you have:
 
+[personal customer](/reference/createperson)
+
+[disclosure](/reference/disclosures)
+
+[verified a customer](/docs/kyc-kyb-verifications)
+
 ### Socure SDKs
+
+[](#socure-sdks)
 
 Socure provides SDKs for multiple platforms to simplify the integration of  document verification into your application:
 
@@ -44,27 +182,103 @@ If you would like build out your document verification flow using the Socure SDK
 
 ### Integration Steps
 
+[](#integration-steps)
+
 ### 1. Create a personal customer
+
+[](#1-create-a-personal-customer)
 
 First we start by creating a record for our new customer. We'll use the POST /persons endpoint to create a person.
 
+`POST /persons`
+
+[create a person](/reference/createperson)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Christopher",
+    "middle_name": "James",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "456-78-9999",
+    "legal_address": {
+      "address_line_1": "123 Main St.",
+      "city": "Beverly Hills",
+      "state": "CA",
+      "postal_code": "90210",
+      "country_code": "US"
+    },
+    "is_customer": true,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
 For more information about creating and managing people consult the person guide.
+
+[person guide](/docs/create-a-personal-customer)
 
 ### 2. Create a KYC data collection disclosure
 
+[](#2-create-a-kyc-data-collection-disclosure)
+
 Once we have our created customer, you will need to display a disclosure to your customer that you are collecting personal data that will be shared with a third-party for the purpose of verifying their identity. For this we use the disclosures resource.
+
+[disclosures resource](/reference/createdisclosure)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/disclosures \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "type": "KYC_DATA_COLLECTION",
+    "version": "1.0",
+    "event_type": "ACKNOWLEDGED",
+    "disclosure_date": "2022-03-17T17:04:34Z"
+  }'
+`
 
 For more information about creating and managing disclosures consult the disclosure guide.
 
+[disclosure guide](/docs/record-disclosure-acceptance)
+
 ### 3. Verify the customer
 
+[](#3-verify-the-customer)
+
 Now that we have a customer, and consent to collect and share their data we can make a request to verify the customer.
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "customer_ip_address": "184.233.47.237",
+    "customer_consent": true
+  }'
+`
 
 📘
 
 Consent must come directly from the customer.
 
 ### 4. Collect the customer's documents
+
+[](#4-collect-the-customers-documents)
 
 Currently, you must integrate with one of Socure's SDKs.
 
@@ -74,13 +288,99 @@ If you would like build out your document verification flow using the Socure SDK
 
 Once you have uploaded the customer's documents you will receive a document_id which we will use in the next step.
 
+`document_id`
+
 ### 5. Verify the customer using document verification
+
+[](#5-verify-the-customer-using-document-verification)
 
 Using the document reference id returned from the Socure SDK, send a verification request, (like you did in step 3) this time including the document_id.
 
+`document_id`
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "customer_ip_address": "184.233.47.237",
+    "document_id": "1ab2c3de-fg45-6789-a01b-23c45678defg",
+    "customer_consent": true
+  }'
+`
+
 By providing a document_id, the verification request will perform a KYC verification of the individual using the documents provided to the Socure SDK.
+
+`document_id`
+
+`{
+  "verification_status": "ACCEPTED",
+  "verifications": [
+    {
+      "id": "05e2ddf3-d172-450e-9cf3-7a34f76a414f",
+      "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+      "verification_type": "IDENTITY",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "Full name, address, and SSN/ITIN can be resolved to the individual",
+          "label": "Customer Identification Program (CIP)",
+          "result": "PASS"
+        },
+        {
+          "description": "Socure's document verification model recommends accepting the individual",
+          "label": "Document Verification",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    },
+    {
+      "id": "a24a16a2-4711-4486-8049-787462c61ffc",
+      "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+      "verification_type": "WATCHLIST",
+      "result": "ACCEPTED",
+      "details": [
+        {
+          "description": "Global Watchlist sources selected are not correlated with the input identifiers",
+          "label": "Watchlist",
+          "result": "PASS"
+        }
+      ],
+      "verification_time": "2022-03-14T18:34:59.91272Z",
+      "creation_time": "2022-03-14T18:34:59.918188Z",
+      "last_updated_time": "2022-03-14T18:34:59.918188Z"
+    }
+  ]
+}
+`
 
 Great! We have successfully created and verified a personal customer using document verification. You can now visit our account creation guide.
 
+[account creation guide](/docs/create-accounts-guide)
+
 Updated 11 months ago 
+
+[Table of Contents](#)
+
+[Prerequisites](#prerequisites)
+
+[Socure SDKs](#socure-sdks)
+
+[Integration Steps](#integration-steps)
+
+[1. Create a personal customer](#1-create-a-personal-customer)
+
+[2. Create a KYC data collection disclosure](#2-create-a-kyc-data-collection-disclosure)
+
+[3. Verify the customer](#3-verify-the-customer)
+
+[4. Collect the customer's documents](#4-collect-the-customers-documents)
+
+[5. Verify the customer using document verification](#5-verify-the-customer-using-document-verification)
 

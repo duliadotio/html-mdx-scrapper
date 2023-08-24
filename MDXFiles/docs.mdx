@@ -1,32 +1,158 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
 ### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
 
 ### Onboard a personal customer
 
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
 ### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
 
 ### Create Accounts
 
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
 ### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
 
 ### Link External Cards
 
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
 ### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
 
 ### Issue Cards
 
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
 ### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
 
 ### Platform Tools
 
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
 ### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
 
 # Synctera Platform
 
+[Suggest Edits](/edit/platform-overview)
+
 # A Synctera Platform Overview for FinTechs
+
+[](#a-synctera-platform-overview-for-fintechs)
 
 You’re a developer about to integrate the Synctera platform with your application. Before you start, what is the Synctera platform anyway? What does it offer, and how do you work with it?
 
 ## The Synctera Platform in a Nutshell
+
+[](#the-synctera-platform-in-a-nutshell)
 
 The Synctera platform is a comprehensive set of cloud-based financial services that brings three types of businesses together:
 
@@ -34,17 +160,23 @@ Synctera provides a unified platform that manages interactions between FinTechs 
 
 ### FinTechs and Sponsor Banks
 
+[](#fintechs-and-sponsor-banks)
+
 The first step in a FinTech’s relationship with Synctera is onboarding to Synctera. During the onboarding process, Synctera helps determine the banking resources the FinTech requires, find a sponsor bank that can provide those resources, and works to establish a business relationship between both parties.
 
 Once a FinTech has connected with a sponsor bank, the Synctera platform provides services that help the FinTech and sponsor bank communicate essential information to each other as they carry out business together. The FinTech can, for example, reconcile the transactions its customers carry out with the customers’ accounts held by the sponsor bank so that the FinTech and the bank’s records agree. Or the FinTech can communicate actions it takes to ensure compliance with banking laws so the sponsor bank knows that their mutual business doesn’t risk breaking those laws.
 
 ### Synctera Services
 
+[](#synctera-services)
+
 In addition to the connection between a sponsor bank and a Fintech, the Synctera platform services are implemented and provided by Synctera and our vendor partners. Synctera’s native services include setting up customers and accounts, reconciling FinTech transactions with a sponsor bank, reporting compliance activities, and so on.
 
 Synctera depends on vendor partners to provide more specialized services that include creating debit cards, performing know-your-customer (KYC) checks on potential customers before signup, performing debit card transactions, and more. These vendor services are all available through the Synctera platform without requiring external setup, contract negotiation, or connections.
 
 ### Synctera Products
+
+[](#synctera-products)
 
 To use Synctera services, a FinTech subscribes to one or more Synctera products via the sponsor bank. Each product provides access to services that address a particular business case.
 
@@ -54,35 +186,81 @@ Synctera offers products that provide, among other things:
 
 ## Platform Interfaces
 
+[](#platform-interfaces)
+
 The Synctera Platform provides two main interfaces to a FinTech:
+
+[Synctera APIs](/reference)
 
 Use the Synctera APIs to integrate Synctera services with your applications, then use the Synctera dashboard for executives, administrators, operators, and your customer care staff to work with those services. The dashboard lets you oversee and gain insights into your business.
 
 ### Synctera APIs
 
+[](#synctera-apis)
+
 The Synctera APIs are RESTful APIs. They include a set of basic service APIs:
+
+[Customers API](/reference/customers)
+
+[Accounts API](/reference/listaccounts)
+
+[Reconciliations API](/reference/reconciliations)
 
 A set of risk management APIs:
 
+[KYC Verification API](/reference/kyckyb-verifications)
+
+[Disclosures API](/reference/disclosures)
+
+[Watchlist API](/reference/watchlist)
+
 A set of money movement APIs:
 
+[Transactions API](/reference/transactions)
+
 A set of card management APIs:
+
+[Cards API](/reference/cards)
+
+[Card Transaction Simulations API](/reference/card-transaction-simulations)
 
 Access to these APIs in production depends on the Synctera products to which you’re subscribed.
 
 ### The Synctera Dashboard
 
+[](#the-synctera-dashboard)
+
 The Synctera dashboard is a browser-based user interface that humans in both a FinTech and its sponsor bank can use to work with integrated Synctera features. The dashboard has three views:
 
 ## Development and Deployment
+
+[](#development-and-deployment)
 
 Synctera provides two environments for successful integration:
 
 We also provide an SDK, full API documentation, and developer support through our Synctera Community Slack account that you can join at https://launchpass.com/synctera-community.
 
+[https://launchpass.com/synctera-community](https://launchpass.com/synctera-community)
+
 ## Getting Started
+
+[](#getting-started)
 
 It’s easy to give our platform a try. Sign up for a Synctera account and learn how to play in our sandbox.
 
+[Sign up for a Synctera account](https://app.synctera.com)
+
 Updated 5 months ago 
+
+[Table of Contents](#)
+
+[A Synctera Platform Overview for FinTechs](#a-synctera-platform-overview-for-fintechs)
+
+[The Synctera Platform in a Nutshell](#the-synctera-platform-in-a-nutshell)
+
+[Platform Interfaces](#platform-interfaces)
+
+[Development and Deployment](#development-and-deployment)
+
+[Getting Started](#getting-started)
 

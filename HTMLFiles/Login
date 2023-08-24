@@ -6,14 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Log in</title>
-    <link rel="icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=mY0X54pJJ6mcuA2CfUY6IwOtZiVDbLqtAnQxF0csHbo%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T00%3A01%3A34Z&amp;se=2023-08-24T00%3A11%3A34Z&amp;srt=o&amp;ss=b&amp;sp=r" />
-    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=mY0X54pJJ6mcuA2CfUY6IwOtZiVDbLqtAnQxF0csHbo%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T00%3A01%3A34Z&amp;se=2023-08-24T00%3A11%3A34Z&amp;srt=o&amp;ss=b&amp;sp=r" />
+    <link rel="icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=OLrl2kVO74NCCYC3bhLZRTDnPJdxfYUHGfyeqa8WKhw%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T00%3A26%3A21Z&amp;se=2023-08-24T00%3A36%3A21Z&amp;srt=o&amp;ss=b&amp;sp=r" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=OLrl2kVO74NCCYC3bhLZRTDnPJdxfYUHGfyeqa8WKhw%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T00%3A26%3A21Z&amp;se=2023-08-24T00%3A36%3A21Z&amp;srt=o&amp;ss=b&amp;sp=r" />
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Nunito:wght@300;400;600;700&display=swap"
           rel="stylesheet">
     <link rel="stylesheet" href="/lib/fontawesome/css/font-icon.css" />
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/site.css" />
-        <style nonce="rfuivodcaikhmeuayrzrjsytwyiikwaw">
+        <style nonce="qqhcsyhthuvmjwnloozmzvwhlnhvvdqk">
             .btn-self-signup {
                 background-color: #00008e;
                 border-color: #00008e;
@@ -87,7 +87,7 @@
     <div class="main-forms-container ">
         <div class="main-forms">
             <form id="login-form" action="" method="post">
-                <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="/connect/authorize/callback?client_id=document360MVC&amp;redirect_uri=https%3A%2F%2Flearn.synctera.com%2Fsignin-oidc&amp;response_type=code&amp;scope=openid%20email%20profile&amp;code_challenge=AGCoF4_TqpFx2KmTmU3cEGk861fjrqE7ekiCuR201LI&amp;code_challenge_method=S256&amp;nonce=638284320935159365.MWFlNGEyNDUtNGUwNS00ZTM0LWE1YjgtYjc4MDdhNGNjZWYxODY5ZTVkODgtYjFkYi00ZmQ4LWIzZGEtZGRlNDYzZDg2OGNi&amp;state=CfDJ8GvI8Ef_dndCvz7hdfx3KRoYAvVaoET9W40J14JGypjV-3m8O5ZKkFnFPOF3r_ILjG1dTgp4sS5ASf4jBFQxPsIl0-LADUo4Q6__qX1XMRlocI_4AOgKRIt1-jRedehKgGOz0mJt824lxnM2LsODC6T1Y3hIjGHAg07aNY6uGqVPAfoe8qPZmDe9EDK_W1NT-u7EBs6TEHiviJz1tW7Hi_7W2Lux3eWVXEIllT1v2dxv_ncCO9Lbe7oV28bNd7pOEgUek0N8P73yX15qzqqVpT1-PEFPdYhGcssP0VG3D8Mu6wq9SN3cXleKCGK2Il7UpbAXW6VqFQbf-t2PnAkTxxWe-b8BCY-x6OUg-hDFSdXuy1399YSVClKD_oaY6z4HXA&amp;x-client-SKU=ID_NETSTANDARD2_0&amp;x-client-ver=5.5.0.0" />
+                <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="/connect/authorize/callback?client_id=document360MVC&amp;redirect_uri=https%3A%2F%2Flearn.synctera.com%2Fsignin-oidc&amp;response_type=code&amp;scope=openid%20email%20profile&amp;code_challenge=aXwJ3UzDk1Kp0HS7aFjIP_31F2LknDTqwOp0oyTHFe4&amp;code_challenge_method=S256&amp;nonce=638284335802571963.ZjQ1YWRkZDktYjcyNS00ZGFmLWI2Y2QtZGRmNmQ4MWVjNjA5NjViNDIzMzQtOGNkOC00OWM0LTg4YjgtMDRlYTllOWI0MmQ5&amp;state=CfDJ8GvI8Ef_dndCvz7hdfx3KRosiXrxE7pZQAQO7qTvJIIOzA8bUnoHMeeXBpPNoQi6I3-QJ-CiqQcztTfXLz2l4QyIyfLauZJmKAxpNyctt51TQ-DKilqlYeXv2ZZaT_WaoUiIjxfh8d02B9qh1EB_fCHHatNZBBB0UTvFnPpmQ5sCN-Y4g0Nir5KsHjfehMpUqJmo0ygHpEA6X-Akq1MSKLWqQR7eZNd0fz28Ucldx7I8avsFgUmuSedelydlbrT-fyBJYFIa6t49FCnMJqnl2H0y6wjMDOcY-YubkT4AkyVKva_e2YpISPmGM8J5S-9bc-_rH12eE2_ymtF4FX0jFZ7jYfS4m1VMENtfGqBbYD8U-mkHx8FjZWfR_5gkPO0wAQ&amp;x-client-SKU=ID_NETSTANDARD2_0&amp;x-client-ver=5.5.0.0" />
                 <input type="hidden" id="disableRecaptcha" data-val="true" data-val-required="The DisableRecaptcha field is required." name="DisableRecaptcha" value="False">
                 <div class="form-group val-group mt-2 pb-2 email-input">
                     <input class="form-control inputValidate" type="email" autofocus autocomplete="username" required data-val="true" data-val-required="The Username field is required." id="Username" name="Username" value="">
@@ -108,7 +108,7 @@
                             </div>
                     </div>
                     <div class="col-md-6 txt-right">
-                        <a class="a-self" href="/Account/ForgotPassword?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DAGCoF4_TqpFx2KmTmU3cEGk861fjrqE7ekiCuR201LI%26code_challenge_method%3DS256%26nonce%3D638284320935159365.MWFlNGEyNDUtNGUwNS00ZTM0LWE1YjgtYjc4MDdhNGNjZWYxODY5ZTVkODgtYjFkYi00ZmQ4LWIzZGEtZGRlNDYzZDg2OGNi%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRoYAvVaoET9W40J14JGypjV-3m8O5ZKkFnFPOF3r_ILjG1dTgp4sS5ASf4jBFQxPsIl0-LADUo4Q6__qX1XMRlocI_4AOgKRIt1-jRedehKgGOz0mJt824lxnM2LsODC6T1Y3hIjGHAg07aNY6uGqVPAfoe8qPZmDe9EDK_W1NT-u7EBs6TEHiviJz1tW7Hi_7W2Lux3eWVXEIllT1v2dxv_ncCO9Lbe7oV28bNd7pOEgUek0N8P73yX15qzqqVpT1-PEFPdYhGcssP0VG3D8Mu6wq9SN3cXleKCGK2Il7UpbAXW6VqFQbf-t2PnAkTxxWe-b8BCY-x6OUg-hDFSdXuy1399YSVClKD_oaY6z4HXA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Forgot password?</a>
+                        <a class="a-self" href="/Account/ForgotPassword?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DaXwJ3UzDk1Kp0HS7aFjIP_31F2LknDTqwOp0oyTHFe4%26code_challenge_method%3DS256%26nonce%3D638284335802571963.ZjQ1YWRkZDktYjcyNS00ZGFmLWI2Y2QtZGRmNmQ4MWVjNjA5NjViNDIzMzQtOGNkOC00OWM0LTg4YjgtMDRlYTllOWI0MmQ5%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRosiXrxE7pZQAQO7qTvJIIOzA8bUnoHMeeXBpPNoQi6I3-QJ-CiqQcztTfXLz2l4QyIyfLauZJmKAxpNyctt51TQ-DKilqlYeXv2ZZaT_WaoUiIjxfh8d02B9qh1EB_fCHHatNZBBB0UTvFnPpmQ5sCN-Y4g0Nir5KsHjfehMpUqJmo0ygHpEA6X-Akq1MSKLWqQR7eZNd0fz28Ucldx7I8avsFgUmuSedelydlbrT-fyBJYFIa6t49FCnMJqnl2H0y6wjMDOcY-YubkT4AkyVKva_e2YpISPmGM8J5S-9bc-_rH12eE2_ymtF4FX0jFZ7jYfS4m1VMENtfGqBbYD8U-mkHx8FjZWfR_5gkPO0wAQ%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Forgot password?</a>
                     </div>
                 </div>
                 <div>
@@ -125,22 +125,22 @@
 
                 <div class="separator login_hint_section"><span>or access quickly</span></div>
                 <div class="login_hint_section sso-login-btn">
-                    <a class="sso-login-link" href="/Account/SSO?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DAGCoF4_TqpFx2KmTmU3cEGk861fjrqE7ekiCuR201LI%26code_challenge_method%3DS256%26nonce%3D638284320935159365.MWFlNGEyNDUtNGUwNS00ZTM0LWE1YjgtYjc4MDdhNGNjZWYxODY5ZTVkODgtYjFkYi00ZmQ4LWIzZGEtZGRlNDYzZDg2OGNi%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRoYAvVaoET9W40J14JGypjV-3m8O5ZKkFnFPOF3r_ILjG1dTgp4sS5ASf4jBFQxPsIl0-LADUo4Q6__qX1XMRlocI_4AOgKRIt1-jRedehKgGOz0mJt824lxnM2LsODC6T1Y3hIjGHAg07aNY6uGqVPAfoe8qPZmDe9EDK_W1NT-u7EBs6TEHiviJz1tW7Hi_7W2Lux3eWVXEIllT1v2dxv_ncCO9Lbe7oV28bNd7pOEgUek0N8P73yX15qzqqVpT1-PEFPdYhGcssP0VG3D8Mu6wq9SN3cXleKCGK2Il7UpbAXW6VqFQbf-t2PnAkTxxWe-b8BCY-x6OUg-hDFSdXuy1399YSVClKD_oaY6z4HXA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">
+                    <a class="sso-login-link" href="/Account/SSO?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DaXwJ3UzDk1Kp0HS7aFjIP_31F2LknDTqwOp0oyTHFe4%26code_challenge_method%3DS256%26nonce%3D638284335802571963.ZjQ1YWRkZDktYjcyNS00ZGFmLWI2Y2QtZGRmNmQ4MWVjNjA5NjViNDIzMzQtOGNkOC00OWM0LTg4YjgtMDRlYTllOWI0MmQ5%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRosiXrxE7pZQAQO7qTvJIIOzA8bUnoHMeeXBpPNoQi6I3-QJ-CiqQcztTfXLz2l4QyIyfLauZJmKAxpNyctt51TQ-DKilqlYeXv2ZZaT_WaoUiIjxfh8d02B9qh1EB_fCHHatNZBBB0UTvFnPpmQ5sCN-Y4g0Nir5KsHjfehMpUqJmo0ygHpEA6X-Akq1MSKLWqQR7eZNd0fz28Ucldx7I8avsFgUmuSedelydlbrT-fyBJYFIa6t49FCnMJqnl2H0y6wjMDOcY-YubkT4AkyVKva_e2YpISPmGM8J5S-9bc-_rH12eE2_ymtF4FX0jFZ7jYfS4m1VMENtfGqBbYD8U-mkHx8FjZWfR_5gkPO0wAQ%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">
                         <i class="fas fa-key fa-rotate-180"></i> SSO
                     </a>
                 </div>
 
-            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EwzYQ5h0vZEmBiLbrCfzMEwf25e3mU4-d9WdtYRAMICgYDY9HsV7N2zpJHRsfiI1_ga_hu0cuapi1g9QaEkcqP_rgNiDTxZ7-wJfzMqwBPqoYr3P1adF2Yvu0qAExhWetD87JIfaexjiEuIAOTzYn8" /><input name="RememberLogin" type="hidden" value="false"></form>
+            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EwzYQ5h0vZEmBiLbrCfzMG15NVkfOr8c8lalgGD_jXMET-TE479LeAgNnPKbhkOy1OOuaa6cY2nqkHGla-rB5CoykW_O4hyNnmGUjsYtYmikV052Uofp5rOkBjsa1oCep1BOMGzn7vo2VZxGBOKfkc" /><input name="RememberLogin" type="hidden" value="false"></form>
 
         </div>
     </div>
     <div class="text-center pt-3">
 
-            <a class="a-self" href="/Account/SelfRegister?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DAGCoF4_TqpFx2KmTmU3cEGk861fjrqE7ekiCuR201LI%26code_challenge_method%3DS256%26nonce%3D638284320935159365.MWFlNGEyNDUtNGUwNS00ZTM0LWE1YjgtYjc4MDdhNGNjZWYxODY5ZTVkODgtYjFkYi00ZmQ4LWIzZGEtZGRlNDYzZDg2OGNi%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRoYAvVaoET9W40J14JGypjV-3m8O5ZKkFnFPOF3r_ILjG1dTgp4sS5ASf4jBFQxPsIl0-LADUo4Q6__qX1XMRlocI_4AOgKRIt1-jRedehKgGOz0mJt824lxnM2LsODC6T1Y3hIjGHAg07aNY6uGqVPAfoe8qPZmDe9EDK_W1NT-u7EBs6TEHiviJz1tW7Hi_7W2Lux3eWVXEIllT1v2dxv_ncCO9Lbe7oV28bNd7pOEgUek0N8P73yX15qzqqVpT1-PEFPdYhGcssP0VG3D8Mu6wq9SN3cXleKCGK2Il7UpbAXW6VqFQbf-t2PnAkTxxWe-b8BCY-x6OUg-hDFSdXuy1399YSVClKD_oaY6z4HXA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Self Signup?</a>
+            <a class="a-self" href="/Account/SelfRegister?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DaXwJ3UzDk1Kp0HS7aFjIP_31F2LknDTqwOp0oyTHFe4%26code_challenge_method%3DS256%26nonce%3D638284335802571963.ZjQ1YWRkZDktYjcyNS00ZGFmLWI2Y2QtZGRmNmQ4MWVjNjA5NjViNDIzMzQtOGNkOC00OWM0LTg4YjgtMDRlYTllOWI0MmQ5%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRosiXrxE7pZQAQO7qTvJIIOzA8bUnoHMeeXBpPNoQi6I3-QJ-CiqQcztTfXLz2l4QyIyfLauZJmKAxpNyctt51TQ-DKilqlYeXv2ZZaT_WaoUiIjxfh8d02B9qh1EB_fCHHatNZBBB0UTvFnPpmQ5sCN-Y4g0Nir5KsHjfehMpUqJmo0ygHpEA6X-Akq1MSKLWqQR7eZNd0fz28Ucldx7I8avsFgUmuSedelydlbrT-fyBJYFIa6t49FCnMJqnl2H0y6wjMDOcY-YubkT4AkyVKva_e2YpISPmGM8J5S-9bc-_rH12eE2_ymtF4FX0jFZ7jYfS4m1VMENtfGqBbYD8U-mkHx8FjZWfR_5gkPO0wAQ%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Self Signup?</a>
     </div>
 </div>
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<script nonce="rfuivodcaikhmeuayrzrjsytwyiikwaw">typeof grecaptcha !== 'undefined' || document.write(`<script src="https://www.recaptcha.net/recaptcha/api.js"><\/script>`)</script></div>
+<script nonce="qqhcsyhthuvmjwnloozmzvwhlnhvvdqk">typeof grecaptcha !== 'undefined' || document.write(`<script src="https://www.recaptcha.net/recaptcha/api.js"><\/script>`)</script></div>
 
 
     </div>
