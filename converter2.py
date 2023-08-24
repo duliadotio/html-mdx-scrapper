@@ -44,7 +44,7 @@ def html_to_mdx(html_file, save_folder):
     mdx_file_name = os.path.splitext(os.path.basename(html_file))[0] + ".mdx"
     with open(os.path.join(save_folder, mdx_file_name), 'w') as mdx_file:
         mdx_file.write(mdx_content)
-base_urls = ["https://learn.synctera.com/", "https://dev.synctera.com/"]
+base_urls = ["https://learn.synctera.com/", "https://dev.synctera.com/docs"]
 all_urls = set(base_urls)  # Using a set to avoid duplicates
 
 # Extract all URLs from the base URLs

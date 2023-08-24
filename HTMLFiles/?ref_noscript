@@ -100,7 +100,7 @@
         
     </div>
 
-    <script>window.marketing_config=JSON.parse('{\u000A  \u0022disqus_domain\u0022:\u0022disqus.com\u0022,\u000A  \u0022is_private\u0022:false\u000A}');</script>
+    <script>window.marketing_config=JSON.parse('{\u000A  \u0022disqus_domain\u0022:\u0022disqus.com\u0022,\u000A  \u0022is_private\u0022:true\u000A}');</script>
     <script src="https://c.disquscdn.com/next/current/marketing/js/entry.js" crossorigin="anonymous" async></script>
 </body>
 
