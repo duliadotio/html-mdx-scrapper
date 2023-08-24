@@ -1,0 +1,605 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# External Cards 3-D Secure (3DS)
+
+[Suggest Edits](/edit/external-cards-3ds-guide)
+
+For additional security, Synctera External Cards supports 3-D Secure (3DS), a globally accepted authentication solution designed to increase security and reduce fraud for e-commerce payments. 3DS operates at the per transaction level in real time at time of payment. Additional information about 3DS can be found here. Synctera's 3DS provider is Cardinal Commerce, facilitated through TabaPay.
+
+[here](https://www.emvco.com/emv-technologies/3-d-secure/)
+
+[Cardinal Commerce](https://www.cardinalcommerce.com/)
+
+[TabaPay](https://tabapay.com/)
+
+In the context of External Cards, 3DS is only applicable to PULL transactions. Depending on your External Cards program, 3DS may be required for some or all PULL transaction. For more information, please talk to your Synctera implementation and onboarding contact.
+
+`PULL`
+
+`PULL`
+
+For testing purposes, refer to this list of test PANs from our vendor that can be used to test various 3DS scenarios in the sandbox environment. See External Cards guide for information about how to create an External Card.
+
+[list of test PANs](https://developers.tabapay.com/reference/3ds-test-cases-and-cards)
+
+[External Cards guide](/docs/external-cards-guide)
+
+## Implementation
+
+[](#implementation)
+
+An implemention of External Cards 3DS authentication consists of frontend and backend components.
+
+The backend is responsible for interacting with Synctera's three 3DS endpoints: Initialize 3DS, Lookup 3DS and Authenticate 3DS.
+
+[Initialize 3DS](/reference/initialize3ds)
+
+[Lookup 3DS](/reference/lookup3ds)
+
+[Authenticate 3DS](authenticate3ds)
+
+The frontend is responsible for performing Device Data Collection (DDC) and (if necessary) presenting the cardholder with the 3DS Challenge.
+
+Device Data Collection (DDC): A process which collects and sends details about the cardholder's physical device being used to complete the payment. It is sometimes the case that DDC is all that is required for a successful authentication. This is called a frictionless authentication.
+
+3DS Challenge: If DDC is not enough to authenticate the cardholder, the card issuer may require a challenge, also known as a step up. This is a dynamic prompt which the cardholder must interact with to complete successfully in order to help prove they are the true card owner. The content and structure of the challenge varies and is determined by the issuer. For example, the cardholder may be required to provide a one time password (OTP) obtained through a separate channel.
+
+### Frontend Implementation
+
+[](#frontend-implementation)
+
+This guide contains information about how to implement and execute the necessary 3DS frontend components, including code snippets for a browser implementation: BROWSER passed for device_channel of Lookup 3DS (step 3).
+
+`BROWSER`
+
+`device_channel`
+
+[Lookup 3DS](/reference/lookup3ds)
+
+[step 3](#3-lookup-3ds)
+
+For a mobile app (SDK) implementation, please refer to our vendor's documentation for how to obtain and implement the 3DS SDK, provided by JFrog. Your Synctera implementation and onboarding will provide you with JFrog credentials.
+
+`SDK`
+
+[documentation](https://developers.tabapay.com/reference/how-to-use-the-3ds-sdk-starter-guide)
+
+[JFrog](https://jfrog.com/)
+
+In order to perform the frontend processes, the Cardinal script must be loaded into the browser document according to environment:
+
+[https://songbird.cardinalcommerce.com/edge/v1/songbird.js](https://songbird.cardinalcommerce.com/edge/v1/songbird.js)
+
+[https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js](https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js)
+
+Code snippet:
+
+`// Ensure any previous Cardinal instance is removed from the document.
+// After being used once, the Cardinal library cannot be reused.
+delete window.Cardinal;
+​
+const headElement = document.getElementsByTagName('head')[0];
+const songbirdScriptElement = document.createElement('script');
+songbirdScriptElement.async = true;
+songbirdScriptElement.type = 'text/javascript';
+songbirdScriptElement.onload = () => {
+  if (window.Cardinal) {
+    // SUCCESS
+  } else {
+    // FAILURE
+  }
+};
+songbirdScriptElement.onerror = () => undefined; // FAILURE
+songbirdScriptElement.src = SONGBIRD_LIBRARY_URL;
+​
+setTimeout(() => undefined, 5000); // FAILURE
+`
+
+If you would like debug information output by the Cardinal library, you can add this:
+
+`window.Cardinal.configure({
+  logging: { level: 'on' },
+});
+`
+
+## Flow
+
+[](#flow)
+
+The entire flow of a 3DS authentication looks like this:
+
+[Initialize 3DS](/reference/initialize3ds)
+
+[Device Data Collection (DDC)](#device-data-collection-ddc)
+
+[Lookup 3DS](/reference/lookup3ds)
+
+[3DS Challenge](#3ds-challenge)
+
+[Authenticate 3DS](/reference/authenticate3ds)
+
+Note that results of step 3 dictate whether step 4 and step 5 are necessary, or if you may proceed directly to step 6.
+
+[step 3](#3-lookup-3ds)
+
+[step 4](#4-3ds-challenge)
+
+[step 5](#5-authenticate-3ds)
+
+[step 6](#6-attach-to-external-card-transaction)
+
+Continue reading for complete details about each step.
+
+## 1. Initialize 3DS
+
+[](#1-initialize-3ds)
+
+To begin a 3DS authentication, first call Initialize 3DS, specifying the external_card_id, amount, and currency.
+
+[Initialize 3DS](/reference/initialize3ds)
+
+`external_card_id`
+
+`amount`
+
+`currency`
+
+If successful, device_data_collection_jwt and device_data_collection_url will be returned (used in step 2), and id, used in all subsequent 3DS calls. The JWT will expire in 2 hours, so DDC must be used before then.
+
+`device_data_collection_jwt`
+
+`device_data_collection_url`
+
+[step 2](#2-device-data-collection-ddc)
+
+`id`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers/initialize_3ds \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "external_card_id": "{EXTERNAL_CARD_ID}",
+    "amount": 1500,
+    "currency": "USD"
+  }'
+`
+
+Example response:
+
+`{
+  "device_data_collection_jwt": "{DDC_JWT}",
+  "device_data_collection_url": "{DDC_URL}",
+  "id": "{3DS_ID}"
+}
+`
+
+## 2. Device Data Collection (DDC)
+
+[](#2-device-data-collection-ddc)
+
+Using {DDC_JWT}, obtained from the previous step, perform DDC with the Cardinal library. This is a background process that does not require any user interaction. Only proceed to the next step once the process completes successfully.
+
+`{DDC_JWT}`
+
+Code snippet:
+
+`// listen for DDC Process completion
+window.Cardinal.on('payments.setupComplete', (setupCompleteData) => {
+  // finished - ready to proceed
+});
+​
+// initialize Cardinal DDC process
+window.Cardinal.setup('init', { jwt: '{DDC_JWT}' });
+​
+setTimeout(() => undefined, 5000); // FAILURE
+`
+
+For additional information, please refer to our vendor's documentation.
+
+[documentation](https://developers.tabapay.com/reference/device-data-collection)
+
+## 3. Lookup 3DS
+
+[](#3-lookup-3ds)
+
+Upon completion of DDC, the next step is to call Lookup 3DS. device_channel must be set according to your 3DS frontend implementation: SDK for mobile app, or BROWSER for mobile or desktop internet browser. If the device channel is BROWSER, you can optionally provide device_details. This is a set of device data (collected separately by you) to be used as a fallback in case there is an issue with DDC.
+
+[Lookup 3DS](/reference/lookup3ds)
+
+`device_channel`
+
+[frontend implementation](#frontend-implementation)
+
+`SDK`
+
+`BROWSER`
+
+`BROWSER`
+
+`device_details`
+
+For authentication_indicator, select the options that best reflect the type of transaction being performed. For transaction_mode, select the correct device type.
+
+`authentication_indicator`
+
+`transaction_mode`
+
+📘
+
+To detect the transaction_mode, you can use UAParser.js:
+
+`transaction_mode`
+
+[UAParser.js](https://www.npmjs.com/package/ua-parser-js)
+
+`import UAParser from 'ua-parser-js';
+const ua = new UAParser();
+const { type: deviceType } = ua.getDevice();
+const transactionMode = deviceType === 'mobile'
+  ? "MOBILE_DEVICE"
+  : deviceType === 'tablet'
+    ? "TABLET_DEVICE"
+    : "COMPUTER_DEVICE";
+`
+
+status from the response indicates the outcome:
+
+`status`
+
+`SUCCESS`
+
+[step 6](#6-attach-to-external-card-transaction)
+
+`FAILED`
+
+`CHALLENGE_REQUIRED`
+
+[step 4](#4-3ds-challenge)
+
+`NOT_ENROLLED`
+
+`UNKNOWN`
+
+If CHALLENGE_REQUIRED status is returned, processor_transaction_id, challenge_url and challenge_payload will also be returned, which are needed to perform the 3DS challenge in the next step.
+
+`CHALLENGE_REQUIRED`
+
+`processor_transaction_id`
+
+`challenge_url`
+
+`challenge_payload`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers/lookup_3ds \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "id": "{3DS_ID}",
+    "authentication_indicator": "PAYMENT",
+    "transaction_mode": "COMPUTER_DEVICE",
+    "device_channel": "BROWSER"
+  }'
+`
+
+Example response (success):
+
+`{
+  "id": "{3DS_ID}",
+  "status": "SUCCESS"
+}
+`
+
+Example response (challenge):
+
+`{
+  "challenge_payload": "{CHALLENGE_PAYLOAD}",
+  "challenge_url": "{CHALLENGE_URL}",
+  "id": "{3DS_ID}",
+  "processor_transaction_id": "{PROCESSOR_TRANSACTION_ID}",
+  "status": "CHALLENGE_REQUIRED"
+}
+`
+
+## 4. 3DS Challenge
+
+[](#4-3ds-challenge)
+
+To trigger the challenge, {CHALLENGE_URL}, {CHALLENGE_PAYLOAD} and {PROCESSOR_TRANSACTION_ID} are required, obtained from the previous step. Once triggered, a modal window will be displayed containing the challenge for the user to complete. They have 10 minutes to complete the challenge before timing out.
+
+`{CHALLENGE_URL}`
+
+`{CHALLENGE_PAYLOAD}`
+
+`{PROCESSOR_TRANSACTION_ID}`
+
+Use an event listener to handle the various challenge results upon completion:
+
+`SUCCESS`
+
+`NOACTION`
+
+`challengeJwt`
+
+[step 5](#5-authenticate-3ds)
+
+`FAILURE`
+
+`CANCEL`
+
+`ERROR`
+
+`TIMEOUT`
+
+Any result except SUCCESS or NOACTION should be treated as a failure.
+
+`SUCCESS`
+
+`NOACTION`
+
+Assuming a successful outcome, retain challengeJwt for performing Authenticate 3DS (step 5). This must be performed within 2 hours or else the JWT will expire.
+
+`challengeJwt`
+
+[Authenticate 3DS](/reference/authenticate3ds)
+
+[step 5](#5-authenticate-3ds)
+
+Code snippet:
+
+`// event listener, triggered once the challenged is complete/cancelled (or error)
+window.Cardinal.on('payments.validated', (data, challengeJwt) => {
+  switch (data.ActionCode) {
+    case 'SUCCESS':
+      return challengeJwt // SUCCESS
+    case 'NOACTION':
+      return challengeJwt || undefined // SUCCESS OR FAILURE
+    case 'FAILURE':
+      return // FAILURE
+    case 'CANCEL':
+      return // FAILURE
+    case 'ERROR':
+      return // FAILURE
+    case 'TIMEOUT':
+      return // FAILURE
+    default:
+      return // FAILURE
+  }
+  return undefined;
+});
+​
+// trigger the challenge
+window.Cardinal.continue(
+  'cca',
+  { AcsUrl: "{CHALLENGE_URL}", Payload: "{CHALLENGE_PAYLOAD}" },
+  {
+    OrderDetails: { TransactionId: "{PROCESSOR_TRANSACTION_ID}" },
+  },
+);
+`
+
+## 5. Authenticate 3DS
+
+[](#5-authenticate-3ds)
+
+Assuming a positive result from the challenge, the last thing to do before the 3DS authentication is complete is to call Authenticate 3DS. You must provide challenge_jwt, obtained from the challenge.
+
+[Authenticate 3DS](/reference/authenticate3ds)
+
+`challenge_jwt`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers/authenticate_3ds \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "id": "{3DS_ID}",
+    "challenge_jwt": "{CHALLENGE_JWT}"
+  }'
+`
+
+Example response:
+
+`  {
+    "id": "{3DS_ID}",
+    "status": "SUCCESS"
+  }'
+`
+
+## 6. Attach to External Card Transaction
+
+[](#6-attach-to-external-card-transaction)
+
+Finally, once you have a successful 3DS authentication, you must provide the id_3ds in the transaction request. A successful authentication must be used within 90 days before expiring.
+
+`id_3ds`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "external_card_id": "{EXTERNAL_CARD_ID}",
+    "originating_account_id": "{ACCOUNT_ID}",
+    "currency": "USD",
+    "type": "PULL",
+    "amount": 1500,
+    "3ds_id": "{3DS_ID}",
+  }'
+`
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Implementation](#implementation)
+
+[Frontend Implementation](#frontend-implementation)
+
+[Flow](#flow)
+
+[1. Initialize 3DS](#1-initialize-3ds)
+
+[2. Device Data Collection (DDC)](#2-device-data-collection-ddc)
+
+[3. Lookup 3DS](#3-lookup-3ds)
+
+[4. 3DS Challenge](#4-3ds-challenge)
+
+[5. Authenticate 3DS](#5-authenticate-3ds)
+
+[6. Attach to External Card Transaction](#6-attach-to-external-card-transaction)
+

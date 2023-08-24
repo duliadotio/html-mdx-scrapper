@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Log in</title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=7z1BDIqjDnVW9%2FmfnyrQfMTsbURiJF9UgRre4B8yHpo%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T02%3A05%3A04Z&amp;se=2023-08-24T02%3A15%3A04Z&amp;srt=o&amp;ss=b&amp;sp=r" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.document360.io/dce2753c-5559-4810-a779-e02cfa7763f7/Images/Documentation/favicon.png?sv=2019-07-07&amp;sig=7z1BDIqjDnVW9%2FmfnyrQfMTsbURiJF9UgRre4B8yHpo%3D&amp;spr=https%2Chttp&amp;st=2023-08-24T02%3A05%3A04Z&amp;se=2023-08-24T02%3A15%3A04Z&amp;srt=o&amp;ss=b&amp;sp=r" />
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Nunito:wght@300;400;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="/lib/fontawesome/css/font-icon.css" />
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+        <style nonce="tfybcckopzdulssmxnzecrtdqluumdyo">
+            .btn-self-signup {
+                background-color: #00008e;
+                border-color: #00008e;
+            }
+
+                .btn-self-signup:hover {
+                    background-color: #00008e;
+                    border-color: #00008e;
+                }
+
+                .btn-self-signup:not(:disabled):not(.disabled):active {
+                    background-color: #00008e;
+                    border-color: #00008e;
+                    box-shadow: none;
+                }
+
+                .btn-self-signup.disabled,
+                .btn-self-signup:disabled {
+                    background-color: #00008e;
+                    border-color: #00008e;
+                }
+
+            .a-self {
+                color: #00008e;
+            }
+
+                .a-self:hover {
+                    color: #00008e;
+                }
+
+            .btn-un-selected-region {
+                background: white;
+                color: #863ab5;
+            }
+
+            .region-selector-content {
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .regional-display-option {
+                display: flex;
+                width: 100px;
+                border: 1px solid #863ab5;
+            }
+
+            }
+
+            .regionSelection {
+                border-radius: 0px !important
+            }
+
+            .regionDisplayData {
+                margin-right: 10px !important;
+            }
+        </style>
+    
+</head>
+
+<body>
+    <div class="body-content">
+        <div class="self-login-container-out">
+
+<div class="self-login-container">
+        <div class="s-logo">
+                <img src="https://cdn.document360.io/logo/dce2753c-5559-4810-a779-e02cfa7763f7/14ec9380c903467188228287a132c936-Synctera-color (1).png">
+        </div>
+
+    <div class="main-forms-container ">
+        <div class="main-forms">
+            <form id="login-form" action="" method="post">
+                <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="/connect/authorize/callback?client_id=document360MVC&amp;redirect_uri=https%3A%2F%2Flearn.synctera.com%2Fsignin-oidc&amp;response_type=code&amp;scope=openid%20email%20profile&amp;code_challenge=PrUu0z3jxck4QzLZJXTuBotnG5QXS91dI34mu9h1rcE&amp;code_challenge_method=S256&amp;nonce=638284395032020735.MTVhNDRjMTgtNjVkMS00YjJiLWEwZDMtODY3ZjgzOTJmMzI0NWFmOWZmODYtMTczZS00MTJiLWIyYjEtZjI0NzhlYTE1ZGZj&amp;state=CfDJ8GvI8Ef_dndCvz7hdfx3KRqGe_lUqCEnznk5PN0f5LJ6F4dv7TRM5ld5va2UFaNGLaYvdOCMV9VRc5RF2I64MlNSnFXtGwLHdAhf0g10BzMzlITX6Yu8mbGWWos1LYYQJMXMzlX9j_O52zDF8rXhgHIFYQd4b-pUXc_18vHNS2IPtL5Z9XQS5F3zUXiPjjutrufBCGYJly03_B60ddAzsSAQnN24ujtOraZPZRUxMinGkeRPuOYz39c0KCjtj3pT-ZBItHEXyGuBj0001r9cufHrm29PNAv_y_Jl1Kr3GzTRrg4LBGmqjZ41unQK88E83e7AqCTOKNH0TOm_rbLS0j6i4CdOGRpfEvMmxCrg5pAMn6vvTFnULfKISlw2IrmNlA&amp;x-client-SKU=ID_NETSTANDARD2_0&amp;x-client-ver=5.5.0.0" />
+                <input type="hidden" id="disableRecaptcha" data-val="true" data-val-required="The DisableRecaptcha field is required." name="DisableRecaptcha" value="False">
+                <div class="form-group val-group mt-2 pb-2 email-input">
+                    <input class="form-control inputValidate" type="email" autofocus autocomplete="username" required data-val="true" data-val-required="The Username field is required." id="Username" name="Username" value="">
+                    <label for="Username">Username</label>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group val-group password-input" id="passwordGroup">
+                    <input type="password" class="form-control inputValidate passwordInput" id="password" autocomplete="current-password" required data-val="true" data-val-required="The Password field is required." name="Password">
+                    <label for="Password">Password</label>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                    <span id="showPassword" class="fa fa-eye"></span>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                            <div class="form-group custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="RememberLogin" data-val="true" data-val-required="The RememberLogin field is required." name="RememberLogin" value="true">
+                                <label class="custom-control-label" for="RememberLogin">Remember me</label>
+                            </div>
+                    </div>
+                    <div class="col-md-6 txt-right">
+                        <a class="a-self" href="/Account/ForgotPassword?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DPrUu0z3jxck4QzLZJXTuBotnG5QXS91dI34mu9h1rcE%26code_challenge_method%3DS256%26nonce%3D638284395032020735.MTVhNDRjMTgtNjVkMS00YjJiLWEwZDMtODY3ZjgzOTJmMzI0NWFmOWZmODYtMTczZS00MTJiLWIyYjEtZjI0NzhlYTE1ZGZj%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRqGe_lUqCEnznk5PN0f5LJ6F4dv7TRM5ld5va2UFaNGLaYvdOCMV9VRc5RF2I64MlNSnFXtGwLHdAhf0g10BzMzlITX6Yu8mbGWWos1LYYQJMXMzlX9j_O52zDF8rXhgHIFYQd4b-pUXc_18vHNS2IPtL5Z9XQS5F3zUXiPjjutrufBCGYJly03_B60ddAzsSAQnN24ujtOraZPZRUxMinGkeRPuOYz39c0KCjtj3pT-ZBItHEXyGuBj0001r9cufHrm29PNAv_y_Jl1Kr3GzTRrg4LBGmqjZ41unQK88E83e7AqCTOKNH0TOm_rbLS0j6i4CdOGRpfEvMmxCrg5pAMn6vvTFnULfKISlw2IrmNlA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Forgot password?</a>
+                    </div>
+                </div>
+                <div>
+                    <div id='recaptcha' class="g-recaptcha"
+                         data-sitekey="6LdtF90ZAAAAABTVBbaIrb4UqzM6FJl9NHXdd0zV"
+                         data-callback="onLoginSubmit"
+                         data-size="invisible"></div>
+                    <button class="btn btn-primary btn-self-signup w-100" value="login" name="button"
+                            id="login_button" type="submit">
+                        Login
+                    </button>
+                </div>
+                
+
+                <div class="separator login_hint_section"><span>or access quickly</span></div>
+                <div class="login_hint_section sso-login-btn">
+                    <a class="sso-login-link" href="/Account/SSO?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DPrUu0z3jxck4QzLZJXTuBotnG5QXS91dI34mu9h1rcE%26code_challenge_method%3DS256%26nonce%3D638284395032020735.MTVhNDRjMTgtNjVkMS00YjJiLWEwZDMtODY3ZjgzOTJmMzI0NWFmOWZmODYtMTczZS00MTJiLWIyYjEtZjI0NzhlYTE1ZGZj%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRqGe_lUqCEnznk5PN0f5LJ6F4dv7TRM5ld5va2UFaNGLaYvdOCMV9VRc5RF2I64MlNSnFXtGwLHdAhf0g10BzMzlITX6Yu8mbGWWos1LYYQJMXMzlX9j_O52zDF8rXhgHIFYQd4b-pUXc_18vHNS2IPtL5Z9XQS5F3zUXiPjjutrufBCGYJly03_B60ddAzsSAQnN24ujtOraZPZRUxMinGkeRPuOYz39c0KCjtj3pT-ZBItHEXyGuBj0001r9cufHrm29PNAv_y_Jl1Kr3GzTRrg4LBGmqjZ41unQK88E83e7AqCTOKNH0TOm_rbLS0j6i4CdOGRpfEvMmxCrg5pAMn6vvTFnULfKISlw2IrmNlA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">
+                        <i class="fas fa-key fa-rotate-180"></i> SSO
+                    </a>
+                </div>
+
+            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EwzYQ5h0vZEmBiLbrCfzMGSjMSaf4nTJ8zFClFxGULNMHLrImljk37CB-e-_WK3Yo1F-oLPCK_9Zxmszv1o0z0KX-LtYtCL1d1BfDHk9wvGAN-ZHwEmzOMGhwE6NNoVbHi7U2BQjsLPBVqm2ykTMrs" /><input name="RememberLogin" type="hidden" value="false"></form>
+
+        </div>
+    </div>
+    <div class="text-center pt-3">
+
+            <a class="a-self" href="/Account/SelfRegister?returnurl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Ddocument360MVC%26redirect_uri%3Dhttps%253A%252F%252Flearn.synctera.com%252Fsignin-oidc%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26code_challenge%3DPrUu0z3jxck4QzLZJXTuBotnG5QXS91dI34mu9h1rcE%26code_challenge_method%3DS256%26nonce%3D638284395032020735.MTVhNDRjMTgtNjVkMS00YjJiLWEwZDMtODY3ZjgzOTJmMzI0NWFmOWZmODYtMTczZS00MTJiLWIyYjEtZjI0NzhlYTE1ZGZj%26state%3DCfDJ8GvI8Ef_dndCvz7hdfx3KRqGe_lUqCEnznk5PN0f5LJ6F4dv7TRM5ld5va2UFaNGLaYvdOCMV9VRc5RF2I64MlNSnFXtGwLHdAhf0g10BzMzlITX6Yu8mbGWWos1LYYQJMXMzlX9j_O52zDF8rXhgHIFYQd4b-pUXc_18vHNS2IPtL5Z9XQS5F3zUXiPjjutrufBCGYJly03_B60ddAzsSAQnN24ujtOraZPZRUxMinGkeRPuOYz39c0KCjtj3pT-ZBItHEXyGuBj0001r9cufHrm29PNAv_y_Jl1Kr3GzTRrg4LBGmqjZ41unQK88E83e7AqCTOKNH0TOm_rbLS0j6i4CdOGRpfEvMmxCrg5pAMn6vvTFnULfKISlw2IrmNlA%26x-client-SKU%3DID_NETSTANDARD2_0%26x-client-ver%3D5.5.0.0">Self Signup?</a>
+    </div>
+</div>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script nonce="tfybcckopzdulssmxnzecrtdqluumdyo">typeof grecaptcha !== 'undefined' || document.write(`<script src="https://www.recaptcha.net/recaptcha/api.js"><\/script>`)</script></div>
+
+
+    </div>
+
+    <script src="/lib/jquery/jquery.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/lib/webshim/polyfiller.js"></script>
+    
+    <script src="/lib/login/login.js"></script>
+
+</body>
+
+</html>

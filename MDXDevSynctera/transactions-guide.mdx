@@ -1,0 +1,1221 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Transactions
+
+[Suggest Edits](/edit/transactions-guide)
+
+## Overview
+
+[](#overview)
+
+A "transaction" in the Synctera platform represents any movement of funds between accounts.
+
+Transactions comes in 2 flavours:
+
+A pending transaction represents a "hold" or "authorization" for the movement of funds in an account. Pending transactions are used whenever we need to
+guarantee the availability of funds for any multi-step payment flow. See The Transaction Life-cycle below for an example.
+
+[The Transaction Life-cycle](#the-transaction-life-cycle)
+
+A pending transaction is mutable, meaning that up to the point that the pending transaction is posted or expired, the amount of the hold may be increased, decreased, canceled, or declined. Note that this functionality is not typically exposed directly to integrator, but instead depends on the business logic of the specific payment rail.
+
+Once a transaction is "posted", it is then considered immutable and cannot be changed. Any adjustments (such as a reversal, for example) requires the creation of a new transaction.
+
+## Creating Transactions
+
+[](#creating-transactions)
+
+Transactions can be initiated in a few different ways:
+
+### Directly, via the Synctera payment APIs:
+
+[](#directly-via-the-synctera-payment-apis)
+
+[ACH API Reference](/reference/addtransactionout)
+
+[Internal Transfer API Reference](/reference/createinternaltransfer)
+
+### Indirectly, via an external payment network:
+
+[](#indirectly-via-an-external-payment-network)
+
+An integrator can subscribe various TRANSACTION webhook events to be notified when a transaction is created or updated, even when the transactions aren't directly initiated by your application.
+
+`TRANSACTION`
+
+## Anatomy of a Transaction
+
+[](#anatomy-of-a-transaction)
+
+The full spec for pending and posted transactions is documented in the API reference for Pending Transactions and Posted Transactions respectively, there are several fields worth describing in more detail:
+
+[Pending Transactions](/reference/getpendingtransactionbyid)
+
+[Posted Transactions](/reference/getpostedtransactionbyid)
+
+### id
+
+[](#id)
+
+The id of a transaction is a unique identifier for a particular payment. This identifier is preserved through the entire life-cycle of a transaction. This means that a pending transaction and its final posted transaction will share the same id.
+
+`id`
+
+### type
+
+[](#type)
+
+The type of a transaction generally represents the "payment rail" that is being used. For ACH payments this will be ach, which debit card transactions will use card.
+
+`type`
+
+`ach`
+
+`card`
+
+### subtype
+
+[](#subtype)
+
+The subtype field represents the specific operation that initiated the transaction. For example, for card transactions, the subtype might be could be atm_withdrawal for taking money out of an ATM, or pos_purchase for any purchase made at a Point-of-Sale system.
+
+`subtype`
+
+`atm_withdrawal`
+
+`pos_purchase`
+
+### effective_date
+
+[](#effective_date)
+
+The effective_date of a transaction represents the time that the transaction should be considered effective for the purposes of interest calculation.
+
+`effective_date`
+
+### posted_date
+
+[](#posted_date)
+
+📘
+
+This value is specific to posted transactions.
+
+This value represents the current banking day the transaction was initiated on, from the perspective of the sponsor bank. This doesn't always match up with the chronological time. Notably, "banking days" do not include weekends or bank holidays.
+
+As an example, of a payment is made on Friday at 9PM, the effective_date would have the current date/time the transaction was created, while the posted_date would actually be the following Monday.
+
+`effective_date`
+
+`posted_date`
+
+### user_data
+
+[](#user_data)
+
+The user_data field represents key-value meta-data specific to a given payment rail. For example, transactions with type ach will have a user_data field containing ACH-specific meta-data (ACH return codes, trace numbers, or file names), which card transactions will have card-specific meta-data (merchant codes, etc...). This is not used for arbitrary metadata supplied by a Fintech, see external_data below.
+
+`user_data`
+
+`ach`
+
+`user_data`
+
+[external_data](#externaldata)
+
+`external_data`
+
+This field is only populated by internal Synctera payment services.
+
+Below is an example of a user_data from an ACH debit transaction that has been sent out to the ACH network (indicated by the file_name field being populated):
+
+`user_data`
+
+`file_name`
+
+`{
+  "id": 1234,
+  "idemkey": "87a964a7-9191-488d-bbb8-b4f9a39578f6",
+  "exported": "2022-03-22T16:55:01.60644546Z",
+  "file_name": "20220322T165501.596_OUTBOUND.ach",
+  "account_id": "7b0ccc9f-957a-4e0b-bc4b-9a3d59c2eef6",
+  "account_no": "1234567890",
+  "customer_id": "226de0b5-e9b9-48f3-b562-c9bc3b35cd5b",
+  "description": "KandaBank",
+  "is_same_day": false,
+  "trace_number": "601282010001234",
+  "reference_info": "This is some reference info",
+  "source_account_id": "d23b541b-1fda-4c3f-b44e-3605f2095618",
+  "source_account_name": "Alberta Charleson"
+}
+`
+
+### external_data
+
+[](#external_data)
+
+The external_data field will include any arbitrary key-value meta-data that you as a Fintech would like to associate with the payment. This is only available for payments initiated directly via one of the Synctera payment APIs (for example, an outgoing ACH payment, or an internal transfer).
+
+`external_data`
+
+### risk_info
+
+[](#risk_info)
+
+The risk_info field is used to hold risk analysis details from Synctera's Risk/Fraud service.
+
+`risk_info`
+
+This is an example of a risk_info payload where the fraud service has determined that the transaction is not fraudulent:
+
+`risk_info`
+
+`{
+  "accept": true,
+  "reasons": ["TRANSACTION_ACCEPTED"],
+  "provider": "FEEDZAI",
+  "provider_info": {
+    "alert": false,
+    "score": 0,
+    "status": "ok",
+    "decision": "approve",
+    "action_codes": ["[Transfers-DR6]"],
+    "lifecycle_id": "c67c7799-f273-4318-8649-1378e42d64af",
+    "sca_required": false,
+    "sender_segment": "27",
+    "event_external_id": "c67c7799-f273-4318-8649-1378e42d64af",
+    "sender_bank_branch_id": "4",
+    "secondary_action_codes": []
+  },
+  "provider_reasons": ["Transfers-DR6"]
+}
+`
+
+### lines
+
+[](#lines)
+
+📘
+
+The lines field is specific to Posted Transactions.
+
+`lines`
+
+The Synctera Ledger uses a concept called Double-Entry Accounting to help ensure the integrity of all financial operation. This means that every debit or credit to an account must be offset by a corresponding credit or debit to another account. This is represented in the Posted Transaction resource by the data.lines field. This field is an array of (primarily) two accounting entries: A debit from one account, and a credit from another account.
+
+[Double-Entry Accounting](https://en.wikipedia.org/wiki/Double-entry_bookkeeping)
+
+[Posted Transaction resource](/reference/getpostedtransactionbyid)
+
+`data.lines`
+
+In many cases, only one side of a transaction will represent a real Synctera (customer) account. For example, consider an ACH payment to an external bank, or an ATM withdrawal.
+
+In this case, Synctera uses an internal account, called a settlement account as a proxy to offset the transaction.
+
+[internal account](/reference/internal-accounts)
+
+## Transaction Types and Subtypes
+
+[](#transaction-types-and-subtypes)
+
+Transactions (both pending and posted) are categorized using a combination of type and subtype fields, as mentioned above.
+
+`type`
+
+`subtype`
+
+The set of types and subtypes currently supported by the Synctera ledger are documented below:
+
+`ach`
+
+`incoming_credit`
+
+`Credit`
+
+`ach`
+
+`incoming_credit_contested_return`
+
+`Credit`
+
+`ach`
+
+`incoming_credit_dishonored_return`
+
+`Credit`
+
+`ach`
+
+`incoming_credit_return`
+
+`Credit`
+
+`ach`
+
+`incoming_credit_reversal`
+
+`Debit`
+
+`ach`
+
+`incoming_debit`
+
+`Debit`
+
+`ach`
+
+`incoming_debit_contested_return`
+
+`Debit`
+
+`ach`
+
+`incoming_debit_dishonored_return`
+
+`Debit`
+
+`ach`
+
+`incoming_debit_return`
+
+`Debit`
+
+`ach`
+
+`incoming_debit_reversal`
+
+`Credit`
+
+`ach`
+
+`outgoing_credit`
+
+`Debit`
+
+`ach`
+
+`outgoing_credit_contested_return`
+
+`Debit`
+
+`ach`
+
+`outgoing_credit_dishonored_return`
+
+`Debit`
+
+`ach`
+
+`outgoing_credit_return`
+
+`Debit`
+
+`ach`
+
+`outgoing_credit_reversal`
+
+`Credit`
+
+`ach`
+
+`outgoing_debit`
+
+`Credit`
+
+`ach`
+
+`outgoing_debit_contested_return`
+
+`Credit`
+
+`ach`
+
+`outgoing_debit_dishonored_return`
+
+`Credit`
+
+`ach`
+
+`outgoing_debit_return`
+
+`Credit`
+
+`ach`
+
+`outgoing_debit_reversal`
+
+`Debit`
+
+`ach`
+
+`temp_hold`
+
+`Debit`
+
+`card`
+
+`auth`
+
+`Debit`
+
+`card`
+
+`auth_atm_withdrawal`
+
+`Debit`
+
+`card`
+
+`auth_quasi_cash`
+
+`Debit`
+
+`card`
+
+`pindebit_auth`
+
+`Debit`
+
+`card`
+
+`auth_cashback`
+
+`Credit`
+
+`card`
+
+`auth_incremental`
+
+`Credit`
+
+`card`
+
+`auth_clearing`
+
+`Debit`
+
+`card`
+
+`auth_clearing_atm_withdrawal`
+
+`Debit`
+
+`card`
+
+`auth_clearing_quasi_cash`
+
+`Debit`
+
+`card`
+
+`pindebit_auth_clearing`
+
+`Debit`
+
+`card`
+
+`auth_advice`
+
+`Debit`
+
+`card`
+
+`auth_reversal`
+
+`Credit`
+
+`card`
+
+`pindebit_auth_reversal`
+
+`Credit`
+
+`card`
+
+`oc_auth_reversal`
+
+`Credit`
+
+`card`
+
+`refund_auth_reversal`
+
+`Credit`
+
+`card`
+
+`refund`
+
+`Credit`
+
+`card`
+
+`pindebit_refund`
+
+`Credit`
+
+`card`
+
+`refund_auth_clearing`
+
+`Credit`
+
+`card`
+
+`pindebit_reversal`
+
+`Credit`
+
+`card`
+
+`balance_inquiry`
+
+`Debit`
+
+`card`
+
+`pindebit_balance_inquiry`
+
+`Debit`
+
+`card`
+
+`pindebit`
+
+`Debit`
+
+`card`
+
+`pindebit_atm_withdrawal`
+
+`Debit`
+
+`card`
+
+`pindebit_cashback`
+
+`Credit`
+
+`card`
+
+`pindebit_quasi_cash`
+
+`Debit`
+
+`card`
+
+`oc_auth`
+
+`Debit`
+
+`card`
+
+`oc_auth_clearing`
+
+`Debit`
+
+`card`
+
+`oc_auth_capture`
+
+`Debit`
+
+`card`
+
+`pindebit_refund_reversal`
+
+`Debit`
+
+`card`
+
+`refund_auth`
+
+`Credit`
+
+`card`
+
+`card_transaction`
+
+`Debit`
+
+`card`
+
+`pos_purchase`
+
+`Debit`
+
+`card`
+
+`atm_withdrawal`
+
+`Debit`
+
+`card`
+
+`pos_cashback`
+
+`Credit`
+
+`card`
+
+`credit`
+
+`Credit`
+
+`card`
+
+`pos_refund`
+
+`Credit`
+
+`card`
+
+`pos_purchase_refund`
+
+`Credit`
+
+`card`
+
+`provisional_credit`
+
+`Credit`
+
+`card`
+
+`card_network_first_chargeback`
+
+`Credit`
+
+`card`
+
+`card_network_final_chargeback`
+
+`Credit`
+
+`card`
+
+`provisional_credit_reversal`
+
+`Debit`
+
+`check`
+
+`mobile_deposit`
+
+`Credit`
+
+`check`
+
+`mobile_deposit_reversal`
+
+`Debit`
+
+`check`
+
+`mobile_deposit_return`
+
+`Debit`
+
+`check`
+
+`mobile_deposit_return_reversal`
+
+`Credit`
+
+`external_card`
+
+`card_funding`
+
+`Credit`
+
+`external_card`
+
+`card_funding_reversal`
+
+`Debit`
+
+`external_card`
+
+`card_send`
+
+`Debit`
+
+`external_card`
+
+`card_send_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`account_decrease_limit`
+
+`Debit`
+
+`internal_transfer`
+
+`account_decrease_limit_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`account_increase_limit`
+
+`Credit`
+
+`internal_transfer`
+
+`account_increase_limit_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`account_to_account`
+
+`Debit`
+
+`internal_transfer`
+
+`account_to_account_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`ach_credit_sweep`
+
+`Debit`
+
+`internal_transfer`
+
+`ach_credit_sweep_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`ach_debit_sweep`
+
+`Credit`
+
+`internal_transfer`
+
+`ach_debit_sweep_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`cashback`
+
+`Debit`
+
+`internal_transfer`
+
+`cashback_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`fee`
+
+`Debit`
+
+`internal_transfer`
+
+`fee_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`incoming_wire`
+
+`Credit`
+
+`internal_transfer`
+
+`incoming_wire_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`interest_payout`
+
+`Credit`
+
+`internal_transfer`
+
+`interest_payout_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`jit_fund`
+
+`Debit`
+
+`internal_transfer`
+
+`jit_fund_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`loc_usage`
+
+`Debit`
+
+`internal_transfer`
+
+`loc_usage_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`manual_adjustment`
+
+`Debit`
+
+`internal_transfer`
+
+`manual_adjustment_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`mastercard_gross_sweep`
+
+`Debit`
+
+`internal_transfer`
+
+`mastercard_gross_sweep_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`mastercard_interchange_sweep`
+
+`Credit`
+
+`internal_transfer`
+
+`mastercard_interchange_sweep_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`mastercard_net_sweep`
+
+`Debit`
+
+`internal_transfer`
+
+`mastercard_net_sweep_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`outgoing_international_remittance`
+
+`Debit`
+
+`internal_transfer`
+
+`outgoing_international_remittance_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`program_decrease`
+
+`internal_transfer`
+
+`program_decrease_reversal`
+
+`internal_transfer`
+
+`program_expansion`
+
+`internal_transfer`
+
+`program_expansion_reversal`
+
+`internal_transfer`
+
+`promotional_credit`
+
+`Credit`
+
+`internal_transfer`
+
+`promotional_credit_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`pulse_gross_sweep`
+
+`Debit`
+
+`internal_transfer`
+
+`pulse_gross_sweep_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`pulse_interchange_sweep`
+
+`Credit`
+
+`internal_transfer`
+
+`pulse_interchange_sweep_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`repayment`
+
+`Credit`
+
+`internal_transfer`
+
+`repayment_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`sign_up_bonus`
+
+`Credit`
+
+`internal_transfer`
+
+`sign_up_bonus_reversal`
+
+`Debit`
+
+`internal_transfer`
+
+`subscription_fee`
+
+`Debit`
+
+`internal_transfer`
+
+`subscription_fee_reversal`
+
+`Credit`
+
+`internal_transfer`
+
+`transfer_fee`
+
+`Debit`
+
+`internal_transfer`
+
+`transfer_fee_reversal`
+
+`Credit`
+
+`wire`
+
+`originated`
+
+`Debit`
+
+`wire`
+
+`originated_reversal`
+
+`Credit`
+
+`wire`
+
+`originated_return`
+
+`Credit`
+
+`wire`
+
+`originated_return_reversal`
+
+`Debit`
+
+`wire`
+
+`received`
+
+`Credit`
+
+`wire`
+
+`received_reversal`
+
+`Debit`
+
+## The Transaction Life-cycle
+
+[](#the-transaction-life-cycle)
+
+While specific details may differ slightly across different payment networks, most payments follow the same basic flow:
+
+Depending on the type of payment, the time between steps (1) and (3) may be anywhere from a few seconds, to several days (in the case of ACH payments).
+
+Each time a transaction changes state, a webhook will be triggered. The exact events are described below:
+
+`TRANSACTION.PENDING.CREATED`
+
+`TRANSACTION.PENDING.UPDATED`
+
+`total_amount`
+
+`TRANSACTION.PENDING.UPDATED`
+
+`status`
+
+`PENDING`
+
+`DECLINED`
+
+`DECLINED`
+
+`user_data`
+
+`TRANSACTION.PENDING.UPDATED`
+
+`user_data`
+
+`TRANSACTION.PENDING.UPDATED`
+
+`status`
+
+`PENDING`
+
+`EXPIRED`
+
+`TRANSACTION.PENDING.UPDATED`
+
+`TRANSACTION.POSTED.CREATED`
+
+`status`
+
+`PENDING`
+
+`POSTED`
+
+## Transaction History
+
+[](#transaction-history)
+
+Synctera provides 2 endpoints for viewing transactions:
+
+[List pending transactions](/reference/listpendingtransactions)
+
+[List posted transactions](/reference/listpostedtransactions)
+
+You can also take advantage of the TRANSACTION Webhook) events to build your own transaction feed tailored to your specific use case.
+
+`TRANSACTION`
+
+[Webhook](/docs/webhooks-guide)
+
+Updated 5 days ago 
+
+[Table of Contents](#)
+
+[Overview](#overview)
+
+[Creating Transactions](#creating-transactions)
+
+[Directly, via the Synctera payment APIs:](#directly-via-the-synctera-payment-apis)
+
+[Indirectly, via an external payment network:](#indirectly-via-an-external-payment-network)
+
+[Anatomy of a Transaction](#anatomy-of-a-transaction)
+
+[id](#id)
+
+[type](#type)
+
+[subtype](#subtype)
+
+[effective_date](#effective_date)
+
+[posted_date](#posted_date)
+
+[user_data](#user_data)
+
+[external_data](#external_data)
+
+[risk_info](#risk_info)
+
+[lines](#lines)
+
+[Transaction Types and Subtypes](#transaction-types-and-subtypes)
+
+[The Transaction Life-cycle](#the-transaction-life-cycle)
+
+[Transaction History](#transaction-history)
+

@@ -1,0 +1,287 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Document Storage
+
+[Suggest Edits](/edit/document-storage-guide)
+
+# Document Storage
+
+[](#document-storage)
+
+Synctera provides a simple document storage service for you.
+You can upload documents, list them, and retrieve them later.
+(Deletion is not currently supported.)
+
+if you are storing PII you should set encryption as required this adds additional encryption treatment to the storage object /note>
+
+`curl \
+  -H "Authorization: Bearer ..." \
+  -X POST \
+  -F encryption=REQUIRED
+  -F [email protected]
+  https://api.synctera.com/v0/documents
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+The types of documents that should be stored as encrypted include:
+
+## What is a document?
+
+[](#what-is-a-document)
+
+A document is any file that either you or one of your customers needs to store.
+It could be a PDF file, a Word document, a spreadsheet, a JPEG file ...
+almost anything.
+
+## Upload
+
+[](#upload)
+
+To upload a file, send a POST /v0/documents request with
+Content-Type: multipart/form-data.
+(This is how browser upload works.)
+
+`POST /v0/documents`
+
+`Content-Type: multipart/form-data`
+
+The document size cannot exceed 32 MB.
+
+The only required form parameter is the file data itself.
+A minimal curl upload:
+
+`curl`
+
+`curl \
+  -H "Authorization: Bearer ..." \
+  -X POST \
+  -F [email protected]
+  https://api.synctera.com/v0/documents
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+Over the wire, this results in a request something like
+
+`POST /v0/documents
+Host: api.synctera.com
+Authorization: Bearer ...
+Content-Length: 200.
+Content-Type: multipart/form-data; boundary=------------------------1deeb99b24570a96
+
+--------------------------1deeb99b24570a96
+Content-Disposition: form-data; name="file"; filename="hello.txt"
+Content-Type: text/plain
+Content-Length: 13
+
+Hello, world
+
+--------------------------1deeb99b24570a96--
+`
+
+The response to your upload request is a JSON object describing the document:
+
+`{
+  "id": "2a1e97a8-96a5-4b24-929a-2f8e4dc6851e",
+  "creation_time": "2022-04-06T14:18:10.123265Z",
+  "last_updated_time": "2022-04-06T14:18:10.123265Z",
+  "description": "",
+  "file_name": "hello.txt",
+  "name": "hello.txt"
+}
+`
+
+## Retrieval
+
+[](#retrieval)
+
+To retrieve the uploaded document later,
+use GET /v0/documents/{document_id}/contents:
+
+`GET /v0/documents/{document_id}/contents`
+
+`GET /v0/documents/2a1e97a8-96a5-4b24-929a-2f8e4dc6851e/contents
+Host: api.synctera.com
+Authorization: Bearer ...
+
+200 OK
+Content-Disposition: attachment; filename="hello.txt"
+Content-Type: text/plain; charset=utf-8
+Content-Length: 13
+
+Hello, world
+`
+
+This returns the exact file contents that were uploaded,
+whether it is a 13-byte plain text file or
+a 30 MB PDF file.
+
+## Listing
+
+[](#listing)
+
+You can also get a paginated list of all uploaded documents
+with GET /v0/documents:
+
+`GET /v0/documents`
+
+`curl \
+  -H "Authorization: Bearer ..." \
+  https://api.synctera.com/v0/documents
+`
+
+Updated 9 months ago 
+
+[Table of Contents](#)
+
+[Document Storage](#document-storage)
+
+[What is a document?](#what-is-a-document)
+
+[Upload](#upload)
+
+[Retrieval](#retrieval)
+
+[Listing](#listing)
+

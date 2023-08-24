@@ -1,0 +1,515 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Webhooks
+
+[Suggest Edits](/edit/webhooks-guide)
+
+# Webhooks
+
+[](#webhooks)
+
+The Webhook API enables integrators to subscribe to specific events on the Synctera platform. Additionally, this API helps integrators reduce the number of requests to the Synctera platform for resource checks. For example, when a customer swipes a card, the Webhook API, if subscribed, will send a POST request to the predefined URL about the transaction. With webhooks, Synctera will push updates to the integrator instead of the integrator pulling updates.
+
+`POST`
+
+## Understand Webhooks and Events
+
+[](#understand-webhooks-and-events)
+
+Creating a webhook defines what events the integrator wants to subscribe to via the event_types field. The following example shows how to subscribe to account updates and customer events. Use the request body of POST /v0/webhooks to create a webhook. enabled_events specifies that this webhook should be invoked whenever an account is updated, or when anything happens to a customer. Once such an event occurs, the Webhook API sends a POST request to https://example.com.
+
+`event_types`
+
+`POST /v0/webhooks`
+
+`enabled_events`
+
+`POST`
+
+`https://example.com`
+
+`{
+  "enabled_events": ["ACCOUNT.UPDATED", "CUSTOMER.*"],
+  "is_enabled": true,
+  "url": "https://example.com"
+}
+`
+
+Most events use the <resource>.[<sub-resource>.]<action> naming convention. For example, ACCOUNT.UPDATED means an account was updated. Resources can have sub-resources: TRANSACTIONS.POSTED.CREATED means to subscribe to changes of the sub-resource TRANSACTION.POSTED. You can also use a wildcard * for convenience purposes. For example, you can use it after a <resource> like CUSTOMER.*, which allows you to receive notifications for all the customer events without explicitly listing all of them. Note that Synctera will continuously add more events, so the webhook will automatically subscribe to any new events added to <resource> and send requests.
+
+`<resource>.[<sub-resource>.]<action>`
+
+`ACCOUNT.UPDATED`
+
+`TRANSACTIONS.POSTED.CREATED`
+
+`TRANSACTION.POSTED`
+
+`*`
+
+`<resource>`
+
+`CUSTOMER.*`
+
+`<resource>`
+
+## Integration Steps
+
+[](#integration-steps)
+
+### 1. Create a Signature Secret for Request Validation
+
+[](#1-create-a-signature-secret-for-request-validation)
+
+To ensure that your incoming webhook requests come from Synctera, you must cryptographically validate each request as it arrives. Synctera will use a shared secret to sign each webhook request before sending it to you, and then you will use the same secret to validate requests. To create a webhook secret, call POST /v0/webhooks/secret with an empty request body:
+
+`POST /v0/webhooks/secret`
+
+`curl \
+  -X POST \
+  $baseurl/v0/webhooks/secret \
+  -H "Authorization: Bearer $apikey" \
+  --data-binary ''
+`
+
+Synctera will respond with the generated secret in the response:
+
+`{
+  "secret": "{signature_secret}"
+}
+`
+
+📘
+
+You must use the same secret to validate all incoming webhook requests.
+
+Secret Replacement
+
+You may want to rotate the secret or immediately replace it for security purposes.
+
+To rotate a secret:
+
+`PUT /v0/webhooks/secret`
+
+`is_rolling_secret`
+
+`true`
+
+`curl \
+  -X PUT \
+  $baseurl/v0/webhooks/secret \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+  {
+    "is_rolling_secret": true
+  }'
+`
+
+📘
+
+The request deletes the last secret in 24 hours, so you will have time to update it.
+
+If you want to delete the last secret immediately without waiting for 24 hours, call DELETE /v0/webhooks/secret?old_secret_only=true
+
+`DELETE /v0/webhooks/secret?old_secret_only=true`
+
+### 2. Implement a Server to Receive Webhook Requests
+
+[](#2-implement-a-server-to-receive-webhook-requests)
+
+The applications that receive webhook requests should be publicly accessible so the Synctera platform can send the webhook request to the URL defined in the webhook resource.
+
+The schema for the webhook request is defined in the OpenAPI spec as webhook_request_object.
+
+[OpenAPI spec](/reference/openapi-spec)
+
+`webhook_request_object`
+
+Request Headers
+
+The request uses the POST method and contains the following headers:
+
+`POST`
+
+`Synctera-Signature`
+
+`Request-Timestamp`
+
+`Content-Type`
+
+`application/json`
+
+Example Request Body
+
+`{
+  "id": "8145af83-0423-488f-8799-1c8c0bf8b189",
+  "url": "http://example.com",
+  "webhook_id": "873f7f9c-3063-4098-adcf-1f3af25286f8",
+  "type": "ACCOUNT.UPDATED",
+  "event_time": "2022-01-25T11:45:54.485698-05:00",
+  "metadata": "test webhook",
+  "event_resource": "{\"id\":\"7fef9ad7-67dc-4af0-9ce2-70011131c20c\", \"status\": \"ACTIVE_OR_DISBURSED\" ... }",
+  "event_resource_changed_fields": "{\"status\": \"RESTRICTED\"}"
+}
+`
+
+`id`
+
+`url`
+
+`webhook_id`
+
+`type`
+
+`metadata`
+
+`metadata`
+
+`event_resource`
+
+`<resource>`
+
+`<sub-resource>`
+
+`event_resource_changed_fields`
+
+Resource JSON string example
+
+`{"a": 1, "b": 2, "c": 3, "n": {"m": 1}}`
+
+`{"a": 4, "c": 3, "d": 5, "n": {"m": 1, "p": 2}}`
+
+event_resource is just the "object after change" itself.
+
+`event_resource`
+
+event_resource_changed_fields is {"a": 1, "b": 2, "d": null, "n": {"m": 1}} because:
+
+`event_resource_changed_fields`
+
+`{"a": 1, "b": 2, "d": null, "n": {"m": 1}}`
+
+`a`
+
+`before-change object`
+
+`b`
+
+`before-change object`
+
+`c`
+
+`event_resource_changed_fields`
+
+`d`
+
+`before-change object`
+
+`n`
+
+`p`
+
+`(n)`
+
+`p`
+
+Therefore, event_resource_changed_fields from the original request body means the account resource has been updated. The account status was changed from RESTRICTED to ACTIVE_OR_DISBURSED.
+
+`event_resource_changed_fields`
+
+`RESTRICTED`
+
+`ACTIVE_OR_DISBURSED`
+
+Request Validation
+
+The Synctera-Signature is generated via HMAC with SHA256 hash and the signature secret as the key. The expected value of the Synctera-Signature is HMAC256({request_timestamp} + '.' + {request_body}, {signature_secret_key}). Your service should validate the header matches what you expect.
+
+`Synctera-Signature`
+
+[HMAC](https://en.wikipedia.org/wiki/HMAC)
+
+`Synctera-Signature`
+
+`HMAC256({request_timestamp} + '.' + {request_body}, {signature_secret_key})`
+
+Furthermore, Synctera-Signature may include two signature strings delimited by . during the rolling secret period, which the old and new signature secrets generate.
+
+`Synctera-Signature`
+
+`.`
+
+⚠️
+
+To prevent replay attacks, integrators should check that the request time is within 5 minutes of now()
+
+`now()`
+
+See the example code below in Go to handle signature validation:
+
+`func ValidateSignature(secret string, payload []byte, reqTime string, signature string) error {
+	// Parse request time
+	reqTimeVal, err := strconv.ParseInt(reqTime, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	// Generate the signature
+	mac := hmac.New(sha256.New, []byte(secret))
+	if _, err := mac.Write([]byte(reqTime + ".")); err != nil {
+		return err
+	}
+	if _, err := mac.Write(payload); err != nil {
+		return err
+	}
+	generatedSignature := hex.EncodeToString(mac.Sum(nil))
+
+	// Verify with the signature header
+	for _, curSign := range strings.Split(signature, ".") {
+		if generatedSignature != curSign {
+			continue
+		}
+		reqT := time.Unix(reqTimeVal, 0)
+		if !reqT.Add(time.Minute * 5).After(time.Now()) {
+			return errors.New("signature expired")
+		}
+		return nil
+	}
+	return errors.New("invalid signature")
+}
+`
+
+Response
+
+The Webhook API expects an HTTP 200 response to indicate that the application processed the request successfully. Any 4xx or 5xx level code will be considered a failure on the application side. The Webhook API will retry the same request with exponential backoff until a successful response is received or 55 hours have passed. Events (successful or failed) are retained for 60 days.
+
+`200`
+
+`4xx`
+
+`5xx`
+
+Request timeout
+
+Webhook requests will timeout after 5 seconds. Should a webhook request timeout, Synctera will automatically retry with exponential back off.
+
+### 3. Create a Webhook Subscription for Events
+
+[](#3-create-a-webhook-subscription-for-events)
+
+Call the POST /v0/webhooks endpoint to create a webhook subscription. For example, If you have deployed your new service so it is accessible on the public Internet at https://api.example.com/webhook:
+
+`POST /v0/webhooks`
+
+`https://api.example.com/webhook`
+
+`curl \
+  -X POST \
+  $baseurl/v0/webhooks \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+  {
+    "url": "https://api.example.com/webhook",
+    "description": "random test",
+    "enabled_events": ["ACCOUNT.*", "CUSTOMER.UPDATED"],
+    "metadata": "nothing",
+    "is_enabled": true
+  }'
+`
+
+`url`
+
+`description`
+
+`enabled_events`
+
+`metadata`
+
+`metadata`
+
+`is_enabled`
+
+Once you create the webhook, it will send requests for any newly triggered events.
+
+Subscribing to a wildcard event, e.g. ACCOUNT.*, will send all webhooks for all events that match that pattern. Note that this can include new event types added after the subscription was created.
+
+`ACCOUNT.*`
+
+📘
+
+Webhook requests are not guaranteed to be real-time calls. In most cases Synctera will send a webhook immediately after an event occurs in most. However, in rare cases the delay could be 15-30 seconds on average. Your app should rely on synchronous responses for time sensitive operations.
+
+📘
+
+Webhook requests may be delivered multiple times, e.g. if Synctera does not receive a 200 response and therefore retries. Your application must handle duplicate requests, e.g. by checking the event ID.
+
+📘
+
+Similarly, webhook requests are not guaranteed to be delivered in order. If you update customer A, then customer B, then customer A again, then those three webhooks are usually delivered in that order. But when errors happen, all bets are off. You should not assume that the state of a resource included in a webhook request is the latest state. If you need the latest state, you should fetch it with an API call back to Synctera.
+
+### 4. Triggering Events
+
+[](#4-triggering-events)
+
+We highly recommend testing your application to ensure it can receive the webhook request. There are several useful endpoints to test if the application is working correctly.
+
+`POST /v0/webhooks/trigger`
+
+`event_resource`
+
+`GET /v0/webhooks/<webhook_id>/events/<event_id>`
+
+`POST /v0/webhooks/<webhook_id>/events/<event_id>/resend`
+
+Updated 3 months ago 
+
+[Table of Contents](#)
+
+[Webhooks](#webhooks)
+
+[Understand Webhooks and Events](#understand-webhooks-and-events)
+
+[Integration Steps](#integration-steps)
+

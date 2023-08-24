@@ -1,0 +1,527 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Spend Controls
+
+[Suggest Edits](/edit/spend-controls-guide)
+
+# Overview
+
+[](#overview)
+
+Spend controls provide a way to monitor the flow of money. In Synctera's platform, spend controls are independent entities that must be associated with another entity (such as an account) to take effect. Spend controls define rules based on time range, payment type, merchant category code and the amount of money that may be spent as well as what to do if the rule is violated. Spend controls can have a many-to-many relationship with another entities (eg. accounts). A spend control may apply to multiple accounts and an account may have multiple spend controls that apply to it.
+
+Currently, only accounts can use spend controls.
+
+Spend controls track the flow of money out of the account (debits) or into the account (credits) but each spend control applies to one direction only. In other words, debits and credits do not offset each other for the purposes of spend controls.
+
+Originally, spend controls applied to debits only. We added support for credits but retained the name "spend controls". The default option for a spend control is to track debits.
+
+# Managing Spend Controls
+
+[](#managing-spend-controls)
+
+## Creating a Spend Control
+
+[](#creating-a-spend-control)
+
+To create a spend control, use POST /v0/spend_controls.
+
+[POST /v0/spend_controls](/reference/createspendcontrol)
+
+For example, to create a limit of $1000 in card spending over the last seven days:
+
+`{
+  "name": "One thousand dollars weekly card limit",
+  "amount_limit": 100000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 7
+  },
+  "payment_types": [
+    "CARD"
+  ],
+  "action_decline": true,
+  "action_case": false,
+  "is_active": true
+}
+`
+
+The amount_limit uses the smallest currency unit (eg. cents).
+
+`amount_limit`
+
+The time_range field can be a rolling window defined by a number of days, as in the example above, or defined as a single transaction. For example, to create a limit of $1000 per card transaction:
+
+`time_range`
+
+`{
+  "name": "One thousand dollars per transaction limit",
+  "amount_limit": 100000,
+  "time_range": {
+    "time_range_type": "SINGLE_TRANSACTION",
+  },
+  "payment_types": [
+    "CARD"
+  ],
+  "action_decline": true,
+  "action_case": false,
+  "is_active": true
+}
+`
+
+The action_decline and action_case fields specify what will happen for a transaction that would exceed the spend control's limit. If action_case is set then a case will be created in Synctera's case management system for any transaction that would exceed the spend control's limit. If action_decline is set then the transaction will be declined if possible. Some transactions are forced, because they represent money movement that has already occurred outside of Synctera's platform. In such cases, if the transaction were to exceed the spend control's limit the transaction will not be declined but instead a case will be created, regardless of the action_case setting. At least one of action_decline and action_case must be set. To completely disable the spend control set is_active to false.
+
+`action_decline`
+
+`action_case`
+
+`action_case`
+
+`action_decline`
+
+`action_case`
+
+`action_decline`
+
+`action_case`
+
+`is_active`
+
+You may omit the payment_types field. In that case, the spend control applies to all payment types.
+
+`payment_types`
+
+You may specify multiple payment types. This means that all the specified payment types count toward the limit. For example, to create a rule that creates a case if there is more than $25000 in combined ACH and wire spending over the last thirty days:
+
+`{
+  "name": "25 thousand ACH and wire",
+  "amount_limit": 2500000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 30
+  },
+  "payment_types": [
+    "ACH",
+    "WIRE"
+  ],
+  "action_decline": false,
+  "action_case": true,
+  "is_active": true
+}
+`
+
+In this example the spending is counted for the entire rule. So if there were $15,000 of ACH spending and $15,000 of wire spending then the rule would take effect and a case would be created. The $25,000 limit is for ACH and wire spending combined. If you want the payment types to be counted separately, create separate spend controls, one for each payment type.
+
+You may specify the direction of money movement to which the spend control applies. The options are DEBITS or CREDITS. For example, to create a rule that triggers a case if an account receives more than $10,000 in cash deposits in the last seven days:
+
+`direction`
+
+`DEBITS`
+
+`CREDITS`
+
+`{
+  "name": "seven day cash warning",
+  "amount_limit": 1000000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 7
+  },
+  "payment_types": [
+    "CASH"
+  ],
+  "action_decline": false,
+  "action_case": true,
+  "is_active": true,
+  "direction": "CREDITS"
+}
+`
+
+You may specify merchant_category_codes to which the spend control applies. Specifying merchant category codes only works with card transactions. The options for merchant_category_codes include individual codes or ranges of codes. For example, to create a weekly limit of $1000 with merchant category code 6012 or in the range of merchant category codes 7300–7999:
+
+`merchant_category_codes`
+
+`merchant_category_codes`
+
+`6012`
+
+`7300–7999`
+
+`{
+  "name": "One thousand dollars weekly card limit for MCCs 6012, 7300–7999",
+  "amount_limit": 100000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 7
+  },
+  "payment_types": [
+    "CARD"
+  ],
+  "action_decline": true,
+  "action_case": false,
+  "is_active": true,
+  "merchant_category_codes": [
+    "6012",
+    "7300–7999"
+  ]
+}
+`
+
+In this example, the spending is counted for the entire rule. So if there were $750 of spending with merchant category code 6012 and subsequently $750 of spending with merchant category code 7375, the rule would take effect. If you want the merchant_category_codes to be counted separately, create separate spend controls for each merchant category code or range of merchant category codes.
+
+`merchant_category_codes`
+
+## Spend Control Response
+
+[](#spend-control-response)
+
+The API responses from the spend control endpoints include the details of the spend control, including the UUID in the id field and the number of accounts that are using the spend control in the number_of_related_accounts field (which will be zero for newly-created spend controls). To check the status of a specific spend control by its UUID, use GET /v0/spend_controls/{id}:
+
+`id`
+
+`number_of_related_accounts`
+
+[GET /v0/spend_controls/{id}](/reference/getspendcontrol)
+
+`{
+  "id": "7d943c51-e4ff-4e57-9558-08cab6b963c7",
+  "name": "One thousand dollars weekly card limit",
+  "amount_limit": 100000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 7
+  },
+  "payment_types": [
+    "CARD"
+  ],
+  "action_decline": true,
+  "action_case": false,
+  "is_active": true,
+  "creation_time": "2022-03-24T12:59:06.756Z",
+  "last_modified_time": "2022-03-24T12:59:06.756Z",
+  "number_of_related_accounts": 0,
+  "direction": "DEBITS",
+  "merchant_category_codes": [
+    "6012",
+    "7300–7999"
+  ]
+}
+`
+
+## Updating a Spend Control
+
+[](#updating-a-spend-control)
+
+To update a spend control, use PATCH /v0/spend_controls/{id}.
+
+[PATCH /v0/spend_controls/{id}](/reference/updatespendcontrol)
+
+This request will disable a spend control:
+
+`{
+  "is_active": false
+}
+`
+
+This request will set a new time range and amount limit:
+
+`{
+  "amount_limit": 75000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 14
+  }
+}
+`
+
+⚠️Caution
+
+Caution
+
+Updating a spend control will affect all accounts that use that spend control. You can check how many accounts will be affected by checking the number_of_related_accounts field in the spend control response. To get details about the accounts, use GET /v0/accounts and include the spend control ID in the spend_control_ids query parameter. If the spend control is used by multiple accounts and you want to change the spend control rules for just one of those accounts you must create a new spend control and then update the account to use the new spend control and not the old spend control.
+
+`number_of_related_accounts`
+
+[GET /v0/accounts](/reference/listaccounts)
+
+`spend_control_ids`
+
+## List Spend Controls
+
+[](#list-spend-controls)
+
+To list spend controls, use GET /v0/send_controls. Using query parameters. you can filter by limit amount (range), payment type, number of related accounts (range), specific related account ID and name.
+
+[GET /v0/send_controls](/reference/listspendcontrols)
+
+## List Accounts that use a Spend Control
+
+[](#list-accounts-that-use-a-spend-control)
+
+To list all accounts that use a spend control, use GET /v0/accounts and include the spend control ID in the spend_control_ids query parameter.
+
+[GET /v0/accounts](/reference/listaccounts)
+
+`spend_control_ids`
+
+# Link Spend Controls to Accounts
+
+[](#link-spend-controls-to-accounts)
+
+## Create an Account with Spend Controls
+
+[](#create-an-account-with-spend-controls)
+
+To create an account with a spend control, use POST /v0/accounts with the optional field spend_controls_ids. For example:
+
+[POST /v0/accounts](/reference/createaccount)
+
+`spend_controls_ids`
+
+`{
+  "account_template_id": "e14182d8-130c-4fa4-bcac-9b3df1537247",
+  "relationships": [
+    {
+      "person_id": "23ec211e-7c3e-4ead-b340-c5cab70257a2",
+      "relationship_type": "ACCOUNT_HOLDER"
+    }
+  ],
+  "spend_control_ids": [
+    "b9c7da4e-8220-4044-86a0-f91a592002a5"
+  ]
+}
+`
+
+You may specify as many as ten spend_control_ids. Each spend control applies to the account independent of the other spend controls on the account and independent of other accounts that may use the same spend controls.
+
+`spend_control_ids`
+
+## Update an Account's Spend Controls
+
+[](#update-an-accounts-spend-controls)
+
+To change the spend controls for an account, use PATCH /v0/accounts/{id}. For example, to have the account use two spend controls:
+
+[PATCH /v0/accounts/{id}](patchaccount)
+
+`{
+  "spend_control_ids": [
+    "ad7495c3-82d0-482d-b1e4-f0cbab6e039c",
+    "41d6ab10-73b3-4b82-9e75-a4981b35edfb"
+  ]
+}
+`
+
+⚠️Caution
+
+Caution
+
+When updating the list of spend_control_ids for an account, the entire list is replaced. The list is not appended. Old values are dropped. So if you want to add a new spend controls to an account with existing spend controls make sure your update request includes both the old spend controls and the new ones.
+
+`spend_control_ids`
+
+To remove spend controls from an account use an explicitly-empty JSON array.
+
+`{
+  "spend_control_ids": []
+}
+`
+
+## Using Account Templates
+
+[](#using-account-templates)
+
+Account templates may contain spend control IDs. As with other account template fields, these spend control IDs will be the default for any account created using the template but during account creation you can over-ride the template's default.
+
+[Account templates](create-accounts-guide#account-templates)
+
+⚠️Caution
+
+Caution
+
+If you create an account from a template which contains a list of spend_control_ids and specify your own list of spend_control_ids then the two lists are not combined. The list will be whatever you specify in the account creation request.
+
+`spend_control_ids`
+
+`spend_control_ids`
+
+# Spend Monitoring Cases
+
+[](#spend-monitoring-cases)
+
+When spend controls are violated they may create a case in Synctera's case system. If the spend control has action_case set, or if the spend control has action_decline set and the transaction is forced, then there will be a case based on that specific account and spend control. Multiple accounts using the same spend control will have separate cases if multiple accounts violate the spend control. Multiple spend controls on the same account will have separate cases if multiple of the spend controls are violated.
+
+`action_case`
+
+`action_decline`
+
+Multiple violations of a specific spend control for a specific account will combine into the same case as long as the case remains open. Any additional violations will be reflected in violation count of the case. If the case is closed and the account violates the spend control again then a new case will be created.
+
+Updated 3 months ago 
+
+[Table of Contents](#)
+
+[Overview](#overview)
+
+[Managing Spend Controls](#managing-spend-controls)
+
+[Creating a Spend Control](#creating-a-spend-control)
+
+[Spend Control Response](#spend-control-response)
+
+[Updating a Spend Control](#updating-a-spend-control)
+
+[List Spend Controls](#list-spend-controls)
+
+[List Accounts that use a Spend Control](#list-accounts-that-use-a-spend-control)
+
+[Link Spend Controls to Accounts](#link-spend-controls-to-accounts)
+
+[Create an Account with Spend Controls](#create-an-account-with-spend-controls)
+
+[Update an Account's Spend Controls](#update-an-accounts-spend-controls)
+
+[Using Account Templates](#using-account-templates)
+
+[Spend Monitoring Cases](#spend-monitoring-cases)
+

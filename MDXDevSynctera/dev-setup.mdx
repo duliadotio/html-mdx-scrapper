@@ -1,0 +1,294 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Developer Setup
+
+[Suggest Edits](/edit/dev-setup)
+
+# Developer Setup
+
+[](#developer-setup)
+
+Integrating your FinTech application with Synctera starts with a development setup:
+
+## Sign Up For a Synctera Account and Generate API Keys
+
+[](#sign-up-for-a-synctera-account-and-generate-api-keys)
+
+Integrating your FinTech application with Synctera starts as soon as you finalize your fintech information and submit your profile for access to your developer environment:
+
+[Sign up](https://app.synctera.com/sign-up)
+
+📘
+
+Once you close the API key pop-up window, you won't be able to view the key. Remember to store your key in a safe location.
+
+You're all set! Your account is set up, and you’re ready to use your API key in your staging environment.
+
+## Look at Available Synctera APIs
+
+[](#look-at-available-synctera-apis)
+
+To see the available Synctera APIs, take a look at:
+
+[API reference documentation](/reference)
+
+You can use all of these APIs in our sandbox, but your FinTech must be subscribed to the appropriate Synctera products to use APIs for production. Subscribing to Ledger as a Service, for example, provides production access to the Accounts API.
+
+## Using Your API Key
+
+[](#using-your-api-key)
+
+Use the API key you received as authorization for each API request you make to our sandbox. Add it to the request header as shown in this snippet from a cURL request:
+
+-H 'Authorization: Bearer {API_KEY}'
+
+`-H 'Authorization: Bearer {API_KEY}'`
+
+## Create a Customer
+
+[](#create-a-customer)
+
+The following cURL request creates a new customer, specifying name, addresses, data of birth, Social Security number, and other pertinent information. Be sure to use your API key to replace {API_KEY} below for authorization:
+
+`curl -X POST https://api-sandbox.synctera.com/v0/customers \
+-H 'Authorization: Bearer {API_KEY}' \
+-H 'Content-Type: application/json; charset=utf-8' \
+--data-binary @- << EOF
+{
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "middle_name": "Fawn",
+  "legal_address": {
+    "default_address_flg": true,
+    "type": "home",
+    "house_number": "781",
+    "address_line_1": "Street Rd.",
+    "address_line_2": "Apartment 32",
+    "city": "Centerville",
+    "state": "CO",
+    "postal_code": "40993",
+    "country_code": "US"
+  },
+  "shipping_address": {
+    "default_address_flg": false,
+    "type": "work",
+    "house_number": "485",
+    "address_line_1": "Boulevard Ave.",
+    "city": "Centerville",
+    "state": "CO",
+    "postal_code": "40995",
+    "country_code": "US"
+  },
+  "dob": "2000-01-01",
+  "ssn": "123-45-6789",
+  "email": "[email protected]",
+  "mobile_phone_number": "+17520343695",
+  "status": "ACTIVE"
+}
+EOF
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+The request returns information about the newly created that includes a customer ID used to specify the customer in other requests:
+
+`{
+  "dob":"2000-01-01",
+  "email":"[email protected]",
+  "first_name":"Jane",
+  "id":"e79ca9ae-25bd-421e-92a2-22d118397799",
+  "last_name":"Doe",
+  "legal_address": {
+    "address_line_1":"Street Rd.",
+    "address_line_2":"Apartment 32",
+    "city":"Centerville",
+    "country_code":"US","default_address_flg":true,
+    "id":"a765479c-ef5f-405b-9e0a-746bdd1e4974",
+	"postal_code":"40993",
+    "state":"CO","type":"home"
+  },
+  "middle_name":"Fawn",
+  "shipping_address": {
+    "address_line_1":"Boulevard Ave.",
+    "city":"Centerville",
+    "country_code":"US",
+    "default_address_flg":false,
+    "id":"8cf2f320-dee9-4e44-87be-b1296ce1fa9f",
+    "postal_code":"40995",
+    "state":"CO","type":"work"
+  },
+  "ssn":"6789",
+  "status":"ACTIVE"
+}
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+## Synctera Development Tools
+
+[](#synctera-development-tools)
+
+Synctera offers an SDK with client libraries at:
+
+[https://github.com/synctera/client-libraries-go](https://github.com/synctera/client-libraries-go)
+
+For current status of API service, look at:
+
+[https://status.synctera.com/](https://status.synctera.com/)
+
+Updated about 1 year ago 
+
+[Table of Contents](#)
+
+[Developer Setup](#developer-setup)
+
+[Sign Up For a Synctera Account and Generate API Keys](#sign-up-for-a-synctera-account-and-generate-api-keys)
+
+[Look at Available Synctera APIs](#look-at-available-synctera-apis)
+
+[Using Your API Key](#using-your-api-key)
+
+[Create a Customer](#create-a-customer)
+
+[Synctera Development Tools](#synctera-development-tools)
+

@@ -1,0 +1,360 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Statements
+
+[Suggest Edits](/edit/statements-guide)
+
+A statement is a disclosure of the state of an account, and its activity, over a billing period. Synctera will generate a statement payload for any account that requires periodic statements to be provided to the customer, through the Statements API. These payloads are made available at the end of every billing period, which is usually from the first to the last day of a calendar month.
+
+[Statements API](/reference/liststatements)
+
+At this time, Synctera does not generate a printable version of a statement.
+
+## Prerequisites
+
+[](#prerequisites)
+
+This guide assumes that you are already familiar with the customer and account APIs, and have one or more accounts created.
+
+If this is not the case, refer to the following guides:
+
+[Customers](/docs/create-a-personal-customer)
+
+[Business Customers](/docs/create-a-business)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Accounts](/docs/create-accounts-guide)
+
+# Statement generation
+
+[](#statement-generation)
+
+📘
+
+The V0 version of this API only supports statements for CHECKING and SAVING accounts. More account types will be supported in future versions.
+
+`CHECKING`
+
+`SAVING`
+
+A statement is generated automatically at the end of an account's billing period. At this time, billing frequency is monthly, meaning that at the end of every calendar month a bank statement will be generated for every eligible account:
+
+`CHECKING`
+
+`SAVING`
+
+Once a statement is generated, a notification will be sent via webhook. Please refer to the Webhook Events section for details.
+
+[Webhook Events](#webhook-events)
+
+## Statement content
+
+[](#statement-content)
+
+In order to produce regulatory-compliant, human-readable statements, this API provides the following information:
+
+`start_date`
+
+`end_date`
+
+`issue_date`
+
+`opening_balance`
+
+`closing_balance`
+
+`start_date`
+
+`end_date`
+
+`disclosure`
+
+`transactions`
+
+[this section](#step-3-list-the-transactions-for-a-statement)
+
+`account_summary`
+
+`account_summary`
+
+`financial_institution`
+
+`customer_service_details`
+
+`primary_account_holder_personal`
+
+`account_summary.customer_type`
+
+`PERSONAL`
+
+`primary_account_holder_personal`
+
+`primary_account_holder_business`
+
+`account_summary.customer_type`
+
+`BUSINESS`
+
+`primary_account_holder_business`
+
+`joint_account_holders`
+
+`authorized_signer`
+
+`savings_summary`
+
+`apy`
+
+`savings_summary`
+
+`interest_earned`
+
+`interest_earned_ytd`
+
+For more details about the schema returned by this API, please refer to the Statements API specification.
+
+[Statements API specification](/reference/getstatement)
+
+Here is a sample statement produced using the information provided by this API:
+
+## Webhook Events
+
+[](#webhook-events)
+
+📘
+
+This section assumes you are familiar with our webhook API. If not, please see the webhooks guide for more context.
+
+[webhooks guide](/docs/webhooks-guide)
+
+When a statement is generated, a webhook notification will be sent to subscribers of event type STATEMENT.CREATED. The event will contain a full version of the statement payload, following the spec outlined in the Statements API specification.
+
+`STATEMENT.CREATED`
+
+[Statements API specification](/reference/getstatement)
+
+Please note that if a statement contains an excessive number of transactions, the system may opt to return an empty list in the webhook notification to the subscriber due to technical limitations. This will be reflected in the payload with transactions_omitted set to "true" and an empty transactions attribute.
+
+`transactions_omitted`
+
+`"true"`
+
+`transactions`
+
+# API Workflow
+
+[](#api-workflow)
+
+## Step 1: List the statements for a given account
+
+[](#step-1-list-the-statements-for-a-given-account)
+
+If statements are available for an account, you can retrieve a summarized list by calling GET /v0/statements, with an account_id query parameter:
+
+[GET /v0/statements](/reference/liststatements)
+
+`GET /v0/statements`
+
+`account_id`
+
+`curl --request GET \
+   --url https://api.synctera.com/v0/statements?account_id=37083b2c-d3f9-4a7f-b781-7342285c368e \
+   -H 'Accept: application/json' \
+   -H "Authorization: Bearer $apikey"
+`
+
+This route only gives high-level details about each statement. Once you know the ID of the statement you're looking for, you can retrieve details about that statement.
+
+## Step 2: Retrieve the details for a given statement
+
+[](#step-2-retrieve-the-details-for-a-given-statement)
+
+With a statement ID, you'll be able to pull detailed information about the statement:
+
+`curl --request GET \
+   --url https://api.synctera.com/v0/statements/a4554821-22c2-4053-8b50-768365b98c83 \
+   -H 'Accept: application/json' \
+   -H "Authorization: Bearer $apikey"
+`
+
+📘
+
+Transaction information will be omitted from the statement detail response payload in future versions of the API. We recommend that all existing clients migrate to calling the dedicated transactions endpoint instead of relying on the transactions attribute.
+
+`transactions`
+
+## Step 3: List the transactions for a statement
+
+[](#step-3-list-the-transactions-for-a-statement)
+
+With a statement ID, you'll be able to pull the list of transactions that pertain to that statement:
+
+`curl --request GET \
+   --url https://api.synctera.com/v0/statements/a4554821-22c2-4053-8b50-768365b98c83/transactions \
+   -H 'Accept: application/json' \
+   -H "Authorization: Bearer $apikey"
+`
+
+This list will only include posted transactions at the time of statement generation. These are also only returned to you in descending order of posted date.
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Prerequisites](#prerequisites)
+
+[Statement generation](#statement-generation)
+
+[Statement content](#statement-content)
+
+[Webhook Events](#webhook-events)
+
+[API Workflow](#api-workflow)
+
+[Step 1: List the statements for a given account](#step-1-list-the-statements-for-a-given-account)
+
+[Step 2: Retrieve the details for a given statement](#step-2-retrieve-the-details-for-a-given-statement)
+
+[Step 3: List the transactions for a statement](#step-3-list-the-transactions-for-a-statement)
+

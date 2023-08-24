@@ -1,0 +1,364 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Ongoing Monitoring
+
+[Suggest Edits](/edit/monitoring-guide)
+
+📘
+
+At this time, monitoring enrollment for personal customers is only available in the Synctera Production environment.
+
+By default, all customers are enrolled in ongoing monitoring. Contact your Synctera sales representative to have this feature disabled.
+
+This guide is provided to showcase a manual implementation of ongoing monitoring.
+
+In addition to the Customer Identification Program (CIP) requirements discussed in the KYC guide financial service providers are required to conduct ongoing monitoring of their customers.
+
+[KYC guide](/docs/kyc-kyb-verifications)
+
+Synctera's monitoring offering provides the ability to subscribe customers to monitoring of global list of sanctions and enforcement watchlists, Politically Exposed Person (PEP) sources, and adverse media screening.
+
+### Prerequisites
+
+[](#prerequisites)
+
+This guide assumes that you have:
+
+[personal customer](/docs/create-a-personal-customer)
+
+[disclosure](/docs/disclosures)
+
+[verified a customer](/docs/kyc-kyb-verifications)
+
+### Monitoring subscriptions
+
+[](#monitoring-subscriptions)
+
+A monitoring subscription represents the customer's enrollment with one of Synctera's monitoring vendors (e.g. Socure, Middesk). A monitoring subscription contains a unique identifier, the identifier of the customer, and any additional metadata.
+
+`{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+  "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+  "creation_time": "2021-06-14T14:15:22Z",
+  "last_updated_time": "2021-12-14T07:15:34Z",
+  "metadata": {}
+}
+`
+
+The expected path for integrating monitoring into your platform includes: (1) Creating a customer. (2) Creating the necessary disclosures. (3) Verifying the customer. (4) Creating a monitoring subscription.
+
+By default, all customers are automatically enrolled in subscription monitoring. Contact your Synctera sales representative to have this feature disabled.
+
+See the API reference for more information about monitoring subscriptions.
+
+[API reference](/reference/createsubscription)
+
+### Monitoring alerts
+
+[](#monitoring-alerts)
+
+When an alert is received for a customer (e.g. watchlist hit, Secretary of State filing, bankruptcy, etc.) a monitoring alert is created.
+
+ A monitoring alert contains a unique identifier, the identifier of the customer, the type of alert, status, a list of URLs where you can find more information, and a vendor specific representation alert.
+
+`{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+  "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+  "type": "WATCHLIST",
+  "vendor_info": {
+    "vendor": "SOCURE",
+    "content_type": "application/json",
+    "json": {}
+  },
+  "urls": [
+    "https://example.com/alert-document-1",
+    "https://example.com/alert-document-2"
+  ],
+  "status": "ACTIVE",
+  "creation_time": "2021-06-14T14:15:22Z",
+  "last_updated_time": "2021-12-14T07:15:34Z",
+  "metadata": {}
+}
+`
+
+Every incoming customer monitoring alert will trigger a case to be created in the Synctera Case Manager so that their profile can be manually reviewed by a compliance officer.
+
+[Synctera Case Manager](https://learn.synctera.com/docs/en/kyc-cases-fintechs)
+
+See the API reference for more information about monitoring alerts.
+
+[API reference](/reference/getalert)
+
+### Integration Steps
+
+[](#integration-steps)
+
+### 1. Create a personal customer
+
+[](#1-create-a-personal-customer)
+
+First we start by creating a record for our new customer. We'll use the POST /persons endpoint to create a person.
+
+`POST /persons`
+
+[create a person](/reference/createperson)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/persons \
+  --data-binary '
+  {
+    "first_name": "Christopher",
+    "middle_name": "James",
+    "last_name": "Albertson",
+    "dob": "1985-06-14",
+    "email": "[email protected]",
+    "phone_number": "+16045551212",
+    "ssn": "456-78-9999",
+    "legal_address": {
+      "address_line_1": "123 Main St.",
+      "city": "Beverly Hills",
+      "state": "CA",
+      "postal_code": "90210",
+      "country_code": "US"
+    },
+    "is_customer": true,
+    "status": "ACTIVE"
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+For more information about creating and managing people consult the person guide.
+
+[person guide](/docs/create-a-personal-customer)
+
+### 2. Create a KYC data collection disclosure
+
+[](#2-create-a-kyc-data-collection-disclosure)
+
+Once we have our created customer, you will need to display a disclosure to your customer that you are collecting personal data that will be shared with a third-party for the purpose of verifying their identity. For this we use the disclosures resource.
+
+[disclosures resource](/reference/createdisclosure)
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/disclosures \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "type": "KYC_DATA_COLLECTION",
+    "version": "1.0",
+    "event_type": "ACKNOWLEDGED",
+    "disclosure_date": "2022-03-17T17:04:34Z"
+  }'
+`
+
+For more information about creating and managing disclosures consult the disclosure guide.
+
+[disclosure guide](/docs/record-disclosure-acceptance)
+
+### 3. Verify the customer
+
+[](#3-verify-the-customer)
+
+Now that we have a customer, and consent to collect and share their data we can verify this customer.
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/verifications/verify \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+    "customer_ip_address": "184.233.47.237",
+    "customer_consent": true
+  }'
+`
+
+📘
+
+Consent must come directly from the customer.
+
+### 4. Enroll the customer in monitoring
+
+[](#4-enroll-the-customer-in-monitoring)
+
+Once the customer has been verified, we are able to create a monitoring subscription.
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  https://api.synctera.com/v0/monitoring/subscriptions \
+  --data-binary '
+  {
+    "person_id": "7ef75751-e372-4c12-9b02-b9e4b1faaac9",
+  }'
+`
+
+Updated 6 months ago 
+
+[Table of Contents](#)
+
+[Prerequisites](#prerequisites)
+
+[Monitoring subscriptions](#monitoring-subscriptions)
+
+[Monitoring alerts](#monitoring-alerts)
+
+[Integration Steps](#integration-steps)
+
+[1. Create a personal customer](#1-create-a-personal-customer)
+
+[2. Create a KYC data collection disclosure](#2-create-a-kyc-data-collection-disclosure)
+
+[3. Verify the customer](#3-verify-the-customer)
+
+[4. Enroll the customer in monitoring](#4-enroll-the-customer-in-monitoring)
+

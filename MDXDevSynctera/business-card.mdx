@@ -1,0 +1,373 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Business Expense Cards
+
+[Suggest Edits](/edit/business-card)
+
+This guide will show how to set up business expense cards in Synctera's platform. In this guide we will create a business expense account which will fund card purchases made by the business's employees, subject to spending controls. The purpose of this guide is to give an overview of how the various entities in Synctera's platform work together to be able to handle this type of use case.
+
+## Prerequisites
+
+[](#prerequisites)
+
+Before continuing in this guide you will also need a card product set up using a commercial BIN. We will refer to its UUID as {{card_product_id}}.
+
+`{{card_product_id}}`
+
+Please also have a business created and fully verified such that is has a verification_status of "ACCEPTED". We will refer to the UUID of this business as {{business_id}}.
+
+`verification_status`
+
+`"ACCEPTED"`
+
+`{{business_id}}`
+
+You will also need one or more persons in the system that have been verified and passed KYC. This means they must have a kyc_status of "ACCEPTED". We will refer to their UUIDs as {{employee1_id}}, {{employee2_id}}, etc. Refer to the KYC Verification API Overview for the process to get your customers verified.
+
+`kyc_status`
+
+`"ACCEPTED"`
+
+`{{employee1_id}}`
+
+`{{employee2_id}}`
+
+[KYC Verification API Overview](/reference/kyc-verification)
+
+## Business expense account
+
+[](#business-expense-account)
+
+Create an account template by performing a POST /v0/accounts/templates with the following request body.
+
+[POST /v0/accounts/templates](/reference/createaccounttemplate)
+
+`{
+  "name": "business expense accounts",
+  "is_enabled": true,
+  "template": {
+    "account_type": "CHECKING",
+    "bank_country": "US",
+    "currency": "USD",
+    "is_ach_enabled": false,
+    "is_card_enabled": false,
+    "is_p2p_enabled": true
+  }
+}
+`
+
+Note that cards are not enabled for accounts created using this template but the accounts can be funded via P2P transactions (money movement within Synctera's platform).
+
+The request should return a new account template. We will refer to this template's UUID as {{business_account_template_id}}.
+
+`{{business_account_template_id}}`
+
+Using this new template, create a new account by performing a POST /v0/accounts with the following request body.
+
+[POST /v0/accounts](/reference/createaccount)
+
+`{
+  "account_template_id": "{{business_account_template_id}}",
+  "relationships": [
+    {
+      "relationship_type": "ACCOUNT_HOLDER",
+      "business_id": "{{business_id}}"
+    }
+  ]
+}
+`
+
+We will refer to this new account's UUID as {{business_account_id}}. Because we disabled cards in the account template, we can not issue cards for this account directly. The cards will be issued against the employee expense accounts which will in turn be connected to this account.
+
+`{{business_account_id}}`
+
+## Spend control
+
+[](#spend-control)
+
+Create a spend control rule by performing a POST /v0/spend_controls with the following request body. For more details, see the spend controls guide.
+
+[POST /v0/spend_controls](/reference/createspendcontrol)
+
+[spend controls guide](/reference/spend-controls-guide)
+
+`{
+  "name": "Employee monthly limit",
+  "amount_limit": 100000,
+  "time_range": {
+    "time_range_type": "ROLLING_WINDOW_DAYS",
+    "days": 30
+  },
+  "action_decline": true,
+  "action_case": false,
+  "is_active": true
+}
+`
+
+The request should return a new spend control rule. We will refer to this rule's UUID as {{spend_control_id}}.
+
+`{{spend_control_id}}`
+
+## Employee expense accounts
+
+[](#employee-expense-accounts)
+
+Create another account template by performing a POST /v0/accounts/templates with the following request body.
+
+[POST /v0/accounts/templates](/reference/createaccounttemplate)
+
+`{
+  "is_enabled": true,
+  "name": "employee spending accounts",
+  "template": {
+    "account_type": "CHECKING",
+    "bank_country": "US",
+    "currency": "USD",
+    "balance_floor": {
+      "balance": 0,
+      "linked_account_id": "{{business_account_id}}"
+    },
+    "balance_ceiling": {
+      "balance": 0,
+      "linked_account_id": "{{business_account_id}}"
+    },
+    "is_ach_enabled": false,
+    "is_card_enabled": true,
+    "is_p2p_enabled": false,
+    "spend_control_ids": [
+      "{{spend_control_id}}"
+    ]
+  }
+}
+`
+
+This request references the spend control.
+
+This request also includes balance floor and balance ceiling objects. The balance floor is zero and the overdraft_account_id refers to the business account we created earlier. This means that for any account created using this template, the business account will provide real-time funding in order to keep the account's balance at or above zero. Similarly, the balance ceiling is also zero and the overflow_account_id also refers to the business account we created earlier. This means that for any account using this template, the business account will receive funds flowing in to the account in order to keep the account's balance at or below zero. In other words, accounts created using this template never hold a balance and card transactions on these accounts effectively move money to and from the business account. The accounts are still limited by their individual spending limits of $1000 per month. For more information, see the guide Balance Floor and Ceiling and Linked Accounts.
+
+`overdraft_account_id`
+
+`overflow_account_id`
+
+[Balance Floor and Ceiling and Linked Accounts](/reference/balance-floor-ceiling)
+
+Note that the only payment rail enabled for this account template is cards.
+
+The request should return a new account template. We will refer to this template's UUID as {{employee_account_template_id}}.
+
+`{{employee_account_template_id}}`
+
+With this template we can now create accounts for all the business's employees by performing a POST /v0/accounts with the following request body.
+
+[POST /v0/accounts](/reference/createaccount)
+
+`{
+  "account_template_id": "{{employee_account_template_id}}",
+  "relationships": [
+    {
+      "relationship_type": "ACCOUNT_HOLDER",
+      "customer_id": "{{employee1_id}}"
+    }
+  ]
+}
+`
+
+This will create a new account. We will refer to the new account's ID as {{employee1_account_id}}. Repeat this request using {{employee2_id}} to create {{employee2_account_id}}, then using {{employee3_id}} to create {{employee3_account_id}}, etc.
+
+`{{employee1_account_id}}`
+
+`{{employee2_id}}`
+
+`{{employee2_account_id}}`
+
+`{{employee3_id}}`
+
+`{{employee3_account_id}}`
+
+## Employee cards
+
+[](#employee-cards)
+
+Create a card for each employee by performing a POST /v0/cards with the following request body. This assumes your card product is for physical cards. For virtual cards replace "PHYSICAL" with "VIRTUAL".
+
+[POST /v0/cards](/reference/issuecard)
+
+`"PHYSICAL"`
+
+`"VIRTUAL"`
+
+`{
+  "form": "PHYSICAL",
+  "account_id": "{{employee1_account_id}}",
+  "card_product_id": "{{card_product_id}}",
+  "customer_id": "{{employee1_id}}",
+  "type": "DEBIT"
+}
+`
+
+Then repeat this request to create cards for the other employees and their accounts.
+
+## Transactions
+
+[](#transactions)
+
+Experiment with the employee cards by doing some simulated card transactions. Card transaction authorizations will automatically create "JIT funding" transactions between the business account and the respective employee accounts. For example, a $10 authorization for employee 1's card will decrease the balance of the business account by $10 and increase the ledger balance of employee 1's account by $10. This $10 will be placed on hold so the available balance of employee 1's account remains zero. If this authorization is reversed the $10 automatically moves back into the business account. Card transactions will appear in the employee account transaction histories. There will be corresponding "JIT funding" transactions that appear in the employee accounts and the business accounts.
+
+The monthly limit applies to each employee independently. Any attempt to authorize a transaction over the limit will be declined.
+
+Updated 9 months ago 
+
+[Table of Contents](#)
+
+[Prerequisites](#prerequisites)
+
+[Business expense account](#business-expense-account)
+
+[Spend control](#spend-control)
+
+[Employee expense accounts](#employee-expense-accounts)
+
+[Employee cards](#employee-cards)
+
+[Transactions](#transactions)
+

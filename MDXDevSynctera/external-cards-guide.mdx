@@ -1,0 +1,486 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# External Cards
+
+[Suggest Edits](/edit/external-cards-guide)
+
+An External Card on the Synctera platform represents a tokenized debit or credit card with which you may perform transactions. This may be a card external to Synctera or a Synctera issued card. There are three types of transactions which may be performed:
+
+`PUSH`
+
+`PULL`
+
+`PULL_REVERSAL`
+
+`PULL`
+
+This guide will explain how to add an External Card and perform transactions with it.
+
+See External Cards API for more details.
+
+[External Cards API](/reference/external-cards)
+
+## Onboarding
+
+[](#onboarding)
+
+In order to be enabled for External Cards, please reach out your Synctera implementation and onboarding contact.
+
+## Add External Card
+
+[](#add-external-card)
+
+The first step to adding an External Card is to tokenize the card. To do so, see Link External Cards guide for how to obtain a token and cardholder name through the iFrame.
+
+[Link External Cards](/docs/link-external-cards)
+
+`token`
+
+`name`
+
+Once the card has been tokenized, use the token and cardholder name to create an External Card. person_id must also be provided and business_id may optionally be provided if applicable. Note that if business_id is provided, address verification is performed on the Business's legal address, otherwise, it is performed on the Person's legal address. However, cardholder name matching is performed on the Person's name regardless. 
+
+`token`
+
+`name`
+
+`person_id`
+
+`business_id`
+
+`business_id`
+
+`name`
+
+📘
+
+The token will expire after 5 minutes, so ensure External Card creation is performed shortly after card tokenization.
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/tokens \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "token": "{TOKEN}"
+    "name": "Jane Taylor",
+    "customer_id": "{CUSTOMER_ID}"
+  }'
+`
+
+Example response:
+
+`{
+  "created_time": "2023-01-18T12:03:46.892809-05:00",
+  "currency": "USD",
+  "customer_id": "{CUSTOMER_ID}",
+  "expiration_month": "4",
+  "expiration_year": "2026",
+  "id": "{EXTERNAL_CARD_ID}",
+  "last_four": "0004",
+  "last_modified_time": "2023-01-18T12:03:46.892809-05:00",
+  "name": "Jane Taylor",
+  "verifications": {
+    "address_verification_result": "VERIFIED",
+    "cvv2_result": "VERIFIED",
+    "pull_enabled": true,
+    "push_enabled": true,
+    "state": "SUCCEEDED"
+  }
+}
+`
+
+The verifications object contains information about the card, including address verifiation and CVV2 code results, as well as the type of transactions the card supports. If either pull_enabled or push_enabled are false, that type of transaction may not be performed using the card.
+
+`verifications`
+
+`pull_enabled`
+
+`push_enabled`
+
+`false`
+
+### Testing
+
+[](#testing)
+
+The following card PANs can be used in sandbox environment for testing various scenarios:
+
+## Create External Card Transaction
+
+[](#create-external-card-transaction)
+
+Now that an External Card has been tokenized and created, it may be used to perform transactions. An account_id must be provided, which refers to the Synctera Account that the funds will flow into or out from, depending on the type of transaction.
+
+`account_id`
+
+The merchant object contains merchant descriptor information that will be shown on financial statements and transaction details. If not provided, default information, defined during onboarding, is used.
+
+`merchant`
+
+The status field of the response indicates the outcome of the transaction:
+
+`status`
+
+`SUCCEEDED`
+
+`DECLINED`
+
+`CANCELED`
+
+`UNKNOWN`
+
+`PENDING`
+
+For the non-terminal status, you can subscribe to the EXTERNAL_CARD_TRANSFER.UPDATED webhook to be notified of status change, or simply Get External Card Transfer at a later time. Once a transaction is in a terminal status, it will not change.
+
+`EXTERNAL_CARD_TRANSFER.UPDATED`
+
+[Get External Card Transfer](/reference/getexternalcardtransfer)
+
+⚠️
+
+Be aware that while testing in the sandbox environment, amount values 1, 1100, 2, 1200, 3, 1300, 4 and 1400 are special values reserved for generating upstream processor errors. They can be used in any Create External Card Transfer request to force an error to occur.
+
+`amount`
+
+`1`
+
+`1100`
+
+`2`
+
+`1200`
+
+`3`
+
+`1300`
+
+`4`
+
+`1400`
+
+[Create External Card Transfer](/reference/createexternalcardtransfer)
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "external_card_id": "{EXTERNAL_CARD_ID}",
+    "originating_account_id": "{ACCOUNT_ID}",
+    "currency": "USD",
+    "type": "PULL",
+    "amount": 2500,
+    "merchant": {
+        "name": "Jane Taylor’s Pub",
+        "address": {
+            "address_line_1": "4455 Vine Street",
+            "city": "Lake Forest",
+            "state": "IL",
+            "postal_code": "60045",
+            "country_code": "US"
+        },
+        "email": "[email protected]"
+    }
+  }'
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+Example response:
+
+`{
+  "account_id": "{ACCOUNT_ID}",
+  "amount": 2500,
+  "country_code": "US",
+  "created_time": "2023-01-18T17:37:59.449877-05:00",
+  "currency": "USD",
+  "customer_id": "{CUSTOMER_ID}",
+  "external_card_id": "{EXTERNAL_CARD_ID}",
+  "id": "{EXTERNAL_CARD_TRANSFER_ID}",
+  "last_modified_time": "2023-01-18T17:37:59.449877-05:00",
+  "merchant": {
+      "name": "Jane Taylor’s Pub",
+      "address": {
+          "address_line_1": "4455 Vine Street",
+          "city": "Lake Forest",
+          "state": "IL",
+          "postal_code": "60045",
+          "country_code": "US"
+      },
+      "email": "[email protected]"
+  },
+  "status": "SUCCEEDED",
+  "transaction_id": "{TRANSACTION_ID}",
+  "type": "PULL"
+}
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+transaction_id can be used to look up the transaction using the Transactions API.
+
+`transaction_id`
+
+[Transactions API](/reference/transactions)
+
+If you receive the following response, it means 3-D Secure is required for this transaction and three_ds_id must be provided. See External Cards 3-D Secure (3DS) guide for more information. Note that this is only applicable to PULL transactions.
+
+`three_ds_id`
+
+[External Cards 3-D Secure (3DS)]()
+
+`PULL`
+
+Response:
+
+`{
+  "code": "EXTERNAL_CARD_TRANSFER_3DS_REQUIRED",
+  "detail": "3-D Secure authorization required for this external card transfer",
+  "status": 422,
+  "title": "Rule Violation",
+  "type": "https://dev.synctera.com/errors/rule-violation"
+}
+`
+
+### Me-to-You PUSH Transactions
+
+[](#me-to-you-push-transactions)
+
+In the typical case, the originating Account and the External Card are assumed to be owned by the same Person (me-to-me transaction). However, it's also possible to initiate a (PUSH only) transaction to an External Card owned by Person who is not the originating Account owner (me-to-you transaction). In this scenario, originating_customer_id is supplied with the Person who owns the originating Account.
+
+`PUSH`
+
+`originating_customer_id`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "external_card_id": "{EXTERNAL_CARD_ID}",
+    "originating_customer_id": "{CUSTOMER_ID}": 
+    "originating_account_id": "{ACCOUNT_ID}",
+    "currency": "USD",
+    "type": "PULL",
+    "amount": 1000,
+  }'
+`
+
+## Reverse External Card Transaction
+
+[](#reverse-external-card-transaction)
+
+Reversals can only be applied to PULL transactions. The full or partial amount may be reversed. However, only one partial reversal may be applied to a single transaction.
+
+`PULL`
+
+Example request:
+
+`curl \
+  $baseurl/v0/external_cards/transfers/{EXTERNAL_CARD_TRANSFER_ID}/reversals \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "currency": "USD",
+    "amount": 2500
+  }'
+`
+
+Example response:
+
+`{
+  "account_id": "{ACCOUNT_ID}",
+  "amount": 2500,
+  "country_code": "US",
+  "created_time": "2023-01-18T17:53:12.52114-05:00",
+  "currency": "USD",
+  "customer_id": "{CUSTOMER_ID}",
+  "external_card_id": "{EXTERNAL_CARD_ID}",
+  "id": "{EXTERNAL_CARD_TRANSFER_REVERSAL_ID}",
+  "last_modified_time": "2023-01-18T17:53:12.52114-05:00",
+  "merchant": {
+      "name": "Jane Taylor’s Pub",
+      "address": {
+          "address_line_1": "4455 Vine Street",
+          "city": "Lake Forest",
+          "state": "IL",
+          "postal_code": "60045",
+          "country_code": "US"
+      },
+      "email": "[email protected]"
+  },
+  "status": "SUCCEEDED",
+  "transaction_id": "{TRANSACTION_ID}",
+  "type": "PULL_REVERSAL"
+}
+`
+
+[[email protected]](/cdn-cgi/l/email-protection)
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Onboarding](#onboarding)
+
+[Add External Card](#add-external-card)
+
+[Testing](#testing)
+
+[Create External Card Transaction](#create-external-card-transaction)
+
+[Me-to-You PUSH Transactions](#me-to-you-push-transactions)
+
+[Reverse External Card Transaction](#reverse-external-card-transaction)
+

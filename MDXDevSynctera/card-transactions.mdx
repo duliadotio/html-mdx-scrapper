@@ -1,0 +1,724 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Card Transactions
+
+[Suggest Edits](/edit/card-transactions)
+
+# Card Transactions
+
+[](#card-transactions)
+
+A card transaction is defined as a transaction that occurs on a customer issued card. All Synctera payment types utilize the common /transactions resource - see API reference for details.
+
+`/transactions`
+
+[API reference](/reference/transactions)
+
+## Transaction Flows
+
+[](#transaction-flows)
+
+The flow of a transaction is split into two major components:
+
+### Funding Request
+
+[](#funding-request)
+
+Funding requests are initiated at the time of card usage. When a cardholder initiates a transaction, the merchant sends a request to the network. The network then sends a funding request to Synctera, expecting an approved or denied response. A Pending Transaction is created when the funding request is received, which publishes a webhook) on the transaction.pending.created topic with initial status PENDING.
+
+[Pending Transaction](/reference/transactions)
+
+[webhook](/docs/webhooks-guide)
+
+`transaction.pending.created`
+
+`PENDING`
+
+Synctera then makes a determination on whether to approve or decline the funding request. See declined transactions for more details.
+
+[declined transactions](#declined-transactions)
+
+While evaluating the funding request, the Pending Transaction may be updated with supplemental data gathered during the process. A transaction.pending.upated webhook is published when the transaction is updated. For example, enhanced transaction information may be added.
+
+[Pending Transaction](/reference/transactions)
+
+`transaction.pending.upated`
+
+[webhook](/docs/webhooks-guide)
+
+[enhanced transaction](#enhanced-transactions)
+
+#### Funding Request Flow
+
+[](#funding-request-flow)
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+sequenceDiagram
+Customer->>Merchant: Initiate transaction
+Merchant->>Network: Request
+Network->>Synctera: Funding request
+Synctera->>FinTech: Pending transaction created webhook
+Synctera->>Synctera: Evaluate funding request
+Synctera->>FinTech: Pending transaction updated webhook
+Synctera-->>Network: Response
+Network-->>Merchant: Response
+`
+
+In addition, the FinTech can elect to participate in the funding request authorization flow - see FinTech in the auth flow - which adds an additional decision point to the evaluation.
+
+[FinTech in the auth flow](#fintech-in-the-auth-flow)
+
+### Clearing
+
+[](#clearing)
+
+The transaction is not fully complete until it has cleared. The clearing process causes a transaction to change from pending to posted. This is when money actually moves. Note that pending and posted transactions are distinct resources - see API reference for more details.
+
+[API reference](/reference/transactions)
+
+After the funding request is approved - sometimes hours - the merchant initiates a request to the network for retrieving the funds for all of their pending transactions. Synctera receives the clearing notification, updates the Pending Transaction and creates a Posted Transaction.
+
+[Pending Transaction](/reference/transactions)
+
+[Posted Transaction](/reference/transactions)
+
+Two webhooks are published when clearing is complete. First, transaction.pending.updated when Pending Transaction status is changed to CLEARED. Second, transaction.posted.created when the Posted Transaction is created.
+
+[webhooks](/docs/webhooks-guide)
+
+`transaction.pending.updated`
+
+[Pending Transaction](/reference/transactions)
+
+`CLEARED`
+
+`transaction.posted.created`
+
+[Posted Transaction](/reference/transactions)
+
+#### Clearing Flow
+
+[](#clearing-flow)
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+sequenceDiagram
+Merchant->>Network: Request
+Network->>Synctera: Notification
+Synctera->>FinTech: Pending transaction updated webhook
+Synctera->>FinTech: Posted transaction created webhook
+`
+
+## Declined Transactions
+
+[](#declined-transactions)
+
+Transactions may be declined for various reasons, including:
+
+[FinTech in the auth flow](#fintech-in-the-auth-flow)
+
+[Network Stand-In](#network-stand-in-scenario)
+
+When a transaction is declined, the status is updated to DECLINED. In most cases, a transaction.pending.updated will be issued to signal change of status. However, in the case of network declination, there will only be a transaction.pending.created webhook with initial status of DECLINED.
+
+`DECLINED`
+
+`transaction.pending.updated`
+
+`transaction.pending.created`
+
+`DECLINED`
+
+The data.reason field of the Pending Transaction body contains the reason for why the transaction was declined. Below is a list of reasons and their sources:
+
+`data.reason`
+
+[Pending Transaction](/reference/transactions)
+
+Customer/account standing:
+
+`NO_CHECKING_ACCOUNT`
+
+`NO_SAVINGS_ACCOUNT`
+
+`NO_CREDIT_ACCOUNT`
+
+`CLOSED_ACCOUNT`
+
+Fraud:
+
+`SUSPECTED_FRAUD`
+
+Ledger:
+
+`INSUFFICIENT_FUNDS`
+
+`DISABLED_PAYMENT_TYPE`
+
+`BALANCE_VIOLATION`
+
+`DUPLICATE_TRANSACTION`
+
+`SPEND_CONTROL_VIOLATED`
+
+[Spend Controls](/reference/spend-controls-guide)
+
+Network stand-in:
+
+`NETWORK_DECLINED`
+
+📘
+
+For network declined transactions, there will be additional details under data.user_data.network_decline_details of the Pending Transaction body.
+
+`data.user_data.network_decline_details`
+
+[Pending Transaction](/reference/transactions)
+
+Gateway:
+
+`GATEWAY_DECLINED`
+
+`GATEWAY_ERROR`
+
+General purpose:
+
+`TRANSACTION_NOT_PERMITTED`
+
+📘
+
+The list of possible decline reasons is subject to grow, so code should be written defensively around processing declined transactions.
+
+## Network Stand-In Scenario
+
+[](#network-stand-in-scenario)
+
+Stand-in scenario happens when a funding request from the network is not responded to in time, so the network must stand in to be the decision maker. It is intended to be a fallback mechanism and not to be consistently relied upon, as there is less control over the decision which may result in undesired money movement.
+
+In rare cases, Synctera may never recieve a funding request and only be informed that a transaction has taken place after the fact. In this case, there will only be a Posted Transaction, no Pending Transaction.
+
+[Posted Transaction](/reference/transactions)
+
+[Pending Transaction](/reference/transactions)
+
+## Card Transaction Simulations
+
+[](#card-transaction-simulations)
+
+Synctera provides a variety of endpoints that simulate card transactions. These endpoints mimic how real transaction will look in a production environment. This gives FinTechs the tools to develop and test their application against the different types of card transactions without any real money movement or financial impact.
+
+All card transaction simulation endpoints are found under the /cards/transaction_simulations path - see API reference for details. These endpoints can only be used in the Synctera Sandbox environment.
+
+`/cards/transaction_simulations`
+
+[API reference](/reference/card-transaction-simulations)
+
+[Synctera Sandbox](/reference/environments#sandbox)
+
+This guide will explain how to simulate a selection of typical transaction scenarios.
+
+#### Merchant Information Fields
+
+[](#merchant-information-fields)
+
+Many of these endpoints require a card_acceptor object, which contains merchant information:
+
+`card_acceptor`
+
+`{
+  "address": "address",
+  "city": "city",
+  "country": "country",
+  "mcc": "mcc",
+  "name": "name",
+  "state": "state",
+  "zip": "zip"
+}
+`
+
+The mcc (MCC - Merchant Category Code) field is a universal code assigned to merchants for the purpose of classifying the type of goods and services they provide.
+
+`mcc`
+
+In addition, the top level mid (MID - Merchant Identification Number) field is sometimes required. This is a unique identifier assigned to all merchants that process card transactions.
+
+`mid`
+
+For simulations, the content used for card_acceptor and mid is not neccesarily important. However, merchant information is often crucial for FinTech in the Auth Flow.
+
+`card_acceptor`
+
+`mid`
+
+[FinTech in the Auth Flow](#fintech-in-the-auth-flow)
+
+### 1. Authorization & Clearing
+
+[](#1-authorization--clearing)
+
+This describes the typical case where a cardholder purchases something from a physical or online merchant. The transaction amount is authorized, then later cleared. To simulate this scenario, an authorization, then clearing is performed. Note that an authorization equates to a funding request.
+
+[funding request](#funding-request)
+
+To simulate, first call Simulate authorization, providing the appropriate card_id, along with the authorization amount. This will generate an authorization (funding request), which applies a hold for the given amount of money and creates a Pending Transaction. On a successful call, a transaction token is generated. The token is needed for clearing.
+
+[Simulate authorization](/reference/simulateauthorization)
+
+`card_id`
+
+`amount`
+
+[Pending Transaction](/reference/transactions)
+
+`token`
+
+`token`
+
+Next, call Simulate clearing or refund with the same amount as was used in the authorization and original_transaction_id set to the authorization transaction token.
+
+[Simulate clearing or refund](/reference/simulateclearing)
+
+`amount`
+
+`original_transaction_id`
+
+`token`
+
+### 2. Authorization Adjustment
+
+[](#2-authorization-adjustment)
+
+In some circumstances, a merchant may want to authorize for a different amount than what is ultimately cleared. For example, at a gas pump, it is common for a customer to pre-authorize up to a certain amount, but only be charged for the amount of gas that was actually pumped. In this case, an initial authorization is created for the pre-authorized amount. Once the final sale price is determined, an authorization advice is performed to adjust the hold. Like the previous scenario, a final clearing is done to capture the funds.
+
+To simulate, first call Simulate authorization like in the previous example and retain the transaction token.
+
+[Simulate authorization](/reference/simulateauthorization)
+
+`token`
+
+Next, issue an authorization advice with Simulate authorization advice, providing the new amount and original_transaction_id (token).
+
+[Simulate authorization advice](/reference/simulateauthorizationadvice)
+
+`amount`
+
+`original_transaction_id`
+
+`token`
+
+Finally, issue the clearing with Simulate clearing or refund, using the final amount from the authorization advice and original_transaction_id set to the transaction token from the original authorization response.
+
+[Simulate clearing or refund](/reference/simulateclearing)
+
+`amount`
+
+`original_transaction_id`
+
+`token`
+
+### 3. Reversals & Refunds
+
+[](#3-reversals--refunds)
+
+Reversals and refunds both refer to the undoing of a previous action, the only difference being the action that is being undone. Reversals release an existing authorization hold and refunds undo a cleared transaction and move funds back to a cardholder's card.
+
+To simulate a reversal, an existing authorization hold must already exist. To issue the reversal, call Simulate reversal, providing the full authorization amount and original_transaction_id set authorization transaction token for original_transaction_id.
+
+[Simulate reversal](/reference/simulatereversal)
+
+`amount`
+
+`original_transaction_id`
+
+`token`
+
+`original_transaction_id`
+
+Likewise, to simulate a refund, a cleared transaction must already exist. To issue the refund, call Simulate clearing or refund, providing the final amount from the clearing and the original authorization transaction token for original_transaction_id.
+
+[Simulate clearing or refund](/reference/simulateclearing)
+
+`amount`
+
+`token`
+
+`original_transaction_id`
+
+### 4. Single Message
+
+[](#4-single-message)
+
+All above listed scenarios involve dual message transactions. Meaning, the transaction occurs in two parts: authorization, then clearing. However, there are also single message transactions, where authorization and clearing occur in a single action. Common examples include PIN-debit transactions and ATM transactions.
+
+Below are descriptions of the common single message simulation endpoint use cases:
+
+[Simulate financial](/reference/simulatefinancial)
+
+`amount`
+
+`card_id`
+
+[Simulate ATM withdrawal](/reference/simulatewithdrawal)
+
+`amount`
+
+`card_id`
+
+## Enhanced Transactions
+
+[](#enhanced-transactions)
+
+By default, transaction metadata (merchant name, location, category, etc.) is provided by the network - found in the transaction data.user_data object. For the most part, this information is limited and often inconsistently formatted.
+
+`data.user_data`
+
+If desired, a card product can be configured with a supported third party provider to add enhanced metadata to each transaction. Synctera's current supported enhanced transaction provider is MX.
+
+[MX](https://www.mx.com)
+
+For example, given the following network provided merchant name and MCC (merchant category code):
+
+`{
+  "mcc": "4816",
+  "name": "EIG*HOSTGATOR.COM"
+}
+`
+
+Enhanced transaction can provide a cleanly formatted name and consistent category:
+
+`{
+  "category": "Hosting",
+  "enhanced_description": "HostGator"
+}
+`
+
+Enhanced transaction information is found in the transaction data.user_data.enhanced_transaction object. enhanced_raw contains the complete set of data received from the enhanced transaction provider.
+
+`data.user_data.enhanced_transaction`
+
+`enhanced_raw`
+
+`{
+  "category": "Hosting",
+  "enhanced_description": "HostGator",
+  "enhanced_raw": [
+    {
+      "amount": 12.75,
+      "categorized_by": 13,
+      "category": "Hosting",
+      "category_guid": "CAT-b74fdd98-4391-8015-eafa-e9ca0fad3bee",
+      "described_by": 6,
+      "description": "HostGator",
+      "extended_transaction_type": null,
+      "id": "2ffa6d90-e4d0-47e3-a290-17240e7a3ae4",
+      "is_bill_pay": false,
+      "is_direct_deposit": false,
+      "is_expense": null,
+      "is_fee": null,
+      "is_income": false,
+      "is_international": null,
+      "is_overdraft_fee": false,
+      "is_payroll_advance": false,
+      "is_subscription": false,
+      "memo": "ad0f57f1-f823-4ba7-8563-a1c4aa458371",
+      "merchant_category_code": 4816,
+      "merchant_guid": "MCH-dae1c6b5-292b-4d3e-ba15-998ab24a79c2",
+      "merchant_location_guid": null,
+      "original_description": "EIG*HOSTGATOR.COM",
+      "type": "DEBIT"
+    }
+  ]
+}
+`
+
+## FinTech in the Auth Flow
+
+[](#fintech-in-the-auth-flow)
+
+### Authorization Gateway
+
+[](#authorization-gateway)
+
+An authorization Gateway enables a FinTech to optionally take part in the funding request decision of a card transaction’s authorization cycle. The FinTech receives an authorization request via the configured Gateway to either approve or decline the card transaction based on the FinTech's own business logic.
+
+If the fintech opts not to participate in the auth flow Synctera will use default authorization logic to authorize the transactions. The fintech does not have to participate unless there is additional approval logic they would like to incorporate into the decision process that is not supported by Synctera or proprietary in nature.
+
+The authorization request must be responded to within a firm timeout window of 1.5 seconds. Synctera will default to declining the funding request if a response is not received within the timeout window.
+
+The information in the authorization request includes, but is not limited to:
+
+`{
+  "customer_id": "2b9cc6f2-d0bd-4d9d-aa20-5e53355f9469",
+  "account_id": "0221e0a7-7774-48a4-8521-e678ec09a53a",
+  "transaction_id": "9b59fc80-9bf5-4749-8dd2-511f183becf2",
+  "card_id": "6128498a-85a9-4bd8-a3ea-bfe3717b64f6",
+  "type": "card_transaction",
+  "user_transaction_time": "2022-03-25T10:41:01-04:00",
+  "settlement_date": "0001-01-01T00:00:00Z",
+  "amount": {
+    "amount": 100,
+    "currency": "USD",
+    "currency_conversion": {}
+  },
+  "balance": {
+    "available_balance": 4210000
+  },
+  "merchant": {
+    "mid": "4445001899609",
+    "mcc": "5411",
+    "name": "WHOLEFDS EGW 101",
+    "city": "EDGEWATER",
+    "state": "NJ",
+    "postal_code": "07020",
+    "country_code": "USA"
+  },
+  "user": {},
+  "network_fraud": {
+    "transaction_risk_score": 18
+  },
+  "network": "MASTERCARD",
+  "subnetwork": ""
+}
+`
+
+Addionally, if enhanced transactions are enabled for the FinTech, this information will also be included.
+
+[enhanced transactions](#enhanced-transactions)
+
+To signal an authorization request decision, the FinTech must reply with the appropriate HTTP code:
+
+`200`
+
+`402`
+
+Note that while HTTP code 402 is conventional, any code other than 200 will also be interpreted as a decline.
+
+`402`
+
+`200`
+
+#### FinTech Included in Funding Request Authorization Flow
+
+[](#fintech-included-in-funding-request-authorization-flow)
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+sequenceDiagram
+Customer->>Merchant: Initiate transaction
+Merchant->>Network: Request
+Network->>Synctera: Funding request
+Synctera->>FinTech: Pending transaction created webhook
+Synctera->>Synctera: Evaluate funding request
+Synctera->>FinTech: Authorization request
+FinTech->>FinTech: Evaluate authorization request
+FinTech-->>Synctera: Response
+Synctera->>FinTech: Pending transaction updated webhook
+Synctera-->>Network: Response
+Network-->>Merchant: Response
+`
+
+### Sandbox Implementation
+
+[](#sandbox-implementation)
+
+[Synctera API](/reference/cards)
+
+[card transaction simulation](#card-transaction-simulations)
+
+📘
+
+For local testing, ngrok or beeceptor can be used to produce a publicly accesable URL that terminates to a local development endpoint.
+
+[ngrok](https://ngrok.com)
+
+[beeceptor](https://beeceptor.com)
+
+### Gateway Endpoint Configuration
+
+[](#gateway-endpoint-configuration)
+
+To create a Gateway, a valid, publicly accessable URL must be supplied, along with a list of Card Product ID's that will utilize the Gateway. Additionally, customer headers may be supplied that will be included in authorization calls to the Gateway. If not supplied, active status is set to true by default. Gateways may be turned off by setting this field false.
+
+`active`
+
+`true`
+
+`false`
+
+Note that a Card Product may not be configured on more than one active Gateway at a time.
+
+`curl \
+  -X POST \
+  -H "Authorization: Bearer $apikey" \
+  -H "Content-Type: application/json" \
+  $baseurl/v0/cards/gateways \
+  --data-binary '
+  {
+    "active": true,
+    "url": "https://example.com",
+    "custom_headers": {
+      "key": "value"
+    },
+    "card_products": [
+      "41e81dff-05d4-4421-b7f0-149e3a536979",
+      "e8361f07-1e7d-440c-91bd-def3e18a907f"
+    ]
+  }'
+`
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Card Transactions](#card-transactions)
+
+[Transaction Flows](#transaction-flows)
+
+[Declined Transactions](#declined-transactions)
+
+[Network Stand-In Scenario](#network-stand-in-scenario)
+
+[Card Transaction Simulations](#card-transaction-simulations)
+
+[Enhanced Transactions](#enhanced-transactions)
+
+[FinTech in the Auth Flow](#fintech-in-the-auth-flow)
+

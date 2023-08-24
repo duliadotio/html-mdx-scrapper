@@ -1,0 +1,268 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Domestic Wires
+
+[Suggest Edits](/edit/domestic-wires)
+
+# Domestic Wires Payments
+
+[](#domestic-wires-payments)
+
+## Overview
+
+[](#overview)
+
+Domestic wires refer to the transfer of funds between 2 US based accounts. This type of transaction is used by individuals and businesses for making payments, transferring funds between accounts, or conducting other financial transactions within the country's borders.
+
+The primary systems used to process domestic wire transfers is the Fedwire payment system.
+
+## What is the Fedwire Payment System?
+
+[](#what-is-the-fedwire-payment-system)
+
+The Fedwire payment system is a real-time gross settlement system operated by the Federal Reserve Bank. It provides a secure and efficient means of transferring funds between banks and other eligible financial institutions within the country. The Fedwire payment system is generally used to make large-value, time-critical payments.
+
+To initiate a domestic wire transfer through the Fedwire system, the sender's bank needs to have access to the system and comply with its rules and regulations. The sender provides the necessary details, such as the recipient's bank account number, routing number, and the amount to be transferred.
+
+The Fedwire system ensures the immediate and final transfer of funds from the sender's bank to the recipient's bank. The transaction is processed in real-time, which means the funds are settled immediately upon receipt.
+
+### What are the benefits of sending domestic wire payments?
+
+[](#what-are-the-benefits-of-sending-domestic-wire-payments)
+
+The Fedwire payment system offers several advantages:
+
+## How do I send a domestic Wire payment?
+
+[](#how-do-i-send-a-domestic-wire-payment)
+
+In order to send a domestic wire you must create a customer and account to represent the sender/originator of the wire who is a direct customer of your fintech. You will also need to create a customer and account for any external recipients that your customers plan to send wires to.
+
+### Step 1: Originator Customer and Account Creation
+
+[](#step-1-originator-customer-and-account-creation)
+
+1.1 Create a Customer
+
+In order for the originator to transact on the Synctera platform, that person/business must be stored as a customer in our system. Part of that includes completing the KYC/KYB process. See Create a Personal Customer or Create a Business Customer for details.
+
+[Create a Personal Customer](/docs/create-a-personal-customer)
+
+[Create a Business Customer](/docs/create-a-business)
+
+1.2 Create an Account
+
+Create an account for the customer your created in step 1.1. Create an Account
+
+[Create an Account](/docs/create-accounts-guide)
+
+### Step 2: Beneficiary Customer and Account Creation
+
+[](#step-2-beneficiary-customer-and-account-creation)
+
+2.1 Create a “non-customer” Customer
+
+Even though the beneficiary is not a customer of your fintech, that person/business must also be represented as a customer in the Synctera system. See Create a Personal Customer or Create a Business Customer for details.
+
+[Create a Personal Customer](/docs/create-a-personal-customer)
+
+[Create a Business Customer](/docs/create-a-business)
+
+NOTE: Make sure you set the is_customer flag to false to indicate that the individual is not a direct customer of your fintech.
+
+`is_customer`
+
+`false`
+
+2.2 Create an External Account
+
+Create an external account for the customer you created in step 2.1. Unlike some of our other payment rails, you do not need to link the external account via Plaid or Finiticy since the external account owner is not a direct customer of your fintech. For details skip to Step 3 in the Create an External Account guide.
+
+[Create an External Account](/docs/external-accounts-guide)
+
+NOTE: Be sure to provide a wire_routing_number as the routing_identifier
+
+`wire_routing_number`
+
+`routing_identifier`
+
+### Step 3: Fund the Originating Account
+
+[](#step-3-fund-the-originating-account)
+
+3.1 Fund the Account
+
+The last step that must be completed before a customer can send a wire is to deposit funds into the originating account. This can be done by originating an ACH debit to an external account that is associated with the customer. See the ACH Guide for steps on how to fund an account via ACH.
+
+[ACH Guide](/docs/ach-guide)
+
+### Step 4: Send a Wire
+
+[](#step-4-send-a-wire)
+
+4.1 Send a Wire Request
+
+Once the previous steps have been completed, a wire payment can be sent from the originator account to the beneficiary account. Take a look at the Wires API reference for an explanation of what to include in the request.
+
+[Wires API reference](/reference/createWire)
+
+## What do I need to do to receive a Wire transaction?
+
+[](#what-do-i-need-to-do-to-receive-a-wire-transaction)
+
+Nothing. No action is required. Synctera will process all credits for any Wire transactions that we receive on behalf of you or your customers. Check your Synctera dashboard to view all Wire transactions that have been sent or received. Synctera also supports webhooks to notify you of all Wire transactions.
+
+Updated 29 days ago 
+
+[Table of Contents](#)
+
+[Domestic Wires Payments](#domestic-wires-payments)
+
+[Overview](#overview)
+
+[What is the Fedwire Payment System?](#what-is-the-fedwire-payment-system)
+
+[How do I send a domestic Wire payment?](#how-do-i-send-a-domestic-wire-payment)
+
+[What do I need to do to receive a Wire transaction?](#what-do-i-need-to-do-to-receive-a-wire-transaction)
+

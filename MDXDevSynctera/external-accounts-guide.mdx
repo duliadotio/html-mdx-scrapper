@@ -1,0 +1,1487 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# External Accounts
+
+[Suggest Edits](/edit/external-accounts-guide)
+
+External Accounts represent user accounts at other financial institutions, such as checking, savings or credit cards. In order to have access to any of these accounts it is necessary to verify ownership. Synctera has partnered with Plaid and Finicity to enable this verification. The External Accounts API allow you to verify an account's ownership through these partners and get information regarding balance and transactions.
+
+For example, you could do balance checks before issuing ACH debits to reduce the likelihood of an overdraft. ACH transactions are yet another reason to verify your account. You can originate ACH credits without verifying the account owner, however you can only initiate ACH debits when the customer has verified that they own the external account.
+
+📘
+
+If you're using another provider such as MX, you can directly create external accounts by posting to the /v0/external_accounts API. Synctera will confirm that customers validate ownership of the external account as part of the launch process.
+
+`/v0/external_accounts`
+
+## Verification Steps (Plaid)
+
+[](#verification-steps-plaid)
+
+### 1. Request a Link Token and Call Plaid Link UI
+
+[](#1-request-a-link-token-and-call-plaid-link-ui)
+
+Getting a link token is the first step to verifying an external account. This token is used to get access to Plaid Link, the UI where customers provide verification details about their bank and accounts.
+
+You'll need to integrate Plaid Link to prompt customers to verify their external account through Plaid's UI. Plaid offers SDKs for Android, iOS, WebView, React Native and web.
+
+[Plaid Link](https://plaid.com/docs/link/)
+
+[Android](https://plaid.com/docs/link/android/)
+
+[iOS](https://plaid.com/docs/link/ios/)
+
+[WebView](https://plaid.com/docs/link/webview/)
+
+[React Native](https://plaid.com/docs/link/react-native/)
+
+[web](https://plaid.com/docs/link/web/)
+
+In case you want to keep testing your calls to Synctera before creating your integration with Plaid Link, you can use our test page. If you are using our test page for micro-deposits, you can find test data here.
+
+[test page](https://app.synctera.com/widgets/plaid-link)
+
+[here](/docs/sandbox-external-account-test-cases#micro-deposit-testing-scenarios)
+
+📘
+
+Refer to Plaid's documentation to ensure that you've correctly configured the UI.
+
+[Plaid's documentation](https://plaid.com/docs/link/)
+
+To request a link token, call the Create Link Token endpoint.
+
+[Create Link Token](/reference/createverificationlinktoken)
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "client_name": "Name of your application",
+    "customer_id":"27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "country_codes": [
+      "US"
+    ],
+    "type":"DEPOSITORY",
+    "language": "EN"
+  }' https://api.synctera.com/v0/external_accounts/link_tokens
+`
+
+The customer_id is the UUID returned when you create a customer in Synctera's API. If you haven't created a customer yet, do it so by following the Customer API spec in order to proceed.
+If you want to create an external account for a business, provide business_id instead of customer_id.
+
+`customer_id`
+
+[Customer API spec](/reference/createcustomer)
+
+`business_id`
+
+`customer_id`
+
+Notice that the type of link token requested will define what kind of account can be verified in this process.
+
+`DEPOSITORY`
+
+`MICRO_DEPOSIT`
+
+`CREDIT`
+
+`INVESTMENT`
+
+Synctera will return the following response:
+
+`{
+  "client_name": "Name of your application",
+  "country_codes": ["US"],
+  "customer_id": "27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+  "expiration": "2022-03-08T21:29:13Z",
+  "language": "EN",
+  "link_token": "link-sandbox-b68c1a6f-c514-4535-9781-0c2b8e2281ad",
+  "request_id": "Roius8bd2DeXq6D",
+  "type": "DEPOSITORY",
+  "verify_owner": false
+}
+`
+
+After the integration of your choice is done you'll use the link_token returned in the above response to launch the Plaid Link UI. Once the customer confirms their account, Plaid sends an onSuccess callback that includes metadata about the external account and a public_token. This new token is what you need for the next step.
+
+`link_token`
+
+[onSuccess callback](https://plaid.com/docs/link/web/#onsuccess)
+
+`public_token`
+
+If you are using the test page, you'll input the link_token in the Plaid Link Token field, and click Link Account. Follow the steps through the UI to confirm an account (or use test data for confirming an account through micro-deposits). After following the steps, you'll see the public_token at the top of the page.
+
+[test page](https://app.synctera.com/widgets/plaid-link)
+
+`link_token`
+
+`Link Account`
+
+[test data](/docs/sandbox-external-account-test-cases#micro-deposit-testing-scenarios)
+
+`public_token`
+
+### 2. Verify Account Information by Requesting an Access Token
+
+[](#2-verify-account-information-by-requesting-an-access-token)
+
+The access token gives you all the details Plaid retrieved from the account during the verification process. In addition, this token enables you to communicate with the Synctera API to manage the account. For example, you can fetch transactions, balances, and other details about the account.
+
+Call the Access Token endpoint to create an access token for the verified institution. For all link token types, except MICRO_DEPOSIT, the Plaid success response will include a vendor_public_token, and vendor_institution_id that must be included in the request for an access token.
+
+[Access Token](/reference/createaccesstoken)
+
+`MICRO_DEPOSIT`
+
+[success response](https://plaid.com/docs/link/web/#onsuccess)
+
+`vendor_public_token`
+
+`vendor_institution_id`
+
+📘
+
+For micro-deposits, where the vendor_public_token and vendor_institution_id are not included in the success response, the request for access tokens and following steps for verifying the account can be found in the next section.
+
+`vendor_public_token`
+
+`vendor_institution_id`
+
+[in the next section](#micro-deposits-flow)
+
+Provide customer_id if this is an account for a personal customer, or business_id for a business customer.
+
+`customer_id`
+
+`business_id`
+
+`The `customer_id` is the same you used on the previous request.
+
+```shell
+curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "customer_id":"27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "vendor_institution_id": "ins_3",
+    "vendor_public_token": "public-sandbox-45524484-45f9-490e-bb44-aec4131f6fb8"
+  }' https://api.synctera.com/v0/external_accounts/access_tokens
+`
+
+Response
+
+`{
+  "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "request_id": "xsHszMQwyB4IbeP",
+  "vendor_access_token": "access-sandbox-2fa1d335-2d85-4563-8faa-d5e2a022d4db",
+  "vendor_customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "vendor_institution_id": "ins_3",
+  "vendor_public_token": "public-sandbox-46a9e08e-a153-4189-85ac-143f8061746b"
+}
+`
+
+The response returns the access token (vendor_access_token), the verification part of the process is done.
+
+`vendor_access_token`
+
+### Micro-Deposits Flow
+
+[](#micro-deposits-flow)
+
+As mentioned before, there may a variety of reasons to use micro-deposits to verify and link an external account.
+The difference in this flow is that, once the customer fills in their account information and authorizes the deposits and withdrawals, Plaid will make a $0.01 deposit to the customer's accounts. The customer will have to manually verify the code, which is part of the transaction description of the micro-deposit received.
+
+At this point, it is assumed that you have:
+
+`type: "MICRO_DEPOSIT"`
+
+[test page](https://app.synctera.com/widgets/plaid-link)
+
+[test data](/docs/sandbox-external-account-test-cases#micro-deposit-testing-scenarios)
+
+The following steps are unique to the micro-deposit flow, starting with the request for an access token.
+
+[access token endpoint](/reference/createaccesstoken)
+
+`"vendor_public_token"`
+
+`"vendor_institution_id"`
+
+`"-"`
+
+Example Request
+
+`The `customer_id` is the same you used on the previous request.
+
+```shell
+curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "customer_id":"27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "vendor_institution_id": "-",
+    "vendor_public_token": "public-sandbox-45524484-45f9-490e-bb44-aec4131f6fb8"
+  }' https://api.synctera.com/v0/external_accounts/access_tokens
+`
+
+Response
+
+`{
+  "customer_id": "27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+  "request_id": "xsHszMQwyB4IbeP",
+  "vendor_access_token": "access-sandbox-2fa1d335-2d85-4563-8faa-d5e2a022d4db",
+  "vendor_customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "vendor_institution_id": "-",
+  "vendor_public_token": "public-sandbox-46a9e08e-a153-4189-85ac-143f8061746b"
+}
+`
+
+The response returns the access token (vendor_access_token). The next step is to submit a 3-letter alphabetical code from the transaction description of the micro-deposit received. Please wait up to 48 hours, after linking your account in Step 1, to receive your micro-deposit. Once it have been received, you can move on to the next step. If you're using the test data, you can move on to the next step immediately.
+
+`vendor_access_token`
+
+[Step 1](#1-request-a-link-token-and-call-plaid-link-ui)
+
+[test data](/docs/sandbox-external-account-test-cases#micro-deposit-testing-scenarios)
+
+`link_token`
+
+`vendor_access_token`
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "type": "MICRO_DEPOSIT",
+    "language": "EN",
+    "client_name": "Name of your application",
+    "country_codes": ["US"],
+    "customer_id": "27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "vendor_access_token": "access-sandbox-bf7436d8-8a18-4a11-a293-66cee2355eb6"
+  }' https://api.synctera.com/v0/external_accounts/link_tokens
+`
+
+Like in all previous calls, if this is an account that belongs to a business, you have to provide business_id instead of customer_id.
+
+`business_id`
+
+`customer_id`
+
+Example Response
+
+`{
+  "client_name": "Name of your application",
+  "country_codes": ["US"],
+  "customer_id": "27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+  "expiration": "2022-04-11T05:58:55Z",
+  "language": "EN",
+  "link_token": "link-sandbox-42da8003-d278-4736-a0f3-437e3cb18b40",
+  "request_id": "xcJAllc7Aao6Lfh",
+  "type": "MICRO_DEPOSIT",
+  "vendor_access_token": "access-sandbox-2fa1d335-2d85-4563-8faa-d5e2a022d4db",
+  "verify_owner": false
+}
+`
+
+Now you'll need to launch Plaid Link UI (or the test page), and submit the latest link token created. You'll be prompted to submit the amounts of the two deposits received (in the order which they were received in).
+
+[test page](https://app.synctera.com/widgets/plaid-link)
+
+Once the micro-deposit has been received, and the code from the transaction description has been submitted through the Plaid Link UI, the verification for the account is complete. The last step is to add the external vendor accounts to Synctera, which is outlined below.
+
+[below](#3-add-external-accounts)
+
+### 3. Add External Accounts
+
+[](#3-add-external-accounts)
+
+This step is essential to the process of verifying an account to avoid having to verify the account every time we want to make use of it. The Add External Accounts endpoint allows you to persist the Access Token (vendor_access_token in previous response) to add accounts the customer selected while linking the financial institution. To add an external account, you need to include the following information in the request:
+
+[Add External Accounts](/reference/addvendorexternalaccounts)
+
+`vendor_access_token`
+
+`customer_id`
+
+`business_id`
+
+`customer_type`
+
+`PERSONAL`
+
+`BUSINESS`
+
+`vendor`
+
+`PLAID`
+
+`FINICITY`
+
+`vendor_access_token`
+
+`vendor_account_ids`
+
+`verify_owner`
+
+Owner identity information is also not yet supported for business customers, so no extra information about the owner will be in the response.
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "customer_id": "3bd1a112-a98e-49ab-831c-33278cab49fb",
+    "customer_type": "PERSONAL",
+    "vendor": "PLAID",
+    "vendor_access_token": "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    "vendor_account_ids": [
+      "blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo"
+    ],
+    "verify_owner": false
+  }' https://api.synctera.com/v0/external_accounts/add_vendor_accounts
+`
+
+Example Response
+
+The response below is expected for all account types, except micro-deposits.
+
+`{
+  "added_accounts": [
+    {
+      "account_identifiers": {
+        "iban": "LB7750793201TP7049N596464T98",
+        "number": "78277121"
+      },
+      "account_owner_names": ["Jay Hansen"],
+      "creation_time": "Sun Aug 22 2021 02:06:32 GMT+0000 (Coordinated Universal Time)",
+      "customer_id": "1381e689-90ff-4176-8f65-a4a1225120ff",
+      "id": "df0978ca-9816-4b3f-b3c1-9f1354e062fe",
+      "last_updated_time": "Tue Sep 21 2021 18:04:16 GMT+0000 (Coordinated Universal Time)",
+      "metadata": {},
+      "nickname": "Home Loan Account",
+      "routing_identifiers": {
+        "ach_routing_number": "756392185",
+        "bank_countries": ["US"],
+        "bank_name": "Chase",
+        "eft_routing_number": "02101140",
+        "swift_code": "CHASUS3AXXX",
+        "wire_routing_number": "756392185"
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "verification": {
+        "creation_time": "Mon Mar 22 2021 12:46:17 GMT+0000 (Coordinated Universal Time)",
+        "last_updated_time": "Sat Jan 15 2022 18:54:20 GMT+0000 (Coordinated Universal Time)",
+        "status": "VERIFIED",
+        "vendor": "PLAID"
+      }
+    }
+  ],
+  "failed_accounts": [
+    {
+      "reason": "FAILED_VERIFICATION",
+      "reason_description": "string",
+      "vendor_account_id": "blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo",
+      "vendor_error_message": "string",
+      "vendor_request_id": "string"
+    }
+  ]
+}
+`
+
+Example Response for Micro-Deposits
+
+`{
+  "added_accounts": [
+    {
+      "account_identifiers": {
+          "number": "0000"
+      },
+      "account_owner_names": [],
+      "creation_time": "2022-08-09T18:28:04.354566Z",
+      "customer_id": "b0f0577c-6614-4b2e-ab21-9c9437202de4",
+      "id": "cf10c441-401f-4395-97de-cff8583041be",
+      "last_updated_time": "2022-08-09T18:28:04.354566Z",
+      "metadata": {},
+      "nickname": null,
+      "routing_identifiers": {
+          "ach_routing_number": "0000",
+          "bank_countries": [
+              "US"
+          ],
+          "bank_name": ""
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "vendor_data": {
+          "account_number_mask": "0000",
+          "institution_id": ""
+      },
+      "verification": {
+          "creation_time": "2022-08-09T18:28:04.354566Z",
+          "last_updated_time": "2022-08-09T18:28:04.354566Z",
+          "status": "VERIFIED",
+          "vendor": "PLAID"
+      }
+    }
+  ],
+  "failed_accounts": []
+}
+`
+
+The success callback will include a list of account IDs passed in the UI. The response includes both added and failed accounts, so you'll need to check the response to see which accounts were added and which ones failed. You can also use the List External Accounts endpoint to retrieve a list of all external accounts assigned to customers.
+
+[List External Accounts](/reference/listexternalaccounts)
+
+### Update Mode
+
+[](#update-mode)
+
+Update Mode allows two things:
+
+`vendor_institution_id`
+
+`vendor_access_token`
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+     "type": "DEPOSITORY",
+     "language": "EN",
+     "client_name": "Synctera",
+     "country_codes": [
+       "US"
+     ],
+     "customer_id": "8bb5f852-5b53-4b0e-97f0-43bcb4f8532b",
+     "vendor_institution_id": "ins_56",
+     "vendor_access_token": "access-sandbox-23ac17ff-b4b7-4dce-8194-2e17f9656ccb"
+ }' https://api.synctera.com/v0/external_accounts/link_tokens
+`
+
+Response
+
+`{
+  "client_name": "Synctera",
+  "country_codes": [
+     "US"
+  ],
+  "customer_id": "8bb5f852-5b53-4b0e-97f0-43bcb4f8532b",
+  "expiration": "2022-09-13T00:58:44Z",
+  "language": "EN",
+  "link_token": "link-sandbox-1d3d4450-9325-4f48-979f-4baf77ba3635",
+  "request_id": "M9priKvIHeLDvcg",
+  "type": "DEPOSITORY",
+  "vendor_access_token": "access-sandbox-23ac17ff-b4b7-4dce-8194-2e17f9656ccb",
+  "vendor_institution_id": "ins_56",
+  "verify_owner": false
+}
+`
+
+Once you have the link token, you can launch Plaid Link. Notice that for that institution and user, you'll see the accounts that are already linked in list of accounts.
+Now you're able to add new accounts, or remove the ones that are already linked. Once you're done selecting the accounts you want and submitting your changes, you'll get a new access token, and you can use it to update the accounts by calling the Sync Vendor Accounts endpoint.
+
+[Sync Vendor Accounts](/reference/sync-vendor-accounts)
+
+## Verification Steps (Finicity)
+
+[](#verification-steps-finicity)
+
+#### Plaid vs Finicity
+
+[](#plaid-vs-finicity)
+
+Plaid and Finicity provide very similar services, but they have a few differences.
+The main difference is in the account linking process.
+Plaid's interface to link accounts, called Plaid Link, requires the fintech to integrate with Plaid directly, using their offered SDKs.
+Finicity Connect on the other hand, is a web interface hosted by Finicity, where the users can provide for their accounts' credentials directly.
+
+Another important difference, micro-deposits are not supported by Finicity.
+
+### 1. Request Connect URL from Finicity
+
+[](#1-request-connect-url-from-finicity)
+
+The Connect URL takes you to Finicity's web interface that allows your customers to link their account(s).
+
+To request the URL, call the Create Link Token endpoint.
+
+[Create Link Token](/reference/createverificationlinktoken)
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "client_name": "Name of your application",
+    "customer_id":"27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "country_codes": [
+      "US"
+    ],
+    "type":"DEPOSITORY",
+    "language": "EN"
+  }' https://api.synctera.com/v0/external_accounts/link_tokens
+`
+
+The customer_id is the UUID returned when you create a customer in Synctera's API. If you haven't created a customer yet, please do it so by following the Customer API spec in order to proceed.
+If you want to create an external account for a business, provide business_id instead of customer_id.
+
+`customer_id`
+
+[Customer API spec](/reference/createcustomer)
+
+`business_id`
+
+`customer_id`
+
+Notice that the type of link token requested will define what kind of account can be verified in this process.
+
+`DEPOSITORY`
+
+`CREDIT`
+
+`INVESTMENT`
+
+Synctera will return the following response:
+
+`{
+  "client_name": "Name of your application",
+  "country_codes": ["US"],
+  "customer_id": "27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+  "expiration": "2022-03-08T21:29:13Z",
+  "language": "EN",
+  "link_token": "https://connect2.finicity.com?customerId=6003202401&experience=8ab62f1c-5f9b-4f3f-a20f-377aa28a8de2&origin=url&partnerId=2445583932772&signature=bdc6b061a8b25822de164fc857a74601c1c1f1b816d9200a8d14dd57c1095246&timestamp=1656025350309&ttl=1656032550309",
+  "request_id": "Roius8bd2DeXq6D",
+  "type": "DEPOSITORY",
+  "verify_owner": false
+}
+`
+
+Your vendor customer ID will be needed in a future step, it should be saved for later. You can locate it as the query parameter customerId in the URL above, in this case the vendor customer id  is 6003202401.
+
+`customerId`
+
+`6003202401`
+
+### 2. Link your account(s)
+
+[](#2-link-your-accounts)
+
+Load the URL returned on the last step, so your users can search the financial institution, provide credential and link their account(s).
+
+### 3. Add External Accounts
+
+[](#3-add-external-accounts-1)
+
+This step is essential to the process of linking an account. You linked your account through Finicity, but in order to make use of it (request balance, transaction history, etc) you need to persist it with Synctera API. To add an external account linked through Finicity, you need to call Sync External Accounts and include the following information in the request:
+
+[Sync External Accounts](/reference/syncvendorexternalaccounts)
+
+`customer_id`
+
+`business_id`
+
+`customer_type`
+
+`PERSONAL`
+
+`BUSINESS`
+
+`vendor`
+
+`PLAID`
+
+`FINICITY`
+
+`vendor_customer_id`
+
+`verify_owner`
+
+All accounts selected in Finicity Connect by your customer in step 2 will be added to Synctera as verified external accounts. The same can be done to delete or add new accounts, just link the accounts you need and call sync_vendor_accounts again.
+
+`sync_vendor_accounts`
+
+Owner identity information is also not yet supported for business customers, so no extra information about the owner will be in the response.
+
+`
+**Example Request**
+
+```shell
+curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "customer_id": "3bd1a112-a98e-49ab-831c-33278cab49fb",
+    "customer_type": "PERSONAL",
+    "vendor": "FINICITY",
+    "vendor_customer_id": "6003202403",
+    "verify_owner": false
+  }' https://api.synctera.com/v0/external_accounts/add_vendor_accounts
+`
+
+Example Response
+
+`{
+  "added_accounts": [
+    {
+      "account_identifiers": {
+        "iban": "LB7750793201TP7049N596464T98",
+        "number": "78277121"
+      },
+      "account_owner_names": ["Jay Hansen"],
+      "creation_time": "Sun Aug 22 2021 02:06:32 GMT+0000 (Coordinated Universal Time)",
+      "customer_id": "1381e689-90ff-4176-8f65-a4a1225120ff",
+      "id": "df0978ca-9816-4b3f-b3c1-9f1354e062fe",
+      "last_updated_time": "Tue Sep 21 2021 18:04:16 GMT+0000 (Coordinated Universal Time)",
+      "metadata": {},
+      "nickname": "Home Loan Account",
+      "routing_identifiers": {
+        "ach_routing_number": "756392185",
+        "bank_countries": ["US"],
+        "bank_name": "Chase",
+        "eft_routing_number": "02101140",
+        "swift_code": "CHASUS3AXXX",
+        "wire_routing_number": "756392185"
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "verification": {
+        "creation_time": "Mon Mar 22 2021 12:46:17 GMT+0000 (Coordinated Universal Time)",
+        "last_updated_time": "Sat Jan 15 2022 18:54:20 GMT+0000 (Coordinated Universal Time)",
+        "status": "UNVERIFIED",
+        "vendor": "FINICITY"
+      }
+    }
+  ],
+  "failed_accounts": [
+    {
+      "reason": "FAILED_VERIFICATION",
+      "reason_description": "string",
+      "vendor_account_id": "blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo",
+      "vendor_error_message": "string",
+      "vendor_request_id": "string"
+    }
+  ]
+}
+`
+
+The response includes both added, deleted and failed accounts. You can also use the List External Accounts endpoint to retrieve a list of all external accounts assigned to customers.
+
+[List External Accounts](/reference/listexternalaccounts)
+
+⚠️
+
+Finicity flow does not support adding accounts through Add External Accounts, only through Sync External Accounts.
+
+[Add External Accounts](/reference/addvendorexternalaccounts)
+
+[Sync External Accounts](/reference/syncvendorexternalaccounts)
+
+## Operations
+
+[](#operations)
+
+Now that you linked your account and added it to Synctera, you can list transactions and see the account's balance.  Note: these operations will not be available for micro deposits as Plaid does not allow Auth
+on micro deposits which means balances and transactions are not available.
+
+### List Transactions
+
+[](#list-transactions)
+
+You can retrieve a list transactions for a given external account using the List Transactions for an external account endpoint. You'll need to provide the following query parameters:
+
+[List Transactions for an external account](/reference/getexternalaccounttransactions)
+
+`external_account_id`
+
+`start_date`
+
+`end_date`
+
+`start_date`
+
+`end_date`
+
+`start_date=2022-01-01&end_date=2022-01-02`
+
+Example Request
+
+`curl -H 'Authorization: Bearer $apikey' \
+     -H 'Content-Type: application/json' "https://api.synctera.com/v0/external_accounts/df0978ca-9816-4b3f-b3c1-9f1354e062fe/transactions?start_date=2022-02-01&end_date=2022-02-01"
+`
+
+Example Response
+
+`{
+  "transactions": [
+    {
+      "amount": 0,
+      "currency": "USD",
+      "category": ["string"],
+      "check_number": "string",
+      "is_pending": true,
+      "date": "2022-02-01",
+      "authorized_date": "2022-02-01",
+      "merchant_name": "Fancy store",
+      "payment_channel": "IN_STORE",
+      "payment_method": "string",
+      "transaction_id": "string"
+    }
+  ]
+}
+`
+
+### Get Balance
+
+[](#get-balance)
+
+You can retrieve an external account balance by specifying an external_account_id. The response includes the following balance information:
+
+`external_account_id`
+
+`available`
+
+`current`
+
+`currency`
+
+[ISO 4217](https://en.wikipedia.org/wiki/ISO_4217)
+
+`limit`
+
+Example Request
+
+`curl -H 'Authorization: Bearer $apikey' \
+     -H 'Content-Type: application/json' https://api.synctera.com/v0/external_accounts/df0978ca-9816-4b3f-b3c1-9f1354e062fe/balance
+`
+
+Example Response
+
+`{
+  "available": 10000,
+  "current": 11000,
+  "currency": "SEK",
+  "limit": 20000
+}
+`
+
+## Account Management
+
+[](#account-management)
+
+### List External Accounts
+
+[](#list-external-accounts)
+
+You can view all external accounts (or optionally filter them by personal customer with the query parameter customer_id, or business customer with business_id) with the following example:
+
+`customer_id`
+
+`business_id`
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' https://api.synctera.com/v0/external_accounts
+`
+
+Example Response
+
+`{
+  "external_accounts": [
+    {
+      "account_identifiers": {
+        "number": "0000"
+      },
+      "account_owner_names": [],
+      "creation_time": "2022-04-08T22:43:43.990785Z",
+      "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+      "id": "1542ea0f-09ef-410c-9d66-57f36af5b52b",
+      "last_updated_time": "2022-04-08T22:43:43.990785Z",
+      "metadata": {},
+      "nickname": "Plaid Checking",
+      "routing_identifiers": {
+        "ach_routing_number": "1533",
+        "bank_countries": ["US"],
+        "bank_name": "Chase"
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "vendor_data": {
+        "account_number_mask": "0000",
+        "institution_id": "ins_3"
+      },
+      "vendor_info": {
+        "content_type": "application/json",
+        "json": {
+          "addresses": null,
+          "emails": null,
+          "names": null,
+          "phone_numbers": null
+        },
+        "vendor": "PLAID"
+      },
+      "verification": {
+        "creation_time": "2022-04-08T22:43:43.990785Z",
+        "last_updated_time": "2022-04-08T22:43:43.990785Z",
+        "status": "VERIFIED",
+        "vendor": "PLAID"
+      }
+    }
+  ]
+}
+`
+
+### View Specific External Account
+
+[](#view-specific-external-account)
+
+You might want to get information about a single account, for that you'll just need the account id.
+
+Example Request
+
+`curl -H 'Authorization: Bearer $apikey' \
+     -H 'Content-Type: application/json' https://api.synctera.com/v0/external_accounts/1542ea0f-09ef-410c-9d66-57f36af5b52b
+`
+
+Example Response
+
+`{
+  "account_identifiers": {
+    "number": "0000"
+  },
+  "account_owner_names": [],
+  "creation_time": "2022-04-08T22:43:43.990785Z",
+  "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "id": "1542ea0f-09ef-410c-9d66-57f36af5b52b",
+  "last_updated_time": "2022-04-08T22:43:43.990785Z",
+  "metadata": {},
+  "nickname": "Plaid Gold Standard 0% Interest Checking",
+  "routing_identifiers": {
+    "ach_routing_number": "1533",
+    "bank_countries": ["US"],
+    "bank_name": "Chase"
+  },
+  "status": "ACTIVE",
+  "type": "CHECKING",
+  "vendor_data": {
+    "account_number_mask": "0000",
+    "institution_id": "ins_3"
+  },
+  "vendor_info": {
+    "content_type": "application/json",
+    "json": {
+      "addresses": null,
+      "emails": null,
+      "names": null,
+      "phone_numbers": null
+    },
+    "vendor": "PLAID"
+  },
+  "verification": {
+    "creation_time": "2022-04-08T22:43:43.990785Z",
+    "last_updated_time": "2022-04-08T22:43:43.990785Z",
+    "status": "VERIFIED",
+    "vendor": "PLAID"
+  }
+}
+`
+
+### Unlink External Account
+
+[](#unlink-external-account)
+
+Deleting an account from Synctera does not mean it will delete its link through Plaid. If you want to unlink an account with Plaid, you need to follow these steps:
+
+[Deleting an account from Synctera](#delete-external-account)
+
+Create a link token in update mode.
+Like in all previous calls that have customer_id in the request body or as a query parameter, if this is an account that belongs to a business, you have to provide business_id instead of customer_id.
+
+[update mode](#update-mode)
+
+`customer_id`
+
+`business_id`
+
+`customer_id`
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "client_name": "Name of your application",
+    "customer_id":"27b1bfd0-d83f-42bc-9b2a-a0241adcba9a",
+    "country_codes": [
+      "US"
+    ],
+    "type":"DEPOSITORY",
+    "language": "EN",
+    "vendor_institution_id": "ins_3"
+  }' https://api.synctera.com/v0/external_accounts/link_tokens
+`
+
+Example Response
+
+`{
+  "client_name": "Name of your application",
+  "country_codes": ["US"],
+  "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "expiration": "2022-04-11T07:04:42Z",
+  "language": "EN",
+  "link_token": "link-sandbox-ad4acabf-8290-4731-b1ea-8629060b97a9",
+  "request_id": "rM3eu8wSqKlR5mk",
+  "type": "DEPOSITORY",
+  "vendor_access_token": "access-sandbox-69e649e2-93ef-41b5-93ef-34fea33a2a50",
+  "vendor_institution_id": "ins_3",
+  "verify_owner": false
+}
+`
+
+Use the newly created link token to launch Plaid Link, fill your credentials and uncheck the accounts you wish to unlink and click Continue. You can also check and link accounts in this same institution that were not linked before. After you clicked Continue you should have the accounts information updated.
+
+The unlinked accounts can now be deleted from Synctera using the delete endpoint. If you linked new accounts you need to add them to Synctera or you'll have no way to access them. You can update the accounts in Synctera with the Sync Vendor Accounts endpoint
+
+[delete endpoint](#delete-external-account)
+
+[Sync Vendor Accounts endpoint](#sync-vendor-accounts)
+
+### Sync Vendor Accounts
+
+[](#sync-vendor-accounts)
+
+After running Plaid Link UI in update mode, you can unlink accounts and also link new ones in the same institution. These changes happen only in Plaid. You need to persist them by calling Synctera's POST external_accounts/sync_vendor_accounts. Syncing the accounts mean you will add the newly linked ones and delete the ones that were unlinked.
+Provide business_id for accounts associated with business customers, customer_id for accounts associated with personal customers.
+
+[update mode](#update-mode)
+
+`POST external_accounts/sync_vendor_accounts`
+
+`business_id`
+
+`customer_id`
+
+Important:
+Owner Identity verification is not supported for accounts associated with business customers. You should either omit verify_owner or set it to false.
+Owner identity information is also not yet supported for business customers.
+
+`verify_owner`
+
+`false`
+
+Example Request
+
+`curl \
+  -X POST \
+  https://api.synctera.com/v0/external_accounts/sync_vendor_accounts \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' \
+  -d '
+  {
+    "customer_id": "0d36a87d-a3dc-4ab9-8732-6c05e955c7fa",
+    "customer_type": "PERSONAL",
+    "vendor": "PLAID",
+    "vendor_access_token": "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    "vendor_account_ids": [
+      "blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo"
+    ],
+    "verify_owner": false
+  }'
+`
+
+Example Response
+
+`{
+  "added_accounts": [
+    {
+      "account_identifiers": {
+        "iban": "IT64G416327044023JW2925VN20",
+        "number": "78277121"
+      },
+      "account_owner_names": ["Emmett Ziemann"],
+      "creation_time": "2022-01-01T00:00:00.000Z",
+      "customer_id": "fe630756-8616-4584-b207-0252d234dfb3",
+      "id": "320ef27f-2956-4b00-95e4-571603217a98",
+      "last_updated_time": "2022-01-01T00:00:00.000Z",
+      "metadata": {},
+      "nickname": "Home Loan Account",
+      "routing_identifiers": {
+        "ach_routing_number": "756392185",
+        "bank_countries": ["US"],
+        "bank_name": "Chase",
+        "eft_routing_number": "02101140",
+        "swift_code": "CHASUS3AXXX",
+        "wire_routing_number": "756392185"
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "vendor_data": {
+        "account_number_mask": "string",
+        "institution_id": "string"
+      },
+      "vendor_info": {
+        "content_type": "application/json",
+        "json": {},
+        "vendor": "SOCURE"
+      },
+      "verification": {
+        "creation_time": "2022-01-01T00:00:00.000Z",
+        "last_updated_time": "2022-01-01T00:00:00.000Z",
+        "status": "VERIFIED",
+        "vendor": "PLAID"
+      }
+    }
+  ],
+  "deleted_accounts": [
+    {
+      "account_identifiers": {
+        "iban": "IT64G416327044023JW2925VN20",
+        "number": "78277121"
+      },
+      "account_owner_names": ["Emmett Ziemann"],
+      "creation_time": "2022-01-01T00:00:00.000Z",
+      "customer_id": "fe630756-8616-4584-b207-0252d234dfb3",
+      "id": "320ef27f-2956-4b00-95e4-571603217a98",
+      "last_updated_time": "2022-01-01T00:00:00.000Z",
+      "metadata": {},
+      "nickname": "Home Loan Account",
+      "routing_identifiers": {
+        "ach_routing_number": "756392185",
+        "bank_countries": ["US"],
+        "bank_name": "Chase",
+        "eft_routing_number": "02101140",
+        "swift_code": "CHASUS3AXXX",
+        "wire_routing_number": "756392185"
+      },
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "vendor_data": {
+        "account_number_mask": "string",
+        "institution_id": "string"
+      },
+      "vendor_info": {
+        "content_type": "application/json",
+        "json": {},
+        "vendor": "SOCURE"
+      },
+      "verification": {
+        "creation_time": "2022-01-01T00:00:00.000Z",
+        "last_updated_time": "2022-01-01T00:00:00.000Z",
+        "status": "VERIFIED",
+        "vendor": "PLAID"
+      }
+    }
+  ],
+  "failed_accounts": [
+    {
+      "reason": "FAILED_VERIFICATION",
+      "reason_description": "string",
+      "vendor_account_id": "blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo",
+      "vendor_error_message": "string",
+      "vendor_request_id": "string"
+    }
+  ]
+}
+`
+
+### Delete External Account
+
+[](#delete-external-account)
+
+⚠️
+
+Deleting one account from Synctera does not unlink it from Plaid, for that you'll need to follow the guide to Unlink External Accounts
+
+[Unlink External Accounts](#unlink-external-account)
+
+Deleting an account from Synctera is one simple call, but you can easily add it back if you haven't unlinked it with Plaid.
+
+Example Request
+
+`curl -X DELETE \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json' https://api.synctera.com/v0/external_accounts/1542ea0f-09ef-410c-9d66-57f36af5b52b
+`
+
+Example Response
+
+`{
+  "id": "1542ea0f-09ef-410c-9d66-57f36af5b52b",
+  "resource": "external_account"
+}
+`
+
+### Create External Account Manually
+
+[](#create-external-account-manually)
+
+In case you want to verify account ownership without Synctera's API, once you're done with the verification you can just manually create the external account. For detailed information visit Add an external account's spec page.
+Provide business_id for accounts associated with business customers, customer_id for accounts associated with personal customers.
+
+[Add an external account's spec page](/reference/addexternalaccounts)
+
+`business_id`
+
+`customer_id`
+
+Example Request
+
+`curl -X POST \
+  -H 'Authorization: Bearer $apikey' \
+  -H 'Content-Type: application/json'
+  -d '
+  {
+    "type": "CHECKING",
+    "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+    "account_official_name": "whatever 2",
+    "vendor_account_id": "m1w75KWEQQh57qaZlo6mIGVR5r64vDSLP74dr",
+    "customer_type": "PERSONAL",
+    "account_owner_names": ["Sponge Bob"],
+    "routing_identifiers": {
+      "bank_name": "Bank of Orion",
+      "bank_countries": ["US"],
+      "ach_routing_number": "110001001"
+    },
+    "account_identifiers": {
+      "number": "31131242233323021"
+    }
+  }' https://api.synctera.com/v0/external_accounts/
+`
+
+Example Response
+
+`{
+  "account_identifiers": {
+    "number": "31131242233323021"
+  },
+  "account_owner_names": ["Sponge Bob"],
+  "creation_time": "2022-04-12T23:10:16.269162Z",
+  "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "id": "e5994d0f-ade9-4167-b314-f9277ffe8fa5",
+  "last_updated_time": "2022-04-12T23:10:16.269162Z",
+  "metadata": {},
+  "routing_identifiers": {
+    "ach_routing_number": "110001001",
+    "bank_countries": ["US"],
+    "bank_name": "Bank of Orion"
+  },
+  "status": "ACTIVE",
+  "type": "CHECKING",
+  "vendor_data": {
+    "account_number_mask": ""
+  },
+  "verification": {
+    "status": "UNVERIFIED",
+    "vendor": "MANUAL"
+  }
+}
+`
+
+### Update External Account
+
+[](#update-external-account)
+
+You can update account details in case that account was created manually, so if your account's details came from the vendor directly to Synctera, you don't want to use this endpoint.
+
+Example Request
+
+`curl -X PATCH \
+  -H 'Authorization: Bearer 476d901b4-a264a79-9db9-96d3dfaafb72' \
+  -H 'Content-Type: application/json'
+  -d '
+  {
+      "nickname": "Super Exciting Account"
+  }' https://api.synctera.com/v0/external_accounts/1542ea0f-09ef-410c-9d66-57f36af5b52b
+`
+
+Example Response
+
+`{
+  "account_identifiers": {
+    "number": "1111222233330001"
+  },
+  "account_owner_names": ["Sponge Bob"],
+  "creation_time": "2022-04-11T21:22:50.222189Z",
+  "customer_id": "17f4c82d-a398-48ed-a9c8-5bd9a53fe862",
+  "id": "30147433-6bc0-48ca-9ebd-8059319a2bdc",
+  "last_updated_time": "2022-04-11T21:23:17.785664Z",
+  "metadata": {},
+  "nickname": "Super Exciting Account",
+  "routing_identifiers": {
+    "ach_routing_number": "110000001",
+    "bank_countries": ["US"],
+    "bank_name": "Bank of Orion"
+  },
+  "status": "ACTIVE",
+  "type": "CHECKING",
+  "vendor_data": {
+    "account_number_mask": ""
+  },
+  "verification": {
+    "status": "UNVERIFIED",
+    "vendor": "MANUAL"
+  }
+}
+`
+
+## Troubleshooting
+
+[](#troubleshooting)
+
+These are some common error scenarios you might encounter while using the External Accounts API:
+
+### ITEM_LOGIN_REQUIRED
+
+[](#item_login_required)
+
+At times, links to connected accounts may be reset due to bank security changes, password changes, or MFA changes. When that happens you may receive the ITEM_LOGIN_REQUIRED error response to API calls. To relink your accounts and fix the connection, you should take the user through the Plaid Link UI flow in update mode.
+
+[update mode](#update-mode)
+
+If this error persists, please submit a Support ticket through Plaid
+
+### PRODUCTS_NOT_SUPPORTED
+
+[](#products_not_supported)
+
+This error may come back when having a user add new accounts as they go through Link UI in update mode. In Update Mode, Plaid should return all accounts connected to a user. This error happens if the institution does not support this operation, this is not a problem in your integration.
+
+[update mode](#update-mode)
+
+### INSTITUTION_NOT_RESPONDING
+
+[](#institution_not_responding)
+
+At times institutions may be doing maintenance on their systems or otherwise be unavailable. When this occurs you'll receive the INSTITUTION_NOT_RESPONDING error. This can generally be handled by retrying later.
+
+If the error persists, please submit a 'Persistent HTTP 500 errors' Support ticket through Plaid.
+
+### NO_AUTH_ACCOUNTS
+
+[](#no_auth_accounts)
+
+This error may be returned when a user can sign in and select accounts, but Plaid is unable to find account and routing numbers at the institution. For some institutions, the end user may need to specifically opt-in during the OAuth flow to share account and routing number information even if they have already opted in to sharing information about their checking or savings account.
+
+### Available Balance is null
+
+[](#available-balance-is-null)
+
+When making a call to get the balance for an account, some institutions may not return the available balance.
+
+`available balance`
+
+Updated 3 months ago 
+
+[Table of Contents](#)
+
+[Verification Steps (Plaid)](#verification-steps-plaid)
+
+[1. Request a Link Token and Call Plaid Link UI](#1-request-a-link-token-and-call-plaid-link-ui)
+
+[2. Verify Account Information by Requesting an Access Token](#2-verify-account-information-by-requesting-an-access-token)
+
+[3. Add External Accounts](#3-add-external-accounts)
+
+[Update Mode](#update-mode)
+
+[Verification Steps (Finicity)](#verification-steps-finicity)
+
+[1. Request Connect URL from Finicity](#1-request-connect-url-from-finicity)
+
+[2. Link your account(s)](#2-link-your-accounts)
+
+[3. Add External Accounts](#3-add-external-accounts-1)
+
+[Operations](#operations)
+
+[List Transactions](#list-transactions)
+
+[Get Balance](#get-balance)
+
+[Account Management](#account-management)
+
+[List External Accounts](#list-external-accounts)
+
+[View Specific External Account](#view-specific-external-account)
+
+[Unlink External Account](#unlink-external-account)
+
+[Sync Vendor Accounts](#sync-vendor-accounts)
+
+[Delete External Account](#delete-external-account)
+
+[Create External Account Manually](#create-external-account-manually)
+
+[Update External Account](#update-external-account)
+
+[Troubleshooting](#troubleshooting)
+
+[ITEM_LOGIN_REQUIRED](#item_login_required)
+
+[PRODUCTS_NOT_SUPPORTED](#products_not_supported)
+
+[INSTITUTION_NOT_RESPONDING](#institution_not_responding)
+
+[NO_AUTH_ACCOUNTS](#no_auth_accounts)
+
+[Available Balance is null](#available-balance-is-null)
+

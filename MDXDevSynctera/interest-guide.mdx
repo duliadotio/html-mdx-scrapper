@@ -1,0 +1,368 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Interest
+
+[Suggest Edits](/edit/interest-guide)
+
+# Interest Calculation Using Account Product
+
+[](#interest-calculation-using-account-product)
+
+Interest accruing accounts are configured using the interest_product_id set on the account or account template. You can use the Accounts Guide to create and manage accounts.  This guide will expand on details of daily interest accrual for savings accounts, show how to create an account product and how payouts occur.  Furthermore, this guide also discusses how Interest is charged for Line of Credit & other credit products. Throughout this guide, all units of money will be in cents and interest rate will be expressed in Basis points or BPS.  1% equals a 100 BPS.
+
+`interest_product_id`
+
+[Accounts Guide](/docs/create-accounts-guide)
+
+## Create Account Product
+
+[](#create-account-product)
+
+An account product is a set of attributes that define how interest is calculate for accounts and how often it is posted to the accounts. The account product resource acts as a profile that can apply to multiple accounts. Changes to the account product affects all accounts that reference it. Only interest-bearing accounts need to reference an account product.
+
+Using an account product is optional. If no account product is specified when creating the account, no interest will be calculated.
+
+To create an interest product_type, use POST /v0/accounts/products. Specify how you want the interest calculated (e.g. COMPOUNDED_MONTHLY), accrued (e.g. DAILY) and paid (e.g. MONTHLY). You can specify that the interest rate varies over time by including multiple periods with different rates. The rate is specified using basis points (bps), i.e. 125 represents 1.25%.
+
+[POST /v0/accounts/products](/reference/createaccountresourceproduct)
+
+`COMPOUNDED_MONTHLY`
+
+`DAILY`
+
+`MONTHLY`
+
+`125`
+
+### Accrual Payout Schedule
+
+[](#accrual-payout-schedule)
+
+This parameter configures the frequency at which Interest is paid out to a savings account.  It can be set to Monthly.  The API allows you to set the schedule to  "None". Obviously, interest is not paid to the account holder.  The "None" value is mostly used for "scenario analysis" or calculating "projected" interest.
+For Line of Credit, please configure this value to "Monthly"
+
+### Calculation_Method
+
+[](#calculation_method)
+
+This parameter allows you to specify the frequency of compounding the interest. COMPOUNDED_MONTHLY, COMPOUNDED_DAILY.
+Monthly compounding would enable the interest to be calculated on the account-balance as-of the last day of the monthly billing cycle.  Daily compounding enables interest to added to the end-of-day balance.
+Line of Credit mostly charge interest with Daily compounding.
+
+### Description
+
+[](#description)
+
+Please enter a description that makes it easier to identify this interest rate.
+
+### Rates
+
+[](#rates)
+
+This sub-object allows you to add rates for various durations.  The configuration it needs are
+
+#### Accrual Period
+
+[](#accrual-period)
+
+Please select "Daily" for this field.  
+
+#### Rate
+
+[](#rate)
+
+Interest rate on an annual basis, expressed in basis points or BPS. 425 would reflect 4.25% and 1699 would reflect 16.99%
+
+#### Valid From & Valid To
+
+[](#valid-from--valid-to)
+
+These are dates during which this interest rate would apply. Please note that date ranges must be continuous, and that gaps and overlapping dates are not permitted.
+
+### Example
+
+[](#example)
+
+`curl \
+  -X POST \
+  $baseurl/v0/accounts/products \
+  -H "Authorization: Bearer $apikey" \
+  -H 'Content-Type: application/json' \
+  --data-binary '
+  {
+    "product_type": "INTEREST",
+    "description": "Sample interest request body",
+    "calculation_method": "COMPOUNDED_MONTHLY",
+    "accrual_payout_schedule": "MONTHLY",
+    "rates": [
+      {
+        "valid_from": "2021-06-15",
+        "rate": 100,
+        "accrual_period": "DAILY"
+      },
+      {
+        "valid_from": "2021-06-01",
+        "valid_to": "2021-06-15",
+        "rate": 100,
+        "accrual_period": "DAILY"
+      }
+    ]
+  }'
+`
+
+This will return a response with the created account product, e.g.:
+
+`{
+  "accrual_payout_schedule": "MONTHLY",
+  "calculation_method": "COMPOUNDED_MONTHLY",
+  "description": "Sample interest request body",
+  "id": "52c80838-90b3-4afb-b3ff-98a97b5df96b",
+  "product_type": "INTEREST",
+  "rates": [
+    {
+      "accrual_period": "DAILY",
+      "rate": 100,
+      "valid_from": "2021-06-01",
+      "valid_to": "2021-06-15"
+    },
+    {
+      "accrual_period": "DAILY",
+      "rate": 100,
+      "valid_from": "2021-06-15"
+    }
+  ]
+}
+
+`
+
+## Calculation method settings
+
+[](#calculation-method-settings)
+
+The calculation_method property determines how interest will be calculated against the account balance. There are currently two options available:
+
+`calculation_method`
+
+`COMPOUNDED_MONTHLY`
+
+`COMPOUNDED_DAILY`
+
+The following matrix outlines which options are currently available for each account type:
+
+`COMPOUNDED_MONTHLY`
+
+`COMPOUNDED_DAILY`
+
+`CHECKING`
+
+`SAVING`
+
+`LINE_OF_CREDIT`
+
+`CHARGE_SECURED`
+
+# Interest Calculation
+
+[](#interest-calculation)
+
+Interest is calculated daily for every account configured with an interest product id at the end of the banking day specific to every bank and is based on the rate (in basis points) configured on the interest account product associated with the account.
+
+For example:
+
+For account A, the interest rate is 125 basis points (1.25%); the end of day balance on the account is $50,000 and the date is 2022-06-02. We use 365, the number of days in a calendar year to calculate the daily rate (use 366 days for leap years)
+
+daily interest rate = (125 / 100) / 365
+interest accrued = 50000 * daily interest rate
+
+Each day's interest accrual would be truncated to 8 decimal places
+
+# Monthly Payout
+
+[](#monthly-payout)
+
+On the last business day of the end of every month (special rules are explained further down), when the daily interest calculation is done, the entire month's interest accruals are summed up and paid out to the customer's account, if MONTHLY is selected in the interest product for accrual_payout_schedule.  If NONE is selected, the interest will be summed but not paid out into the customer's account, this is used if a fintech wants to have book keeping on the interest accued each day through the daily reports but want to handle the actual payout themselves or just show the potential in interest earnings.
+
+`MONTHLY`
+
+`accrual_payout_schedule`
+
+`NONE`
+
+Monthly payout is rounded to the nearest cent (2 decimal places)
+
+# Backdated transactions
+
+[](#backdated-transactions)
+
+Transactions which have an effective date in the past will trigger a recalculation of interest on the day it's posted.
+
+For example:
+
+On June 2, 2022, the interest accrual is 5, however, a transaction came in which was effective May 31 for 500 which means May 31 and June 1 should have had an additional balance of 500.  This will trigger interest calculations based on May 31 and June 1's new balance, the new interest calculated will be compared against the old interest and changes will be applied on June 2.
+
+If the backdated transaction happens > 90 days in the past, we will raise a case and not calculate the interest adjustment for this account.
+
+## Payout (DDA Accounts) And Charging Interest (Lending Accounts)
+
+[](#payout-dda-accounts-and-charging-interest-lending-accounts)
+
+If the last day of the billing period happens to fall on a holiday/weekend, the interest payout/charge will occur on the previous business day.  Any transactions which happen during this time will have their interest applied on the following business day and count towards the next billing period.
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Interest Calculation Using Account Product](#interest-calculation-using-account-product)
+
+[Create Account Product](#create-account-product)
+
+[Calculation method settings](#calculation-method-settings)
+
+[Interest Calculation](#interest-calculation)
+
+[Monthly Payout](#monthly-payout)
+
+[Backdated transactions](#backdated-transactions)
+
+[Payout (DDA Accounts) And Charging Interest (Lending Accounts)](#payout-dda-accounts-and-charging-interest-lending-accounts)
+

@@ -1,0 +1,323 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Custom Cards
+
+[Suggest Edits](/edit/custom-card-images)
+
+Synctera offers the ability to create physical cards with custom images, such as customers' personal photos. To do this you must have a card program with this feature enabled. To check if custom images are enabled, you can perform a GET /v0/cards/products. Any entry in the list of card products with an image_mode field supports custom images.
+
+`GET /v0/cards/products`
+
+`image_mode`
+
+All custom card images must be in JPEG format.
+
+## Card product image mode
+
+[](#card-product-image-mode)
+
+If the card product has an image_mode then it supports custom images. The only supported image_mode is "REQUIRED_APPROVED_FIRST". In this mode card creation requests using that card product must include an image ID and the image ID included in the card creation request must refer to an image which is in the "APPROVED" state.
+
+`image_mode`
+
+`image_mode`
+
+`"REQUIRED_APPROVED_FIRST"`
+
+`"APPROVED"`
+
+# Image management
+
+[](#image-management)
+
+Custom card images are managed independently of the cards themselves. It is only during issuing a card that the images are associated with cards.
+
+Card images start in the "NOT_UPLOADED" state and then transition to the "UNREVIEWED" state and finally to either "APPROVED" or "REJECTED".
+
+`"NOT_UPLOADED"`
+
+`"UNREVIEWED"`
+
+`"APPROVED"`
+
+`"REJECTED"`
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+graph LR
+NOT_UPLOADED-->UNREVIEWED
+UNREVIEWED-->APPROVED
+UNREVIEWED-->REJECTED
+APPROVED-->REJECTED
+`
+
+Images that are "APPROVED" maybe be updated to "REJECTED" but not the other way around.
+
+`"APPROVED"`
+
+`"REJECTED"`
+
+## Create an image entity
+
+[](#create-an-image-entity)
+
+Uploading a custom card image is a two-step process. First, you must create a card image entity. This is done by performing a POST /v0/cards/images. The request body must contain the customer ID and the ID of a card product that supports custom images.
+
+`POST /v0/cards/images`
+
+`{
+  "customer_id": "{{customer_id}}",
+  "card_product_id": "{{card_product_id}}"
+}
+`
+
+This returns the newly-created card image entity in the "NOT_UPLOADED" state with its UUID.
+
+`"NOT_UPLOADED"`
+
+`{
+  "customer_id": "{{customer_id}}",
+  "id": "{{image_id}}",
+  "status": "NOT_UPLOADED"
+}
+`
+
+## Upload the image data
+
+[](#upload-the-image-data)
+
+The second step of uploading the card image is to send the binary JPEG image data. You can do this by performing a POST /v0/cards/images/{{image_id}}/data. Put the binary image data in the body of this request and be sure to set the Content-Type header to image/jpeg.
+
+`POST /v0/cards/images/{{image_id}}/data`
+
+`Content-Type`
+
+`image/jpeg`
+
+In the response you should see that the image is now in the "UNREVIEWED" state.
+
+`"UNREVIEWED"`
+
+Once you have uploaded the image data for an image it can not be changed. If you want to upload a new image instead you must create a new image entity with a new ID. You must start the two-step process again at the first step.
+
+### Acceptable images
+
+[](#acceptable-images)
+
+Images that you upload are subject to review and will not be printed on cards until they are approved. Prohibited images include but are not limited to:
+
+## Get the card image
+
+[](#get-the-card-image)
+
+After it is created, you can look up the image entity by performing a GET /v0/cards/images/{{image_id}}. You can also list all of a customer's images by performing a GET /v0/cards/images?customer_id={{customer_id}}.
+
+`GET /v0/cards/images/{{image_id}}`
+
+`GET /v0/cards/images?customer_id={{customer_id}}`
+
+To get the JPEG image data, perform a GET /v0/cards/images/{{card_image_id}}/data.
+
+`GET /v0/cards/images/{{card_image_id}}/data`
+
+## Image review
+
+[](#image-review)
+
+Once the image data has been uploaded, it is ready to be reviewed. This is typically done through the Synctera application. Authorized users can log in, click on "Cases" in the navigation bar and then click on "Custom Card Review". From here they can preview the images as they would appear on a card and approve or reject them. In Synctera's sandbox, developers can review their own images by performing a PATCH /v0/cards/images/{{image_id}}. The content of this request is either:
+
+`PATCH /v0/cards/images/{{image_id}}`
+
+`{
+  "status": "APPROVED"
+}
+`
+
+or:
+
+`{
+  "status": "REJECTED"
+}
+`
+
+# Card Creation
+
+[](#card-creation)
+
+When you have an image ready for a card, you can create the card in the usual way by performing a POST /v0/cards using the card product that supports custom images and specifying the image ID in the card_image_id field.
+
+`POST /v0/cards`
+
+`card_image_id`
+
+`{
+  "form": "PHYSICAL",
+  "type": "DEBIT",
+  "customer_id": "{{customer_id}}",
+  "card_image_id": "{{image_id}}",
+  "card_product_id": "{{card_product_id}}",
+  "account_id": "{{account_id}}"
+}
+`
+
+Note that the response will not include some fields that are available when creating cards that don't have custom images. Specifically, the last four digits of the PAN and the expiration month and year will not be included. This is because the cards are not fully created until the image is processed and image processing happens once per day. If everything goes normally, these fields will be available the following day if you perform a GET /v0/cards/{{card_id}}. You can also get these updated fields as soon as the card is fully created via a webhook.
+
+`GET /v0/cards/{{card_id}}`
+
+Updated 10 months ago 
+
+[Table of Contents](#)
+
+[Card product image mode](#card-product-image-mode)
+
+[Image management](#image-management)
+
+[Create an image entity](#create-an-image-entity)
+
+[Upload the image data](#upload-the-image-data)
+
+[Get the card image](#get-the-card-image)
+
+[Image review](#image-review)
+
+[Card Creation](#card-creation)
+

@@ -1,0 +1,424 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Card Widgets
+
+[Suggest Edits](/edit/card-widgets)
+
+With the Card Widgets, your customers can view and interact with sensitive card information inside the application. Since these widgets communicate directly between the client, card vendor and Synctera, they remove the need for the integrator to be PCI certified.
+
+📘
+
+This is a short-term solution. We are currently advancing this functionality to make it more customizable and easier to integrate with.
+
+Through the marqeta.js client library, you can display the following pieces of sensitive card information for a customer inside your application:
+
+[marqeta.js client library](https://www.marqeta.com/docs/developer-guides/using-marqeta-js)
+
+Through the Activate Card and Set PIN Widgets, you can interact with your card to activate it or to set card's PIN:
+
+[Activate Card and Set PIN Widgets](https://www.marqeta.com/docs/developer-guides/using-activate-card-and-set-pin-widgets)
+
+[Activate Card](https://www.marqeta.com/docs/developer-guides/using-activate-card-and-set-pin-widgets)
+
+[Set PIN](https://www.marqeta.com/docs/developer-guides/using-activate-card-and-set-pin-widgets)
+
+## Getting Started
+
+[](#getting-started)
+
+Make sure you've got the necessary components in place before integrating widgets with your application.
+
+### API Keys
+
+[](#api-keys)
+
+First, ensure you have your Synctera API Keys working for your business.
+
+[Synctera API Keys](/docs/dev-setup#sign-up-for-a-synctera-account-and-generate-api-keys)
+
+### Mobile applications
+
+[](#mobile-applications)
+
+If you're integrating the widgets in a mobile application, you may need to use one of the following web views:
+
+[WKWebView in an iOS application](https://developer.apple.com/documentation/webkit/wkwebview)
+
+[WebView in an android application](https://developer.android.com/guide/webapps/webview)
+
+[WebView in React Native](https://github.com/react-native-webview/react-native-webview)
+
+## Display Card PAN, CVV, and EXP
+
+[](#display-card-pan-cvv-and-exp)
+
+📘
+
+Refer to Marqeta’s guide Using Marqeta.js for additional information on the widget configuration and styling.
+
+[Using Marqeta.js](https://www.marqeta.com/docs/developer-guides/using-marqeta-js)
+
+The steps below describe how the application uses a client access token to show PAN, CVV and Card EXP using the marqeta.js client library:
+
+Load marqeta.js into the window object of the browser by adding the following script into the <head> tag of the required page:
+
+`marqeta.js`
+
+`<head>`
+
+`<script
+  src="https://widgets.marqeta.com/marqetajs/1.1.0/marqeta.min.js"
+  type="text/javascript"
+></script>
+;
+`
+
+Request a client access token for a card from Synctera via the POST request for /cards/{card_id}/client_token endpoint. Pass clientAccessToken to your front-end via SSR or HTTP request. This token expires after five minutes and is only applicable to the given card, so it's a good idea to create a client access token on every page load:
+
+[/cards/{card_id}/client_token](/reference/getclientaccesstoken)
+
+`clientAccessToken`
+
+`curl -X POST "https://api-sandbox.synctera.com/v0/cards/{cardId}/client_token" -H "Content-Length: 0" -H "Authorization: Bearer {apiKey}"
+
+{"client_token": ... }
+`
+
+Add a separate HTML div element to your client page per each piece of the sensitive card data (Card PAN, Card CVV, Card EXP). You can attach this information to any HTML container:
+
+`div`
+
+`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Synctera</title>
+    <script
+      src="https://widgets.marqeta.com/marqetajs/1.1.0/marqeta.min.js"
+      type="text/javascript"
+    ></script>
+  </head>
+  <body>
+    <!-- each piece of sensitive information must have have it's
+  own div -->
+    <div id="display-card-pan"></div>
+    <div id="display-card-cvv"></div>
+    <div id="display-card-exp"></div>
+  </body>
+</html>
+`
+
+Initialize marqeta.js via bootstrap with token by calling window.marqeta.bootstrap. It will create an HTML iframe element inside each HTML div element. You can style the div elements and inner contents for the card PAN, card CVV, card EXP containers. To do so, use the showPan object as described in Using Marqeta.js > The showPan.cardPan and showPan.cardExp objects:
+
+`marqeta.js`
+
+`window.marqeta.bootstrap`
+
+`div`
+
+`div`
+
+`showPan`
+
+[Using Marqeta.js > The showPan.cardPan and showPan.cardExp objects](https://www.marqeta.com/docs/developer-guides/using-marqeta-js#_the_showpan_cardpan_and_showpan_cardexp_objects)
+
+`window.marqeta.bootstrap({
+  clientAccessToken: clientAccessToken,
+  integrationType: "custom",
+  showPan: {
+    cardPan: { domId: "display-card-pan", format: true },
+    cardExp: { domId: "display-card-exp", format: true },
+    cardCvv: { domId: "display-card-cvv" },
+  },
+  callbackEvents: {
+    onSuccess: () => console.log("Widget loaded!"),
+    onFailure: () => console.warn("Widget failed to load."),
+  },
+});
+`
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+sequenceDiagram
+participant IFE as Integrator Frontend
+participant MFE as Marqeta.js
+participant IBE as Integrator Backend
+participant S as Synctera API
+participant M as Marqeta
+IFE ->> IBE: Request client access token
+IBE ->> S: `POST /v0/cards/:card_id/client_token`
+S ->> M: Get token
+M -->> S: Token
+S -->> IBE: Response with client_token
+IBE -->> IFE: Client access token
+IFE ->> MFE: Marqeta.js display card PAN, CVV, and EXP
+MFE ->> M: Request sensitive card data
+M -->> MFE: Response with sensitive card data
+MFE ->> MFE: Render sensitive card data
+`
+
+## Display Activate Card and Set PIN Widgets
+
+[](#display-activate-card-and-set-pin-widgets)
+
+The Activate Card widget and Set PIN widget are displayed inside HTML iframe elements, with source URLs provided by the /cards/card_widget_url route.
+
+`/cards/card_widget_url`
+
+📘
+
+Refer to Marqeta’s guide Using Activate Card and Set PIN Widgets for additional information.
+
+[ Using Activate Card and Set PIN Widgets](https://www.marqeta.com/docs/developer-guides/using-activate-card-and-set-pin-widgets)
+
+Fetch the card widget URL from the related endpoint. On the server, make a request to /cards/card_widget_url. For the Activate Card widget (widget_type === 'activate_card'), you can omit the card_id param in the query:
+
+`/cards/card_widget_url`
+
+`card_id`
+
+`curl -X GET "https://api-sandbox.synctera.com/v0/cards/card_widget_url?card_id={cardId}&customer_id={customerId}&account_id={accountId}&widget_type={widgetType}" -H "Content-Type: application/json" -H "Authorization: Bearer {apiKey}"
+
+{"url": ... }
+`
+
+Pass the acquired URL to your front-end via SSR or HTTP request. Include the URL into an iframe on your client page. The desired widget will be rendered inside the iframe, allowing the user to input either card PAN or card PIN and press submit:
+
+`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Synctera</title>
+  </head>
+  <body>
+    <iframe
+      src="{cardWidgetUrl}"
+      title="Card
+    Widget Url"
+    />
+  </body>
+</html>
+`
+
+`%%{init: {"fontFamily": "sans-serif"}}%%
+sequenceDiagram
+participant IFE as Integrator Frontend
+participant IBE as Integrator Backend
+participant S as Synctera API
+participant M as Marqeta
+IFE ->> IBE: Request card widget
+IBE ->> S: `GET /v0/cards/card_widget_url`
+S ->> M: Get card widget URL
+M -->> S: Card widget URL
+S -->> IBE: Response with card_widget_url
+IBE -->> IFE: Card widget URL
+IFE ->> IFE: Render Activate Card or Set PIN widget
+`
+
+## Additional Information
+
+[](#additional-information)
+
+The current solution doesn't provide the styling customization for the Card Activation and Pin Change widgets. Thus, one can't change the font style, set a different color, padding, and margins for the widgets.
+
+We use Typescript at Synctera and find it helpful to type our window properties. See the example typescript below for the window.marqeta object provided by marqeta.js:
+
+`window.marqeta`
+
+`marqeta.js`
+
+`// global.d.ts
+interface Window {
+  marqeta: {
+    bootstrap: (params: {
+      clientAccessToken: string;
+      integrationType: "custom";
+      showPan: {
+        cardPan?: {
+          domId: string;
+          format?: boolean;
+          styles?: CSSProperties;
+          mode?: "transparent";
+          onCopySuccess?: () => void;
+          onCopyFailure?: () => void;
+        };
+        cardExp?: {
+          domId: string;
+          format?: boolean;
+          styles?: CSSProperties;
+          mode?: "transparent";
+          onCopySuccess?: () => void;
+          onCopyFailure?: () => void;
+        };
+        cardCvv?: {
+          domId: string;
+          styles?: CSSProperties;
+          mode?: "transparent";
+          onCopySuccess?: () => void;
+          onCopyFailure?: () => void;
+        };
+      };
+      callbackEvents?: {
+        onSuccess?: () => void;
+        onFailure: () => void;
+      };
+    }) => void;
+  };
+}
+`
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Getting Started](#getting-started)
+
+[API Keys](#api-keys)
+
+[Mobile applications](#mobile-applications)
+
+[Display Card PAN, CVV, and EXP](#display-card-pan-cvv-and-exp)
+
+[Display Activate Card and Set PIN Widgets](#display-activate-card-and-set-pin-widgets)
+
+[Additional Information](#additional-information)
+

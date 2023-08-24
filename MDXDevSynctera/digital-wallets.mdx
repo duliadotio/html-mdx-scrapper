@@ -1,0 +1,376 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Digital Wallets
+
+[Suggest Edits](/edit/digital-wallets)
+
+# Digital Wallets
+
+[](#digital-wallets)
+
+## Overview
+
+[](#overview)
+
+Through Synctera, you can offer your end customers the ability to add cards to their digital wallet, such as Apple Pay or Google Wallet. This provides a convenient way for cardholders to store and use their payment cards securely. When the card is added to the digital wallet, the card’s sensitive data, i.e. the PAN, expiration date and CVV, is replaced with a token. This token serves as a reference to the card, and is used when the cardholder makes a payment using the digital wallet.
+
+This guide describes what features can be implemented as part of the Digital Wallet & Tokenization process:
+
+[Token provisioning methods](#adding-a-card-to-a-digital-wallet)
+
+[Token lifecycle management](#token-lifecycle)
+
+ The Digital Wallet & Tokenization feature can only be tested in the production environment. 
+
+## Prerequisites
+
+[](#prerequisites)
+
+Before you can launch the digital wallet feature, the following steps must be completed:
+
+📘NOTE: Synctera’s Implementation & Onboarding Team will guide you through this process.
+
+NOTE: Synctera’s Implementation & Onboarding Team will guide you through this process.
+
+## Adding a Card to a Digital Wallet
+
+[](#adding-a-card-to-a-digital-wallet)
+
+The integration steps depend on the provisioning method you want to support. The first two methods can be enabled directly on the card product, whereas in-app provisioning requires additional integration steps.
+
+### Manual provisioning:
+
+[](#manual-provisioning)
+
+The cardholder opens the wallet app (Apple Pay / Google Wallet) on a mobile device and manually adds the virtual or physical card to the wallet by typing in the card details.  
+
+### Card-on-file:
+
+[](#card-on-file)
+
+The cardholder has already added a card to one device, but now wants to add it to another device. The card details that are available on-file are used to provision a separate token for the new device.
+Alternatively, this can happen when a customer submits their card to a merchant to be saved for future purchases. The merchant can then tokenize the card outside of our system, and we will get the token pushed to us by the network.
+
+### In-app provisioning:
+
+[](#in-app-provisioning)
+
+This method is also called push-provisioning or instant issuance. Cardholder can “push” the card to the digital wallet from within your app, for example through a “Add to Wallet” button. You need to integrate with the digital wallet provider (instructions provided by Synctera) and with the Synctera platform by calling the correct endpoint based on the type of device:
+
+For Apple Pay compatible devices, call:
+
+`POST /v0/cards/{card_id}/digital_wallet_tokens/applepay
+`
+
+Sample Request:
+
+`{
+  "device_type": "MOBILE_PHONE",
+  "provisioning_app_version": "2.13.7",
+  "certificates":  [
+    "MIIEPDCCA+KgAwIBAgICEAAwCQYHKoZIzj...",
+    "MIIDZjCCAw2gAwIBAgIJAJx22AGaEPSgMA..." ],
+  "nonce": "vXWJaBidcTLaJJCF",
+  "nonce_signature": "jD4Aphu+93N2wbBn"
+}
+`
+
+For Google Wallet compatible devices, call:
+
+`POST /v0/cards/{card_id}/digital_wallet_tokens/googlepay
+`
+
+Sample Request:
+
+`{
+  "device_type": "MOBILE_PHONE",
+  "provisioning_app_version": "2.13.3",
+  "wallet_account_id": "ae25OGhjZTk2dsr452dgsr51",
+  "device_id": "W85OGhjZTk2dsr452dgsr51j"
+}
+`
+
+See API reference for more information about Digital Wallet Tokens API.
+
+[API reference](/reference/createdigitalwalletapple)
+
+### Token approval process - step-up verification:
+
+[](#token-approval-process---step-up-verification)
+
+All token provisioning requests go through a token approval process, where the legitimacy of the request is scored. Based on the score, the request can either be automatically approved/declined or step-up verification is required. During step-up verification, the cardholder gets a one-time passcode (OTP) through email or SMS, based on preferences, and enters the code in the wallet for verification. This requires that all cardholders have an email and mobile phone number on file (enforced through the Synctera onboarding journey).	
+
+Synctera offers support through the Synctera UI for resolving any issues that your customers may run into while adding their card to their digital wallet.
+
+## Token lifecycle
+
+[](#token-lifecycle)
+
+During its lifecycle, a card token can have the following states:
+
+`REQUESTED`
+
+`REQUEST_DECLINED`
+
+`ACTIVE`
+
+`REQUESTED`
+
+`SUSPENDED`
+
+`SUSPENDED`
+
+`ACTIVE`
+
+`TERMINATED`
+
+To change the state of a token, you can call:
+
+`PATCH /v0/cards/digital_wallet_tokens/{digital_wallet_token_id}
+`
+
+Sample Request:
+
+`{
+  "token_status": "ACTIVE"
+}
+`
+
+Sample Response:
+
+`{
+  "card_id": "ea4fe485-b688-4fc8-b861-a136245ab931",
+  "device_id": "044B3013EE56800192111170603027118DE08E4001501681",
+  "device_type": "MOBILE_PHONE",
+  "id": "de0ebd60-4dd5-413a-a0cc-afbd91798f7c",
+  "last_modified_time": "2022-05-06T18:58:02.587813Z",
+  "requested_time": "2022-05-06T18:11:19Z",
+  "state": "ACTIVE",
+  "type": "APPLE_PAY"
+}
+`
+
+Anytime a token state changes, a webhook event is generated:
+
+`card.digitalwallettoken.created`
+
+`card.digitalwallettoken.updated`
+
+To get a list of all tokens that have been provisioned for a card, including information on token state, call:
+
+`GET /v0/cards/digital_wallet_tokens
+`
+
+Sample Response:
+
+`{
+  "digital_wallet_tokens": [
+    {
+      "card_id": "ea4fe485-b688-4fc8-b861-a136245ab931",
+      "device_id": "044B3013EE56800192111170603027118DE08E4001501681",
+      "device_type": "MOBILE_PHONE",
+      "id": "de0ebd60-4dd5-413a-a0cc-afbd91798f7c",
+      "last_modified_time": "2022-05-06T18:58:02.587813Z",
+      "requested_time": "2022-05-06T18:11:19Z",
+      "state": "ACTIVE",
+      "type": "APPLE_PAY"
+    },
+    {
+      "card_id": "6cfe1b97-f737-49e3-8aee-55bd19afa739",
+      "device_id": "044B3013EE56800192111170603027118DE08E4001501681",
+      "device_type": "MOBILE_PHONE",
+      "id": "8fdf0a38-055d-41bd-a238-d79269335b7f",
+      "last_modified_time": "2022-06-08T23:46:38.736908Z",
+      "requested_time": "2022-05-16T20:48:18Z",
+      "state": "ACTIVE",
+      "type": "ANDROID_PAY"
+    }
+  ]
+}
+`
+
+To get the details of a specific token, call:
+
+`GET /v0/cards/digital_wallet_tokens/{digital_wallet_token_id}
+`
+
+Sample Response:
+
+`{
+  "card_id": "6cfe1b97-f737-49e3-8aee-55bd19afa739",
+  "device_id": "044B3013EE56800192111170603027118DE08E4001501681",
+  "device_type": "MOBILE_PHONE",
+  "id": "8fdf0a38-055d-41bd-a238-d79269335b7f",
+  "last_modified_time": "2022-06-08T23:46:38.736908Z",
+  "requested_time": "2022-05-16T20:48:18Z",
+  "state": "ACTIVE",
+  "type": "ANDROID_PAY"
+}
+`
+
+📘NOTE:
+
+NOTE:
+
+`TERMINATED`
+
+`TERMINATED`
+
+See API reference for more information about Digital Wallet Tokens API.
+
+[API reference](/reference/createdigitalwalletapple)
+
+Updated 4 months ago 
+
+[Table of Contents](#)
+
+[Digital Wallets](#digital-wallets)
+
+[Overview](#overview)
+
+[Prerequisites](#prerequisites)
+
+[Adding a Card to a Digital Wallet](#adding-a-card-to-a-digital-wallet)
+
+[Token lifecycle](#token-lifecycle)
+

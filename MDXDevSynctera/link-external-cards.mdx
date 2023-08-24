@@ -1,0 +1,254 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Link External Cards
+
+[Suggest Edits](/edit/link-external-cards)
+
+The Synctera platform offers the ability to tokenize external cards and associate them with customer accounts. This guide will provide you with the steps to start using the external cards feature by integrating with the TabaPay Cards Tokenization widget. Card tokenization is a process that converts sensitive cardholder data into a token to protect it from being accessed in the event of a data breach or unauthorized exposure. This process is similar to encryption, which obscures data to make it unreadable. The widget allows for direct communication between the client, TabaPay, and Synctera, eliminating the need for the integrator to have PCI certification.
+
+## Getting started
+
+[](#getting-started)
+
+Before integrating with TabaPay Card PCI-Compliant iFrame, ensure that you have all the necessary components in place:
+
+[WKWebView in a iOS application](https://developer.apple.com/documentation/webkit/wkwebview)
+
+[WebView in an android application](https://developer.android.com/guide/webapps/webview)
+
+[WebView in React Native](https://github.com/react-native-webview/react-native-webview)
+
+`{
+  "connect-src": [
+    'https://sso.tabapay.com',
+    'https://sso.sandbox.tabapay.com:8443'
+  ],
+  "frame-src": [
+    'https://sso.tabapay.com',
+    'https://sso.sandbox.tabapay.com:8443'
+  ]
+}
+`
+
+## Display iFrame and tokenize an External Card
+
+[](#display-iframe-and-tokenize-an-external-card)
+
+The steps below describe how to display TabaPay PCI-Compliant iFrame:
+
+`<div><iframe id="sso"></iframe></div>
+`
+
+[https://sso.tabapay.com/SSOSynctera.html"](https://sso.tabapay.com/SSOSynctera.html%22)
+
+[https://sso.sandbox.tabapay.com:8443/SSOSynctera.html"](https://sso.sandbox.tabapay.com:8443/SSOSynctera.html%22)
+
+`<script>
+  document.getElementById( "sso" ).src = "https://sso.sandbox.tabapay.com:8443/SSOSynctera.html";
+</script>
+`
+
+`<script>
+  function pfReceivedMessage( event )
+  {
+    if ( event.data != "Close" )
+    {
+      if ( event.data.slice( 0, 7 ) == "Error: " )
+      {
+        // Error
+      }
+      else
+      {
+        var asData = event.data.split( "|" );
+        if ( asData.length == 4 )
+        {
+          // asData[ 0 ] contains the Cardholder Name
+          // asData[ 1 ] contains the Last 4
+          // asData[ 2 ] contains the Expiration Date in YYYYMM Format
+          // asData[ 3 ] contains the Card Token
+        }
+        else
+        {
+          // Data Error
+        }
+      }
+    }
+    else
+    {
+      // Close or Cancel
+    }
+  }
+  window.addEventListener( "message", pfReceivedMessage, false);
+</script>
+`
+
+Upon completing the preceding steps, the widget should be ready to display and capable of tokenizing External Cards.
+
+💡
+
+For more information on card tokenization using TabaPay PCI-Compliant iFrame, refer to the TabaPay documentation.
+
+[TabaPay documentation](https://developers.tabapay.com/docs/pci-compliant-iframe)
+
+## Associate token with the customer
+
+[](#associate-token-with-the-customer)
+
+The final step is to associate the created token with the customer identity, using the card token and cardholder name. See External Cards Guide for further instructions.
+
+`token`
+
+`name`
+
+[External Cards Guide](/docs/external-cards)
+
+Updated 7 months ago 
+
+[Table of Contents](#)
+
+[Getting started](#getting-started)
+
+[Display iFrame and tokenize an External Card](#display-iframe-and-tokenize-an-external-card)
+
+[Associate token with the customer](#associate-token-with-the-customer)
+

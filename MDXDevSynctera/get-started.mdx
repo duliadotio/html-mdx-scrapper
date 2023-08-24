@@ -1,0 +1,346 @@
+[Jump to Content](#content)
+
+[](/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[](/)
+
+[Sign Up](https://app.synctera.com/sign-up)
+
+[Log In](https://app.synctera.com)
+
+[Learning Center](https://learn.synctera.com/)
+
+[Community](https://launchpass.com/synctera-community)
+
+[Platform Status](https://status.synctera.com/)
+
+[Postman Collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/)
+
+[Home](/)
+
+[Guides](/docs)
+
+[API Reference](/reference)
+
+### Overview
+
+[Synctera Platform](/docs/platform-overview)
+
+[Get Started](/docs/get-started)
+
+[Developer Setup](/docs/dev-setup)
+
+### Onboard a personal customer
+
+[Create A Personal Customer](/docs/create-a-personal-customer)
+
+[Record Disclosure Acceptance](/docs/record-disclosure-acceptance)
+
+[KYC/KYB Verification](/docs/kyc-kyb-verification)
+
+[Document Verification](/docs/document-verification)
+
+[Ongoing Monitoring](/docs/monitoring-guide)
+
+[Sandbox KYC Test Cases](/docs/sandbox-kyc-test-cases)
+
+[Document Storage](/docs/document-storage-guide)
+
+### Onboard a business customer
+
+[Create A Business Customer](/docs/create-a-business)
+
+[Sandbox KYB Test Cases](/docs/sandbox-kyb-test-cases)
+
+### Create Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+[Lines of Credit (alpha)](/docs/line-of-credit-guide)
+
+[Balance Floor and Ceiling and Linked Accounts](/docs/balance-floor-ceiling)
+
+[Statements](/docs/statements-guide)
+
+[Interest](/docs/interest-guide)
+
+[Spend Controls](/docs/spend-controls-guide)
+
+### Link External Accounts
+
+[External Accounts](/docs/external-accounts-guide)
+
+[Sandbox External Account Test Cases](/docs/sandbox-external-account-test-cases)
+
+### Link External Cards
+
+[External Cards](/docs/external-cards-guide)
+
+[Link External Cards](/docs/link-external-cards)
+
+[External Cards 3-D Secure (3DS)](/docs/external-cards-3ds-guide)
+
+### Move Money
+
+[Internal Transfers](/docs/internal-transfer-guide)
+
+[Payment Schedules](/docs/payment-schedules)
+
+[ACH Payments](/docs/ach-guide)
+
+[MRDC](/docs/create-mobile-deposit-guide)
+
+[Domestic Wires](/docs/domestic-wires)
+
+[International Wires (Alpha)](/docs/international-wires)
+
+### Issue Cards
+
+[Personal Cards](/docs/personal-cards)
+
+[Business Expense Cards](/docs/business-card)
+
+[Custom Cards](/docs/custom-card-images)
+
+[Digital Wallets](/docs/digital-wallets)
+
+[Card Widgets](/docs/card-widgets)
+
+### Get Transactions
+
+[Transactions](/docs/transactions-guide)
+
+[Card Transactions](/docs/card-transactions)
+
+### Platform Tools
+
+[Webhooks](/docs/webhooks-guide)
+
+[Sandbox Testing](/docs/sandbox-testing)
+
+### Validate a value proposition
+
+[Waitlist](/docs/viral-loops-waitlist)
+
+# Get Started
+
+[Suggest Edits](/edit/get-started)
+
+# 
+
+[](#section-)
+
+Most Synctera APIs act on resources whose IDs are specified in requests. These resources must exist. This means there is a sequence to calling the APIs to get from a clean slate to a successful transaction.
+
+This document is aimed at capturing that sequence, which is a reflection of a typical customer journey. We have provided the exact API details here but we strongly encourage you to read the Guides mentioned below to understand the dependencies, alternatives, configuration needs and additional information about these products.
+
+You can also explore and try out the Postman collection once you have an API key.
+
+[Postman collection](https://www.postman.com/synctera/workspace/synctera-public-workspace/collection/19487588-931708f8-bc42-4051-8a02-4e9104d984e4?action=share&creator=19487588)
+
+# Before You Begin
+
+[](#before-you-begin)
+
+## Get an API Key
+
+[](#get-an-api-key)
+
+If you don't already have an API key, you will need one in order to call the APIs. If you have signed up for the t-minus10 program (click here for more details on t-minus10) you can self-serve an API key by following the "Sandbox" or "Live testing" links in the top navigation. If you are already working with the Synctera team, you an also reach out to your contact at Synctera to get an API key.
+
+[click here](https://drive.google.com/file/d/1qPYNx4Ij1el5lIKbfJcJttQJb4Ot9xny/view?usp=sharing)
+
+Self-serve:
+
+[https://app.synctera.com/admin/developer-tools/api-keys](https://app.synctera.com/admin/developer-tools/api-keys)
+
+[https://app-sandbox.synctera.com/admin/developer-tools/api-keys](https://app-sandbox.synctera.com/admin/developer-tools/api-keys)
+
+Once an API key is issued in Sandbox, you can immediately start calling the APIs below. In Live Testing or Production, your FinTech must first pass KYB.
+
+## KYB Your FinTech
+
+[](#kyb-your-fintech)
+
+In Sandbox - you're done! KYB was automatically passed for your Sandbox workspace.
+
+In Live Testing or Production, you need to have run a successful KYB on your Fintech if you want to issue cards or move money via ACH / Internal transfers.
+
+If you are on t-minus 10, you need to do this by filling in Business information and Owner details and then Run KYB using the t-minus 10 platform.
+
+[Business information](https://app.synctera.com/admin/my-fintech/address)
+
+[Owner details](https://app.synctera.com/admin/my-fintech/owners)
+
+[Run KYB](https://app.synctera.com/admin/my-fintech/kyb)
+
+If you are not on t-minus10, your contact at Synctera will collect the required information to run KYB for you.
+
+# Guides and APIs
+
+[](#guides-and-apis)
+
+Customers & Businesses
+
+These are customers of the Financial Service that use Synctera APIs. Customers can either be Individuals or Businesses. If your customers are businesses, create a business.
+
+Guide:
+
+[Personal Customers](/docs/create-a-personal-customer)
+
+[Business Customers](/docs/create-a-business)
+
+APIs:
+
+[Create Customer](/reference/createcustomer)
+
+[Create Business](/reference/createbusiness)
+
+Disclosures
+
+Customers or Businesses who are onboarded to your platform will need to accept disclosures for legal needs. You will work with Synctera Implementation & Onboarding team to identify the disclosures needed for your company.
+
+Guide: Disclosures
+
+[Disclosures](/docs/record-disclosure-acceptance)
+
+API: Create Disclosure
+
+[Create Disclosure](/reference/createdisclosure)
+
+KYB & KYC
+
+The next step is to ensure that you know your customer and they are who they claim to be. Run KYC if your customer is an individual. Run KYB if your customer is a business.
+
+As part of this, you can also enroll the user for Watchlists.
+
+Guide: KYC
+
+[KYC](/docs/kyc-kyb-verification)
+
+APIs:
+
+[Verify a customer's identity](/reference/verify)
+
+[Subscribe a customer to watchlist monitoring](/reference/watchlistsubscribe)
+
+Account Templates
+
+Account templates define basic characteristics of an account. This is a mandatory step to create an account.
+
+You can also use Account Products which can be included in the account template to capture the Interest / Fee aspects of the account.
+
+Guide: Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+APIs:
+
+[Create an account template](/reference/createaccounttemplate)
+
+[Create an account product](/reference/createaccountresourceproduct)
+
+Accounts
+
+Once a Customer is created, Verified, and an account template is created, you can now create an account for the customer / business.
+
+You can use Account relationships to create further relationships on the accounts - e.g Joint Account Holder.
+
+Guide: Accounts
+
+[Accounts](/docs/create-accounts-guide)
+
+APIs:
+
+[Create an account](/reference/createaccount)
+
+[Create account relationship](/reference/createaccountrelationship)
+
+External Accounts
+
+Once an account is created, the next step is to move funds from an external bank account to move funds into the customer’s account at the Fintech.
+
+Guide: External Accounts)
+
+[External Accounts](/docs/external-accounts-guide)
+
+APIs:
+
+[Create a link token to verify an external account](/reference/createverificationlinktoken)
+
+[Create a permanent access token for an external account](/reference/createaccesstoken)
+
+[Add external accounts through a vendor, such as Plaid.](/reference/addvendorexternalaccounts)
+
+Internal Accounts
+
+To move funds into a customer account, you would typically link a customer's external account and move funds from there. Alternatively, as a convenience in the sandbox environment, you can also create an internal account to do this. Internal accounts in production would typically be used for specific needs such as issuing promotional credits to your customers. To create an internal account, use this API.
+
+API: Add internal accounts
+
+[Add internal accounts](/reference/addinternalaccounts)
+
+Move Funds with ACH
+
+Once an external account is linked (or you created an internal account as above), you can move funds from an external account into the customer’s account at the Fintech.
+
+API: Create an outgoing ACH
+
+[Create an outgoing ACH](/reference/addtransactionout)
+
+Issue Cards
+
+Once the account is funded, the customer access the money on the account using cards or ACH. Users can be issued multiple virtual cards and a physical card per account.
+
+You will have to use Marqeta widgets for accessing card details. You also can issue custom Cards with images uploaded by the user.
+
+Guides:
+
+[Personal Cards](/docs/personal-cards)
+
+[Card Widgets](/docs/card-widgets)
+
+[Custom Cards](/docs/custom-card-images)
+
+API: Issue a Card
+
+[Issue a Card](/reference/issuecard)
+
+Internal Transfer
+
+You can also move money between accounts held in the Fintech.
+
+API: Create an internal transfer
+
+[Create an internal transfer](/reference/createinternaltransfer)
+
+Updated 11 months ago 
+
+[Table of Contents](#)
+
+[Before You Begin](#before-you-begin)
+
+[Get an API Key](#get-an-api-key)
+
+[KYB Your FinTech](#kyb-your-fintech)
+
+[Guides and APIs](#guides-and-apis)
+
